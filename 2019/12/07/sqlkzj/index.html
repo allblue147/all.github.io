@@ -10,7 +10,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="宽字节注入">
 <meta property="og:url" content="http://allblue147.github.io/2019/12/07/sqlkzj/index.html">
-<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:site_name" content="A1LB1ue">
 <meta property="og:description" content="宽字节sql注入的原理gbk使用的是双字节编码,而utf8则是三字节。  宽字节注入原因是设置的数据库编码和php编码是两个不同的编码，就可能产生宽字节注入漏洞  如果php编码为utf8,而sql语句set names gbk 这样配置可能会导致编码在转换时出现注入漏洞。  set names x.就等同设置了数据库连接，发出，接收的编码(宽字节sql注入就是php在发送数据到数据库过程中使用了">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-12-06T17:51:02.060Z">
