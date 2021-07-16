@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="验证码作用验证码（CAPTCHA）是“Completely Automated Public Turing test to tell Computers and Humans Apart”（全自动区分计算机和人类的图灵测试）的缩写，是一种区分用户是计算机还是人的公共全自动程序。 可以防止：恶意破解密码、刷票、论坛灌水，有效防止某个黑客对某一个特定注册用户用特定程序暴力破解方式进行不断的登陆尝试，实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="验证码绕过、密码找回漏洞">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="验证码作用验证码（CAPTCHA）是“Completely Automated Public Turing test to tell Computers and Humans Apart”（全自动区分计算机和人类的图灵测试）的缩写，是一种区分用户是计算机还是人的公共全自动程序。 可以防止：恶意破解密码、刷票、论坛灌水，有效防止某个黑客对某一个特定注册用户用特定程序暴力破解方式进行不断的登陆尝试，实">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbn3k3ewj31h80q37gc.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbne7ztuj30ir09ddfu.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3si8n7bwqj30t30i1jxq.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbo8p3hxj31gz0q9ah4.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbp05856j30kz09jabl.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sj2ny46ij31h20msafk.jpg">
+<meta property="og:updated_time" content="2019-12-06T17:53:01.105Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="验证码绕过、密码找回漏洞">
+<meta name="twitter:description" content="验证码作用验证码（CAPTCHA）是“Completely Automated Public Turing test to tell Computers and Humans Apart”（全自动区分计算机和人类的图灵测试）的缩写，是一种区分用户是计算机还是人的公共全自动程序。 可以防止：恶意破解密码、刷票、论坛灌水，有效防止某个黑客对某一个特定注册用户用特定程序暴力破解方式进行不断的登陆尝试，实">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbn3k3ewj31h80q37gc.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>验证码绕过、密码找回漏洞</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/漏洞搜集/CVE-2019-12747：TYPO3 9.5.7 RCE漏洞分析/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/文件上传解析漏洞3/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&text=验证码绕过、密码找回漏洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&is_video=false&description=验证码绕过、密码找回漏洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=验证码绕过、密码找回漏洞&body=Check out this article: http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&name=验证码绕过、密码找回漏洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&t=验证码绕过、密码找回漏洞"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#验证码作用"><span class="toc-number">1.</span> <span class="toc-text">验证码作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#验证码常见的绕过姿势"><span class="toc-number">2.</span> <span class="toc-text">验证码常见的绕过姿势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码不失效"><span class="toc-number">2.1.</span> <span class="toc-text">验证码不失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#未校验用户字段的值"><span class="toc-number">2.2.</span> <span class="toc-text">未校验用户字段的值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前端验证验证码"><span class="toc-number">2.3.</span> <span class="toc-text">前端验证验证码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改密码处id可替换"><span class="toc-number">2.4.</span> <span class="toc-text">修改密码处id可替换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码无校验"><span class="toc-number">2.5.</span> <span class="toc-text">验证码无校验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码空值绕过"><span class="toc-number">2.6.</span> <span class="toc-text">验证码空值绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码可控制"><span class="toc-number">2.7.</span> <span class="toc-text">验证码可控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#密码找回漏洞"><span class="toc-number">3.</span> <span class="toc-text">密码找回漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#密码找回漏洞例子"><span class="toc-number">3.1.</span> <span class="toc-text">密码找回漏洞例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#靶场实例"><span class="toc-number">4.</span> <span class="toc-text">靶场实例</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        验证码绕过、密码找回漏洞
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.514Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="验证码作用"><a href="#验证码作用" class="headerlink" title="验证码作用"></a>验证码作用</h2><p>验证码（CAPTCHA）是“Completely Automated Public Turing test to tell Computers and Humans Apart”（全自动区分计算机和人类的图灵测试）的缩写，是一种区分用户是计算机还是人的公共全自动程序。</p>
+<p>可以防止：恶意破解密码、刷票、论坛灌水，有效防止某个黑客对某一个特定注册用户用特定程序暴力破解方式进行不断的登陆尝试，实际上用验证码是现在很多网站通行的方式，我们利用比较简易的方式实现了这个功能。这个问题可以由计算机生成并评判，但是必须只有人类才能解答。</p>
+<p>由于计算机无法解答CAPTCHA的问题，所以回答出问题的用户就可以被认为是人类。</p>
+<p>验证码的种类很多，有滑块验证，纯数字验证，点击字符，数字运算等……<br>而我们能有效的利用验证码防止恶意破解密码、刷票、论坛灌水、刷页。</p>
+<h2 id="验证码常见的绕过姿势"><a href="#验证码常见的绕过姿势" class="headerlink" title="验证码常见的绕过姿势"></a>验证码常见的绕过姿势</h2><h3 id="验证码不失效"><a href="#验证码不失效" class="headerlink" title="验证码不失效"></a>验证码不失效</h3><ul>
+<li>造成原因：找回密码的时候获取的验证码缺少时间限制仅值判断了验证码是够正确未判断验证码是否过期。</li>
+<li>测试方法：通过枚举找到真正的验证码输入验证码完成验证。</li>
+</ul>
+<p>###验证码重复使用<br>验证码可以多次重复，如果现在的验证码为1106，如果登录失了，验证码会换但是输入1106，还是判定验证码正确；<a href="http://www.anquan.us/static/bugs/wooyun-2016-0169672.html" target="_blank" rel="noopener">案例</a></p>
+<h3 id="未校验用户字段的值"><a href="#未校验用户字段的值" class="headerlink" title="未校验用户字段的值"></a>未校验用户字段的值</h3><ul>
+<li>造成原因：在整个重置密码的流程中，只对验证码和手机号做了校验，未对后面设置新密码的用户身份做判断，导致在最后一步通过修改用户身份来重置他人的密码。</li>
+<li>测试方法：使用自己的手机号走流程，在走到最后一个设置密码的流程时，修改数据包里的用户信息。<h3 id="前端验证验证码"><a href="#前端验证验证码" class="headerlink" title="前端验证验证码"></a>前端验证验证码</h3></li>
+<li>造成原因：只在前端进行验证没有进行后端验证</li>
+<li>测试方法：直接抓包进行跑数据包，反正没验证码的阻碍。<h3 id="修改密码处id可替换"><a href="#修改密码处id可替换" class="headerlink" title="修改密码处id可替换"></a>修改密码处id可替换</h3></li>
+<li>造成原因：修改密码的时候，没有对原密码进行判断，且根据id的值来修改用户的密码，类似的SQL语句：update user set  password=”qwer1234” where id = ‘1’修改数据包里的id的值，即可修改他人密码。</li>
+<li>测试方法：修改自己用户密码，抓取数据包，替换数据包中用户对应的id值，即可修改他人的密码。<h3 id="验证码无校验"><a href="#验证码无校验" class="headerlink" title="验证码无校验"></a>验证码无校验</h3></li>
+<li>造成原因：设置了验证码，但却没有校验(真是扯淡……估计开发会被老板砍死)</li>
+<li>测试方法：乱输验证码进行验证即可。<h3 id="验证码空值绕过"><a href="#验证码空值绕过" class="headerlink" title="验证码空值绕过"></a>验证码空值绕过</h3></li>
+<li>造成原因：没对验证码参数进行强制条件，如我们发现登录参数是user=admin&amp;psw=123456&amp;yzm=1312，将验证码传参去掉，留下user=admin&amp;psw=123456就可以绕过验证码机制。</li>
+<li>测试方法：抓包，如看到类似验证码参数，将其去掉，进行发包。<h3 id="验证码可控制"><a href="#验证码可控制" class="headerlink" title="验证码可控制"></a>验证码可控制</h3></li>
+<li>造成原因：有时候验证码通过url传参，就是说我们参数可控，而验证码是通过参数设定的。</li>
+<li>测试方法：直接将参数设置成固定，那么可能验证码就不会变</li>
+</ul>
+<p><strong>绕过姿势有很多种，这里只是给大家介绍几种，能帮助更好的了解此漏洞。</strong></p>
+<h2 id="密码找回漏洞"><a href="#密码找回漏洞" class="headerlink" title="密码找回漏洞"></a>密码找回漏洞</h2><p>有一类验证码，他并不是区分用户是计算机还是人的公共全自动程序，它是用来证明你的身份，比如你登入微信，支付宝，支持短信验证登入，像这类验证码实际上是用来区分你的身份的。<br>当你qq密码忘记密码时候，你需要找回密码，然后他要求把APP现实的动态密码填入框内，一般而言手机验证码都由5-30分钟，如果他没有做尝试限制的话我们是不是可以进行穷举？然后直接跑出验证码就能修改他人的密码？</p>
+<p>第一种就是找回密码，往邮箱发送明文或密码后者验证码(手机短信验证就是玩你的手机发送验证码)通过这样的方式来判断是否是本人</p>
+<p>第二种发送一个重置密码的链接到你的绑定邮箱去，点击则重置密码；</p>
+<h3 id="密码找回漏洞例子"><a href="#密码找回漏洞例子" class="headerlink" title="密码找回漏洞例子"></a>密码找回漏洞例子</h3><ul>
+<li>验证码发送后前端返回<a href="http://www.anquan.us/static/bugs/wooyun-2016-0172266.html" target="_blank" rel="noopener">安利</a></li>
+<li>验证码无次数限制可爆破</li>
+<li>验证码可控<a href="http://www.anquan.us/static/bugs/wooyun-2014-086716.html" target="_blank" rel="noopener">安利</a></li>
+<li>直接修改密码页面<a href="http://www.anquan.us/static/bugs/wooyun-2013-040908.html" target="_blank" rel="noopener">安利</a></li>
+<li>缺失身份——&gt;绑定别人的手机号到自己的手机<a href="http://www.anquan.us/static/bugs/wooyun-2013-016896.html" target="_blank" rel="noopener">安利</a></li>
+<li>越权漏洞——&gt;自己验证码通过改包然后修改他们密码</li>
+</ul>
+<h2 id="靶场实例"><a href="#靶场实例" class="headerlink" title="靶场实例"></a>靶场实例</h2><p><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbn3k3ewj31h80q37gc.jpg" alt><br>我们看到这是一个后台管理页面，在这里我们可以看到有一个密码找回，他是通过管理员邮箱来找回的，我们可以通过社工和社区寻找管理员的邮箱。</p>
+<p>在这里我们已经找到邮箱了<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbne7ztuj30ir09ddfu.jpg" alt></p>
+<p>我们通过审计代码发现认证码是在10-10000的随机数，那如果它没有输入认证码次数限制，那我们可不可以通过爆破来爆出认证码。<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3si8n7bwqj30t30i1jxq.jpg" alt><br>我们通过burp抓包<br>进行爆破<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbo8p3hxj31gz0q9ah4.jpg" alt></p>
+<p>成功爆破出认证码<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3pbp05856j30kz09jabl.jpg" alt></p>
+<p>我们进行登录<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sj2ny46ij31h20msafk.jpg" alt="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sj2ny46ij31h20msafk.jpg"><br>发现登录成功</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#验证码作用"><span class="toc-number">1.</span> <span class="toc-text">验证码作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#验证码常见的绕过姿势"><span class="toc-number">2.</span> <span class="toc-text">验证码常见的绕过姿势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码不失效"><span class="toc-number">2.1.</span> <span class="toc-text">验证码不失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#未校验用户字段的值"><span class="toc-number">2.2.</span> <span class="toc-text">未校验用户字段的值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前端验证验证码"><span class="toc-number">2.3.</span> <span class="toc-text">前端验证验证码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改密码处id可替换"><span class="toc-number">2.4.</span> <span class="toc-text">修改密码处id可替换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码无校验"><span class="toc-number">2.5.</span> <span class="toc-text">验证码无校验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码空值绕过"><span class="toc-number">2.6.</span> <span class="toc-text">验证码空值绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证码可控制"><span class="toc-number">2.7.</span> <span class="toc-text">验证码可控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#密码找回漏洞"><span class="toc-number">3.</span> <span class="toc-text">密码找回漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#密码找回漏洞例子"><span class="toc-number">3.1.</span> <span class="toc-text">密码找回漏洞例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#靶场实例"><span class="toc-number">4.</span> <span class="toc-text">靶场实例</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&text=验证码绕过、密码找回漏洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&is_video=false&description=验证码绕过、密码找回漏洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=验证码绕过、密码找回漏洞&body=Check out this article: http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&title=验证码绕过、密码找回漏洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&name=验证码绕过、密码找回漏洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/验证码绕过、密码找回漏洞/&t=验证码绕过、密码找回漏洞"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

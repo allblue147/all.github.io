@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="什么是SSRF?SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的内部系统。（因为他是从内部系统访问的，所以可以通过它攻击外网无法访问的内部系统(即内网)，也就是把目标网站当中间人;即利用一个可发起网络请求的服务当做跳板来攻击其他服务; 通俗的说就是浏览器去访问服务都是通过浏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSRF-服务器端请求伪造">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="什么是SSRF?SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的内部系统。（因为他是从内部系统访问的，所以可以通过它攻击外网无法访问的内部系统(即内网)，也就是把目标网站当中间人;即利用一个可发起网络请求的服务当做跳板来攻击其他服务; 通俗的说就是浏览器去访问服务都是通过浏">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e2wptko9j31h90fyglw.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4norujuj30z40qf40e.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4o051cyj30z40ouq6c.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4oa3liaj30z40ovju0.jpg">
+<meta property="og:updated_time" content="2019-12-06T17:51:26.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSRF-服务器端请求伪造">
+<meta name="twitter:description" content="什么是SSRF?SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的内部系统。（因为他是从内部系统访问的，所以可以通过它攻击外网无法访问的内部系统(即内网)，也就是把目标网站当中间人;即利用一个可发起网络请求的服务当做跳板来攻击其他服务; 通俗的说就是浏览器去访问服务都是通过浏">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e2wptko9j31h90fyglw.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>SSRF-服务器端请求伪造</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/unserialize反序列化漏洞/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/sql注入--0day审计案例(2)/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&text=SSRF-服务器端请求伪造"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&is_video=false&description=SSRF-服务器端请求伪造"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SSRF-服务器端请求伪造&body=Check out this article: http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&name=SSRF-服务器端请求伪造&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&t=SSRF-服务器端请求伪造"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是SSRF"><span class="toc-number">1.</span> <span class="toc-text">什么是SSRF?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF原理详解"><span class="toc-number">1.1.</span> <span class="toc-text">SSRF原理详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF的作用"><span class="toc-number">1.2.</span> <span class="toc-text">SSRF的作用</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        SSRF-服务器端请求伪造
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.461Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="什么是SSRF"><a href="#什么是SSRF" class="headerlink" title="什么是SSRF?"></a>什么是SSRF?</h1><p>SSRF(Server-Side Request Forgery:<strong>服务器端</strong>请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的<strong>内部系统</strong>。（因为他是从内部系统访问的，所以可以通过它攻击外网无法访问的<strong>内部系统(即内网)</strong>，也就是把目标网站当中间人;即<strong>利用一个可发起网络请求的服务当做跳板来攻击其他服务;</strong></p>
+<p>通俗的说就是浏览器去访问服务都是通过浏览器本地去访问的，而SSRF就是攻击者通过命令服务器端去访问另一个服务，<strong>服务器端去访问</strong>并返回了访问数据</p>
+<h2 id="SSRF原理详解"><a href="#SSRF原理详解" class="headerlink" title="SSRF原理详解"></a>SSRF原理详解</h2><p>首先，我们要对目标网站的架构了解，脑子了要有一个架构图。比如 ： A网站，是一个所有人都可以访问的外网网站并可以发起网络请求，B网站是一个他们内部的OA网站。</p>
+<p>所以，我们普通用户只可以访问a网站，不能访问b网站。但是我们可以通过a网站做中间人，<strong>让a网站去代替我们去访问b网站，并返回数据，</strong>从而达到攻击b网站需求。那如果b网站是个内网网站，那我们就可以去通过a网站进入<strong>攻击外网无法访问的内网系统</strong>，攻击所在内网中网站、程序；</p>
+<h2 id="SSRF的作用"><a href="#SSRF的作用" class="headerlink" title="SSRF的作用"></a>SSRF的作用</h2><ul>
+<li>扫描内部网络(FingerPrint)(对输入连接没有限制，可以直通内网)</li>
+<li>向<strong>内部</strong>主机的<strong>任意主机</strong>的<strong>任意端口</strong>发送我们精心构造的数据表(payload)</li>
+<li>DDOS(请求大文件，始终保持连接Keep-Alive Alway)</li>
+<li>暴力穷举(users/dirs/files)</li>
+<li>内外网Web站点漏洞的利用(比如内网网站存在sql注入，因为是内网，网站管理员防范意识较低，那我们就可以通过存在漏洞达到我们的目的)</li>
+<li>内外网主机应用程序漏洞的利用</li>
+</ul>
+<p>##靶场实战<br>我们进入靶场<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e2wptko9j31h90fyglw.jpg" alt><br>发现访问的是一个xmlrpc服务，但该服务<strong>只接受POST请求</strong>；我们发现这是一个typeecho的CMS,这个CMS是默认开启了XMLRPC服务的</p>
+<p><strong>XML RPC</strong><br>(XML-RPC是一个远程过程调用（远端程序呼叫）（remote procedure call，RPC)的分布式计算协议，通过XML将调用函数封装，并使用http协议做为传输协议的rpc机制，使用xml文本的方式传输命令和数据。)</p>
+<p>XMLRPC中有一个叫做pingback协议(pingback,<strong>通知网志系统文章被引用</strong>情况的一种手段)，我们可以直接使用；</p>
+<p>POC如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line"> &lt;methodName&gt;pingback.ping&lt;/methodName&gt;</span><br><span class="line"> &lt;params&gt;</span><br><span class="line">    &lt;string&gt;http://127.0.0.1:1&lt;/string&gt;</span><br><span class="line"> &lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure>
+<p>通过刷新抓包，将请求方式修改为POST方式，并将poc代码放到下面<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4norujuj30z40qf40e.jpg" alt><br>这段poc说简单点，就是他会通过服务器端去ping内网的地址，并返回信息，通过返回信息知道端口的开放。<br>由于我们不知道开放端口，所以通过burp进行端口爆破<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4o051cyj30z40ouq6c.jpg" alt><br>发现开放了两个端口，我们通过提示知道了内网88端口映射12388端口,<br>我们对12388端口进行访问，抓包看返回头，得到flag<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4oa3liaj30z40ovju0.jpg" alt></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是SSRF"><span class="toc-number">1.</span> <span class="toc-text">什么是SSRF?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF原理详解"><span class="toc-number">1.1.</span> <span class="toc-text">SSRF原理详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF的作用"><span class="toc-number">1.2.</span> <span class="toc-text">SSRF的作用</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&text=SSRF-服务器端请求伪造"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&is_video=false&description=SSRF-服务器端请求伪造"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SSRF-服务器端请求伪造&body=Check out this article: http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&title=SSRF-服务器端请求伪造"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&name=SSRF-服务器端请求伪造&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/SSRF-服务器端请求伪造/&t=SSRF-服务器端请求伪造"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

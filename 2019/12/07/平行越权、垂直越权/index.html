@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="越权漏洞描述越权访问，这类漏洞是指应用在检查授权(Authorization)时存在纰漏，使得攻击者在获得低权限用户帐后后，可以利用一些方式绕过权限检查，访问或者操作到原本无权访问的高权限功能。在实际的代码安全审查中，这类漏洞往往很难通过工具进行自动化检测，因此在实际应用中危害很大。其与未授权访问有一定差别。目前存在着两种越权操作类型：横向越权操作(平行越权)和纵向越权操作(垂直越权)。  水平越">
+<meta property="og:type" content="article">
+<meta property="og:title" content="平行越权、垂直越权">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/平行越权、垂直越权/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="越权漏洞描述越权访问，这类漏洞是指应用在检查授权(Authorization)时存在纰漏，使得攻击者在获得低权限用户帐后后，可以利用一些方式绕过权限检查，访问或者操作到原本无权访问的高权限功能。在实际的代码安全审查中，这类漏洞往往很难通过工具进行自动化检测，因此在实际应用中危害很大。其与未授权访问有一定差别。目前存在着两种越权操作类型：横向越权操作(平行越权)和纵向越权操作(垂直越权)。  水平越">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn5h46bnj30ty0fggno.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn66xuz7j31h80pydo1.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn6kpdp3j31hc0p2dnr.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3snle4qokj30z40rkabo.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn7bm6blj31a00mt0vp.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn7p34boj30v80oswhs.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn84pl6pj31hc0q2wmh.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn8f7fi1j31hc0hltak.jpg">
+<meta property="og:updated_time" content="2019-12-06T17:52:36.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="平行越权、垂直越权">
+<meta name="twitter:description" content="越权漏洞描述越权访问，这类漏洞是指应用在检查授权(Authorization)时存在纰漏，使得攻击者在获得低权限用户帐后后，可以利用一些方式绕过权限检查，访问或者操作到原本无权访问的高权限功能。在实际的代码安全审查中，这类漏洞往往很难通过工具进行自动化检测，因此在实际应用中危害很大。其与未授权访问有一定差别。目前存在着两种越权操作类型：横向越权操作(平行越权)和纵向越权操作(垂直越权)。  水平越">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn5h46bnj30ty0fggno.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>平行越权、垂直越权</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/支付漏洞/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/变量覆盖/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&text=平行越权、垂直越权"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&is_video=false&description=平行越权、垂直越权"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=平行越权、垂直越权&body=Check out this article: http://allblue147.github.io/2019/12/07/平行越权、垂直越权/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&name=平行越权、垂直越权&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&t=平行越权、垂直越权"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#越权漏洞描述"><span class="toc-number">1.</span> <span class="toc-text">越权漏洞描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#越权思路"><span class="toc-number">1.1.</span> <span class="toc-text">越权思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#越权漏洞实例与类型"><span class="toc-number">1.2.</span> <span class="toc-text">越权漏洞实例与类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#靶场实际"><span class="toc-number">2.</span> <span class="toc-text">靶场实际</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        平行越权、垂直越权
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.496Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="越权漏洞描述"><a href="#越权漏洞描述" class="headerlink" title="越权漏洞描述"></a>越权漏洞描述</h2><p>越权访问，这类漏洞是指应用在检查授权(Authorization)时存在纰漏，使得攻击者在获得低权限用户帐后后，可以利用一些方式绕过权限检查，访问或者操作到原本无权访问的高权限功能。在实际的代码安全审查中，这类漏洞往往很难通过工具进行自动化检测，因此在实际应用中危害很大。其与未授权访问有一定差别。目前存在着两种越权操作类型：横向越权操作(平行越权)和纵向越权操作(垂直越权)。</p>
+<ul>
+<li><strong>水平越权漏洞</strong>，是一种“基于数据的访问控制”设计缺陷引起的漏洞。由于服务器端在接收到请求数据进行操作时没有判断数据的所属人而导致的越权数据访问漏洞。如服务器端从客户端提交的request参数(用户能够控制的数据)中获取用户id，恶意攻击者通过变换请求ID的值，查看或修改不属于本人的数据。</li>
+<li><strong>垂直越权漏洞</strong>，也称为权限提升，是一种“基于URL的访问控制”设计缺陷引起的漏洞。由于Web应用程序没有做权限控制或者仅在菜单上做了权限控制，导致恶意用户只要猜测其他管理页面的URL，就可以访问或控制其他角色拥有的数据或页面，达到权限提升的目的。<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn5h46bnj30ty0fggno.jpg" alt></li>
+</ul>
+<p>我们可以这么说<strong>把握住传参就能把握住逻辑漏洞的命脉</strong>，其实渗透测试也是同一道理，漏洞是不会无缘无故产生。</p>
+<h3 id="越权思路"><a href="#越权思路" class="headerlink" title="越权思路"></a>越权思路</h3><p>登入用户A，正常更改或者是查看A用户信息，然后抓取数据包，将传参ID修改为其他用户，如果成功查看或者修改了同权限其他用户的信息就属于水平越权测试(当然如果可以影响到更高权限的用户就是垂直越权漏洞)</p>
+<p>传参ID参数需要自己检测(常见：uid= id= user= 等)通常使用brup进行爆破传参(传参可能在GET POST COOKIE中)</p>
+<p>常见的平行越权(不需要输入原密码的修改密码，抓包该改用户或者用户ID修改他人密码)进行查看订单信息，遍历订单id等。</p>
+<h3 id="越权漏洞实例与类型"><a href="#越权漏洞实例与类型" class="headerlink" title="越权漏洞实例与类型"></a>越权漏洞实例与类型</h3><ol>
+<li>通过修改GET传参来越权<a href="http://www.anquan.us/static/bugs/wooyun-2016-0205340.html" target="_blank" rel="noopener">GET越权实例</a></li>
+<li>修改POST传参进行越权<a href="http://www.anquan.us/static/bugs/wooyun-2016-0207583.html" target="_blank" rel="noopener">POST越权实例</a></li>
+<li>修改cookie传参进行越权<a href="http://www.anquan.us/static/bugs/wooyun-2016-0184633.html" target="_blank" rel="noopener">COOKIE越权实例</a></li>
+</ol>
+<p>还有一类叫做<strong>未授权访问</strong>，严格意义上而言这个不属于越权漏洞，但是在日常的测试中常常会遇见</p>
+<p>(只要<strong>输入正确对应身份的网址就可以直接访问</strong>，例如/admin默认是登录，登陆后跳转到user.php然后直接访问user.php，发现你直接有后台权限)</p>
+<h2 id="靶场实际"><a href="#靶场实际" class="headerlink" title="靶场实际"></a>靶场实际</h2><p>靶场是一个很老的保修系统，虽然很老，但是还是有些网站还在使用(BWSsoft维修系统)<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn66xuz7j31h80pydo1.jpg" alt="2"><br>我们想要去做一个越权，那我们需要先有一个普通用户的使用权限，我们看到了注册按钮，于是我们进行了注册，获得了一个普通用户身份。<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn6kpdp3j31hc0p2dnr.jpg" alt="3"><br>我们点击物品保修，并抓个包看看。<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3snle4qokj30z40rkabo.jpg" alt="4"><br>我们发现cookie中存在登陆用户的信息传参，那我们是否能对其数据更改进行越权<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn7bm6blj31a00mt0vp.jpg" alt="5"><br>我们看到admin=0，那管理员的admin传参是不是要等于1呢，我改了一下，但是没用，后面我看到了一个shenfen的传参，两个一起修改才有效呢，管理员的参数值一般为1(true)，那我们试一下。<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn7p34boj30v80oswhs.jpg" alt="6"><br>发现改完以后出现了后台管理的按钮<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn84pl6pj31hc0q2wmh.jpg" alt="7"><br>我们点击进去<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3sn8f7fi1j31hc0hltak.jpg" alt="8"><br>发现成功进去后台。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#越权漏洞描述"><span class="toc-number">1.</span> <span class="toc-text">越权漏洞描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#越权思路"><span class="toc-number">1.1.</span> <span class="toc-text">越权思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#越权漏洞实例与类型"><span class="toc-number">1.2.</span> <span class="toc-text">越权漏洞实例与类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#靶场实际"><span class="toc-number">2.</span> <span class="toc-text">靶场实际</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&text=平行越权、垂直越权"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&is_video=false&description=平行越权、垂直越权"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=平行越权、垂直越权&body=Check out this article: http://allblue147.github.io/2019/12/07/平行越权、垂直越权/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&title=平行越权、垂直越权"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&name=平行越权、垂直越权&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/平行越权、垂直越权/&t=平行越权、垂直越权"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

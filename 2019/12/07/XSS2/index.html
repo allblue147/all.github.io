@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="XSS(跨站脚本攻击)的原理其实我已经在上篇文章说过了，所以我就不详细解释了，我们就说说xss漏洞的两大根本条件：  用户要能控制输入， 原本程序要执行的html代码，拼接了用户输入的数据  存储型XSS指嵌入web页面的恶意html代码被存进了应用服务器端去，也就是说被存储到数据库中去，在每次有人访问这个页面，都会自动触发恶意代码，并且能够持续的攻击用户，所以也称为持久型； 我们通常是通过一个弹">
+<meta property="og:type" content="article">
+<meta property="og:title" content="存储型XSS">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/XSS2/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="XSS(跨站脚本攻击)的原理其实我已经在上篇文章说过了，所以我就不详细解释了，我们就说说xss漏洞的两大根本条件：  用户要能控制输入， 原本程序要执行的html代码，拼接了用户输入的数据  存储型XSS指嵌入web页面的恶意html代码被存进了应用服务器端去，也就是说被存储到数据库中去，在每次有人访问这个页面，都会自动触发恶意代码，并且能够持续的攻击用户，所以也称为持久型； 我们通常是通过一个弹">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/7*uFk3MvsKFG57tovZNgRkkCqVvvqiRXK7Cg.PzBVHo!/b/dMAAAAAAAAAA&bo=swTKAwAAAAADJ3w!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/Jc8TcgJNtMElfIS6K0NoUpudHzE6xCirF8XnLuQStHY!/b/dFMBAAAAAAAA&bo=dgQ9AQAAAAADF3w!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/wMq3UQ0gc93UieaE5eIkqd2UWTNL*5d2oCrytVsRng4!/b/dAgBAAAAAAAA&bo=yQHFAAAAAAADFz8!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/JoeGc63sW7v3Qz1e4O7F0yJIUboQItBj7hn2Ls9zYks!/b/dLYAAAAAAAAA&bo=1gbGAQAAAAADFyU!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/8XKbLcqw40gOT5tuCQDQ3asbNCMMrPwn1g1GO4xbf*A!/b/dL8AAAAAAAAA&bo=uQVmAwAAAAADF.s!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/2LotA1LS9E1m5Ra1m3X15yDrDTYZqJmezvdQJ.BjnHs!/b/dDcBAAAAAAAA&bo=MQU*AwAAAAADFzo!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/zsEOEET*L*0nIJ1hX1LePGgHNif.mbwTuOyRFNYFx.c!/b/dFYBAAAAAAAA&bo=egMuAwAAAAADF2Y!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/U5uylpL*PqLh2*jjkg1FVvjQZ8*NMIB*b10X78I1hFA!/b/dMIAAAAAAAAA&bo=swRbAgAAAAADF9w!&rf=viewer_4">
+<meta property="og:updated_time" content="2019-12-06T17:51:53.888Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="存储型XSS">
+<meta name="twitter:description" content="XSS(跨站脚本攻击)的原理其实我已经在上篇文章说过了，所以我就不详细解释了，我们就说说xss漏洞的两大根本条件：  用户要能控制输入， 原本程序要执行的html代码，拼接了用户输入的数据  存储型XSS指嵌入web页面的恶意html代码被存进了应用服务器端去，也就是说被存储到数据库中去，在每次有人访问这个页面，都会自动触发恶意代码，并且能够持续的攻击用户，所以也称为持久型； 我们通常是通过一个弹">
+<meta name="twitter:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/7*uFk3MvsKFG57tovZNgRkkCqVvvqiRXK7Cg.PzBVHo!/b/dMAAAAAAAAAA&bo=swTKAwAAAAADJ3w!&rf=viewer_4">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>存储型XSS</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/XXE-实体注入/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/xss1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/XSS2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/XSS2/&text=存储型XSS"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/XSS2/&is_video=false&description=存储型XSS"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=存储型XSS&body=Check out this article: http://allblue147.github.io/2019/12/07/XSS2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/XSS2/&name=存储型XSS&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/XSS2/&t=存储型XSS"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#存储型XSS"><span class="toc-number">1.</span> <span class="toc-text">存储型XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存储型XSS可能触发的地方"><span class="toc-number">2.</span> <span class="toc-text">存储型XSS可能触发的地方</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        存储型XSS
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.473Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>XSS(跨站脚本攻击)的原理其实我已经在上篇文章说过了，所以我就不详细解释了，我们就说说xss漏洞的两大根本条件：</p>
+<ul>
+<li>用户要能控制输入，</li>
+<li>原本程序要执行的html代码，拼接了用户输入的数据</li>
+</ul>
+<h3 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h3><p>指嵌入web页面的恶意html代码被存进了应用服务器端去，也就是说被存储到数据库中去，在每次有人访问这个页面，都会自动触发恶意代码，并且能够持续的攻击用户，所以也称为持久型；</p>
+<p>我们通常是通过一个弹窗去检验是否存在XSS,如果有XSS漏洞，我们通常会使用XSS平台去获取对方cookie，网上XSS平台其实有很多，自行搜索即可；</p>
+<h3 id="存储型XSS可能触发的地方"><a href="#存储型XSS可能触发的地方" class="headerlink" title="存储型XSS可能触发的地方"></a>存储型XSS可能触发的地方</h3><ul>
+<li>任何可以插入到数据库的地方</li>
+<li>注册提交框</li>
+<li>留言板</li>
+<li>上传文件的文件名</li>
+<li>报错日志信息(管理员可见)<br>……</li>
+</ul>
+<p>我们通过<a href="http://117.41.229.122:8004/Feedback.asp" target="_blank" rel="noopener">掌控安全公开课靶场</a>为例：<br>我们点击网页一看，看见有个留言板，那我们在想这里会不会有没有xss?<br>我们通过弹窗去测试有没有XSS漏洞：</p>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/7*uFk3MvsKFG57tovZNgRkkCqVvvqiRXK7Cg.PzBVHo!/b/dMAAAAAAAAAA&amp;bo=swTKAwAAAAADJ3w!&amp;rf=viewer_4" alt></p>
+<p>发现出现弹窗</p>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/Jc8TcgJNtMElfIS6K0NoUpudHzE6xCirF8XnLuQStHY!/b/dFMBAAAAAAAA&amp;bo=dgQ9AQAAAAADF3w!&amp;rf=viewer_4" alt></p>
+<p>我们发现我们输入的代码已经被插入html代码块里面去了</p>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/wMq3UQ0gc93UieaE5eIkqd2UWTNL*5d2oCrytVsRng4!/b/dAgBAAAAAAAA&amp;bo=yQHFAAAAAAADFz8!&amp;rf=viewer_4" alt></p>
+<p>因为XSS payload代码复杂，所以我们通常是使用xss平台去获取cookie<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/JoeGc63sW7v3Qz1e4O7F0yJIUboQItBj7hn2Ls9zYks!/b/dLYAAAAAAAAA&amp;bo=1gbGAQAAAAADFyU!&amp;rf=viewer_4" alt></p>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/8XKbLcqw40gOT5tuCQDQ3asbNCMMrPwn1g1GO4xbf*A!/b/dL8AAAAAAAAA&amp;bo=uQVmAwAAAAADF.s!&amp;rf=viewer_4" alt></p>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/2LotA1LS9E1m5Ra1m3X15yDrDTYZqJmezvdQJ.BjnHs!/b/dDcBAAAAAAAA&amp;bo=MQU*AwAAAAADFzo!&amp;rf=viewer_4" alt></p>
+<p>我们将平台上的payload复制，插入到有xss漏洞的留言框去<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/zsEOEET*L*0nIJ1hX1LePGgHNif.mbwTuOyRFNYFx.c!/b/dFYBAAAAAAAA&amp;bo=egMuAwAAAAADF2Y!&amp;rf=viewer_4" alt></p>
+<p>插入成功后，我们查看xss平台，成功拿到管理员cookie</p>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/U5uylpL*PqLh2*jjkg1FVvjQZ8*NMIB*b10X78I1hFA!/b/dMIAAAAAAAAA&amp;bo=swRbAgAAAAADF9w!&amp;rf=viewer_4" alt></p>
+<p><strong>其实xss漏洞出现在留言框上，还可能出现在上传文件名或注册页面框等与插入数据库的提交框上，我们可以通过js弹窗进行测试！</strong></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#存储型XSS"><span class="toc-number">1.</span> <span class="toc-text">存储型XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存储型XSS可能触发的地方"><span class="toc-number">2.</span> <span class="toc-text">存储型XSS可能触发的地方</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/XSS2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/XSS2/&text=存储型XSS"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/XSS2/&is_video=false&description=存储型XSS"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=存储型XSS&body=Check out this article: http://allblue147.github.io/2019/12/07/XSS2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/XSS2/&title=存储型XSS"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/XSS2/&name=存储型XSS&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/XSS2/&t=存储型XSS"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

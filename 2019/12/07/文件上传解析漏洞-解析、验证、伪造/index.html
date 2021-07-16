@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="文件上传漏洞：文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利用技术门槛非常的低，对于攻击者来说很容易实施。 文件上传漏洞本身就是一个危害巨大的漏洞，WebShell更是将这种漏洞的利用无限扩大。大多数的上传漏洞被利用后攻击者都会留下WebShell以方便后续进入系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件上传解析漏洞-解析、验证、伪造">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="文件上传漏洞：文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利用技术门槛非常的低，对于攻击者来说很容易实施。 文件上传漏洞本身就是一个危害巨大的漏洞，WebShell更是将这种漏洞的利用无限扩大。大多数的上传漏洞被利用后攻击者都会留下WebShell以方便后续进入系统">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/3Mmx5VPtCeDOVajrGQdlsIyRqbXkdDVByTBpXwvgJdA!/b/dE8BAAAAAAAA&bo=JAWAAn4HpQMDCVA!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/l.JY9E.mj4AfwMwYb5Dctfcfw9EOUQbMT0Z.zi4J4go!/b/dL8AAAAAAAAA&bo=ZQaAAnwGiQIDGSw!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/uTXBzs2Ps5cWXXSqyuT6tJycypL.Z6kJ*kCngBftG6s!/b/dDUBAAAAAAAA&bo=8ATgA*AE4AMDGTw!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/TTZRCftxc3JNuulzU7WceTsyeEqqCQOokzNoepwq*XA!/b/dL4AAAAAAAAA&bo=8ATgA*AE4AMDGTw!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/*EDL2ABep5jCTnuEtx3hbs3zd7SZRFPJR3GKoldj5xc!/b/dLYAAAAAAAAA&bo=gAcyAoAHMgIDGTw!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/4TFYbPyRNP5*fBz2AFQw*IZxJcvcViw.uVEx9OrYYt8!/b/dIMAAAAAAAAA&bo=XQfVA10H1QMDGTw!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/k7Q*x9fqgWz5dGtJqOsWKzPvTT0idkTpvc1k9nKHPLs!/b/dLgAAAAAAAAA&bo=BgWAAmUHrgMRGWA!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/gz4TwdZE01nQdK7U6tdbyqa9xidrPgWSev6j8jC5.jM!/b/dFMBAAAAAAAA&bo=zADaAMwA2gARGS4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/OJ0mpZH4z1GBmvVyPYgtUiengE6r*78DPKn.ynq4WTc!/b/dMUAAAAAAAAA&bo=nQI*AZ0CPwERGS4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/dUa5qe571hvX4y8kSTfD*rEs.jxaziSx8mmE0Yo.9sI!/b/dIQAAAAAAAAA&bo=8ATgA*AE4AMRGS4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/8Temr59hWbfKnh6OUyr0dRh3UCato6TZFcWnUChSbHM!/b/dL8AAAAAAAAA&bo=MQWAAmgHkQMRGWU!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/ZO3Z5LqU7MPUKOuIRhqiYTwnCmkpNEaHxm1U*T3d1.o!/b/dDQBAAAAAAAA&bo=dAfXA3QH1wMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/Nb6czO9WTB4*L6e6mQuqQ7Agi.ex2aNHMb*tv6W2SgM!/b/dLYAAAAAAAAA&bo=ZQW9AmUFvQIRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/ekwZbyk2edL5EupB09P8Jmdsc2QvPzfargMfRfWj03U!/b/dMAAAAAAAAAA&bo=LgGkAC4BpAARCT4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/ER3vfEB2o6Cz20fHXHQSnQVYaezJOBDlDhVPMMSlH4o!/b/dL8AAAAAAAAA&bo=ewfSA3sH0gMRGS4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/mEWjMDZU2Q7YDuklJEEfcKIcukqlBjU8U*FNNsBltTw!/b/dDIBAAAAAAAA&bo=VAXJAlQFyQIRGS4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/*Z8xWXTZLwkgcga9IhymWx*oWoG6MnmR9M.DajlIFl8!/b/dE0BAAAAAAAA&bo=WwTQAlsE0AIRGS4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/QjmHLIRy7nOP*i6x2BoPnYS58mG3WipMkEMJnsztUyk!/b/dLYAAAAAAAAA&bo=gAfcA4AH3AMRGS4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/NsiHDYDfN.Hj.9yD1bRwXVg.UMyHnH6x.WU0p0PPKtY!/b/dFMBAAAAAAAA&bo=YAXIAmAFyAIRCT4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/yOlNuyZEw.zicCi8Edmbs5BKc1fH.HnwoPjmqQwes4Q!/b/dFMBAAAAAAAA&bo=ZwCCAGcAggARGS4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/kvso.KNy1R2IDA9JC.lM4CZqaR4Py5qhwuvutwnx8ME!/b/dE8BAAAAAAAA&bo=gAfZA4AH2QMRGS4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/ctpzNLW1hvfPIv.T4z0Dkrsak5SyY67FtTJu8nlEkzQ!/b/dDQBAAAAAAAA&bo=ZwXFAmcFxQIRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/d*pCj2unPGzQ7rMhKzo8QEfPa7tBLtExl229Qs*79HE!/b/dL4AAAAAAAAA&bo=8ATgA*AE4AMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/kvso.KNy1R2IDA9JC.lM4CZqaR4Py5qhwuvutwnx8ME!/b/dE8BAAAAAAAA&bo=gAfZA4AH2QMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/m1IqTO83xMSNLK8m2qvEU8CwZUTsqPY3GoAIPB1aFdY!/b/dL8AAAAAAAAA&bo=CQWAAmAFqwIRCXw!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/qiENQR89aUzEeuVUhohrosTDte9YlnwFnZr1bGrfjko!/b/dL8AAAAAAAAA&bo=8ATgA*AE4AMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/synsgTwLVgNk6k9.rkhjouhz5iuujzkRNdYZALQkaCg!/b/dDcBAAAAAAAA&bo=gAfbA4AH2wMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/ZxgolmKjvTPXMgVANvNagukSCz3aQqzZw.zzqXbcpS4!/b/dEgBAAAAAAAA&bo=8ATgA*AE4AMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/.jYmXUYDdeLg0syadDStJOYrClaPTtwNCJ92IdU5zYs!/b/dLYAAAAAAAAA&bo=fgfSA34H0gMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/u0nPUSpkCll3GfBBIDmRopaaxgVdUrxPl0kX1o15lXo!/b/dMAAAAAAAAAA&bo=awXNAmsFzQIRCT4!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V133mrMy3dol57/b3gpzQ8zgA4BwI3BdF4*1rxQ4lONy3af9pXegTyO3Gg!/b/dLgAAAAAAAAA&bo=8ATgA*AE4AMRGS4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/ypZhRcfDvAhSB.SfJLlAWG2DK8tmHOECM2ZWrfGyWtU!/b/dIQAAAAAAAAA&bo=agUEAmoFBAIRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/4OigHcJUMtz6dSWTiGju0oMns0AxY1eM0u*O.o.QG7E!/b/dL8AAAAAAAAA&bo=8ATgA*AE4AMRCT4!&rf=viewer_4">
+<meta property="og:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/LG5JK1ZorQZBrglBO1UAbGKez.B5lgA3DPErpWLP77M!/b/dDcBAAAAAAAA&bo=cgfWA3IH1gMRCT4!&rf=viewer_4">
+<meta property="og:updated_time" content="2020-03-17T05:13:43.663Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文件上传解析漏洞-解析、验证、伪造">
+<meta name="twitter:description" content="文件上传漏洞：文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利用技术门槛非常的低，对于攻击者来说很容易实施。 文件上传漏洞本身就是一个危害巨大的漏洞，WebShell更是将这种漏洞的利用无限扩大。大多数的上传漏洞被利用后攻击者都会留下WebShell以方便后续进入系统">
+<meta name="twitter:image" content="https://m.qpic.cn/psb?/V133mrMy3dol57/3Mmx5VPtCeDOVajrGQdlsIyRqbXkdDVByTBpXwvgJdA!/b/dE8BAAAAAAAA&bo=JAWAAn4HpQMDCVA!&rf=viewer_4">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>文件上传解析漏洞-解析、验证、伪造</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/文件上传解析漏洞3/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/支付漏洞/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&text=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&is_video=false&description=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=文件上传解析漏洞-解析、验证、伪造&body=Check out this article: http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&name=文件上传解析漏洞-解析、验证、伪造&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&t=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传漏洞："><span class="toc-number">1.</span> <span class="toc-text">文件上传漏洞：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#webshell："><span class="toc-number">2.</span> <span class="toc-text">webshell：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传漏洞的原因："><span class="toc-number">3.</span> <span class="toc-text">文件上传漏洞的原因：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传常见检测："><span class="toc-number">4.</span> <span class="toc-text">文件上传常见检测：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-客户端检测"><span class="toc-number">4.0.1.</span> <span class="toc-text">1.客户端检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-服务端检测"><span class="toc-number">4.0.2.</span> <span class="toc-text">2.服务端检测</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#靶场实战"><span class="toc-number">5.</span> <span class="toc-text">靶场实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-前端验证绕过"><span class="toc-number">5.1.</span> <span class="toc-text">1.前端验证绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Content-Type方式绕过"><span class="toc-number">5.2.</span> <span class="toc-text">2.Content-Type方式绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-黑名单绕过"><span class="toc-number">5.3.</span> <span class="toc-text">3.黑名单绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-htaccess文件绕过"><span class="toc-number">5.4.</span> <span class="toc-text">4. .htaccess文件绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-后缀大小写绕过"><span class="toc-number">5.5.</span> <span class="toc-text">5.后缀大小写绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-文件后缀（空）绕过"><span class="toc-number">5.6.</span> <span class="toc-text">6.文件后缀（空）绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-文件后缀-点-绕过"><span class="toc-number">5.7.</span> <span class="toc-text">7.文件后缀(点)绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-DATA（Windows文件流绕过）"><span class="toc-number">5.8.</span> <span class="toc-text">8.::$DATA（Windows文件流绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-构造文件后缀绕过"><span class="toc-number">5.9.</span> <span class="toc-text">9.构造文件后缀绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10双写文件后缀绕过"><span class="toc-number">5.10.</span> <span class="toc-text">10双写文件后缀绕过</span></a></li></ol></li>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        文件上传解析漏洞-解析、验证、伪造
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.507Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="文件上传漏洞："><a href="#文件上传漏洞：" class="headerlink" title="文件上传漏洞："></a>文件上传漏洞：</h1><p>文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利用技术门槛非常的低，对于攻击者来说很容易实施。</p>
+<p>文件上传漏洞本身就是一个危害巨大的漏洞，WebShell更是将这种漏洞的利用无限扩大。大多数的上传漏洞被利用后攻击者都会留下WebShell以方便后续进入系统。攻击者在受影响系统放置或者插入WebShell后，可通过该WebShell更轻松，更隐蔽的在服务中为所欲为。</p>
+<p>这里需要特别说明的是上传漏洞的利用经常会使用WebShell，而WebShell的植入远不止文件上传这一种方式。</p>
+<h1 id="webshell："><a href="#webshell：" class="headerlink" title="webshell："></a>webshell：</h1><p>WebShell就是以asp、php、jsp或者cgi等网页文件形式存在的一种命令执行环境，也可以将其称之为一种网页后门。攻击者在入侵了一个网站后，通常会将这些asp或php后门文件与网站服务器web目录下正常的网页文件混在一起，然后使用浏览器来访问这些后门，得到一个命令执行环境，以达到控制网站服务器的目的（可以上传下载或者修改文件，操作数据库，执行任意命令等）。</p>
+<h1 id="文件上传漏洞的原因："><a href="#文件上传漏洞的原因：" class="headerlink" title="文件上传漏洞的原因："></a>文件上传漏洞的原因：</h1><ul>
+<li>文件上传时检查不严。没有进行文件格式检查。</li>
+<li>文件上传后修改文件名时处理不当。一些应用在服务器端进行了完整的黑名单和白名单过滤，在修改已上传文件文件名时却百密一疏，允许用户修改文件后缀。如应用只能上传.doc文件时攻击者可以先将.php文件后缀修改为.doc，成功上传后在修改文件名时将后缀改回.php。</li>
+</ul>
+<h1 id="文件上传常见检测："><a href="#文件上传常见检测：" class="headerlink" title="文件上传常见检测："></a>文件上传常见检测：</h1><h3 id="1-客户端检测"><a href="#1-客户端检测" class="headerlink" title="1.客户端检测"></a>1.客户端检测</h3><p>一般都是在网页上写一段js脚本，通过js去检测上传文件的后缀名，有白名单形式也有黑名单形式。</p>
+<p><strong>判断方式</strong>：在浏览加载文件，但还未点击上传按钮时便弹出对话框，内容如：只允许上传.jpg/.jpeg/.png后缀名的文件，而此时并没有发送数据包。前端验证非常不可靠，通过修改数据包后缀名就可以绕过，甚至关闭js都可以尝试绕过。</p>
+<h3 id="2-服务端检测"><a href="#2-服务端检测" class="headerlink" title="2.服务端检测"></a>2.服务端检测</h3><p>检查content-type(内容类型)</p>
+<p>检查后缀(多为检查后缀)</p>
+<p>检查文件头</p>
+<h1 id="靶场实战"><a href="#靶场实战" class="headerlink" title="靶场实战"></a>靶场实战</h1><p><strong>我们通过upload-labs这个靶场实践来进一步认识文件上传漏洞：</strong></p>
+<h2 id="1-前端验证绕过"><a href="#1-前端验证绕过" class="headerlink" title="1.前端验证绕过"></a>1.前端验证绕过</h2><p>发现有一个上传点:<br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/3Mmx5VPtCeDOVajrGQdlsIyRqbXkdDVByTBpXwvgJdA!/b/dE8BAAAAAAAA&amp;bo=JAWAAn4HpQMDCVA!&amp;rf=viewer_4" alt></p>
+<p>我们试着上传一个带一句话的php上去，并开启burp抓包：<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/l.JY9E.mj4AfwMwYb5Dctfcfw9EOUQbMT0Z.zi4J4go!/b/dL8AAAAAAAAA&amp;bo=ZQaAAnwGiQIDGSw!&amp;rf=viewer_4" alt><br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/uTXBzs2Ps5cWXXSqyuT6tJycypL.Z6kJ*kCngBftG6s!/b/dDUBAAAAAAAA&amp;bo=8ATgA*AE4AMDGTw!&amp;rf=viewer_4" alt><br>发现被拦截下来，提示只能上传图片类型，而在burp上并无抓取到任何数据，这证明就是一个典型的客户端前端检测</p>
+<p>我们通过将php文件改成jpg文件使其符合检测要求，再在抓取数据包时将文件后缀改回php，从而完成绕过：<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/TTZRCftxc3JNuulzU7WceTsyeEqqCQOokzNoepwq*XA!/b/dL4AAAAAAAAA&amp;bo=8ATgA*AE4AMDGTw!&amp;rf=viewer_4" alt></p>
+<p>发现成功上传<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/*EDL2ABep5jCTnuEtx3hbs3zd7SZRFPJR3GKoldj5xc!/b/dLYAAAAAAAAA&amp;bo=gAcyAoAHMgIDGTw!&amp;rf=viewer_4" alt></p>
+<p>通过连接菜刀或直接调用一句话函数都可以实现了getshell；<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/4TFYbPyRNP5*fBz2AFQw*IZxJcvcViw.uVEx9OrYYt8!/b/dIMAAAAAAAAA&amp;bo=XQfVA10H1QMDGTw!&amp;rf=viewer_4" alt></p>
+<h2 id="2-Content-Type方式绕过"><a href="#2-Content-Type方式绕过" class="headerlink" title="2.Content-Type方式绕过"></a>2.Content-Type方式绕过</h2><p>分析源码，知道了是对Content-Type(内容类型)和文件头的检测，<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/k7Q*x9fqgWz5dGtJqOsWKzPvTT0idkTpvc1k9nKHPLs!/b/dLgAAAAAAAAA&amp;bo=BgWAAmUHrgMRGWA!&amp;rf=viewer_4" alt></p>
+<p>那我们想到的是就是图片马，图片马是可以很好的绕过内容类型和文件头检测的，在这里我准备好了一个写了一句话的txt文件和一张小图片来合成一张图片马：<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/gz4TwdZE01nQdK7U6tdbyqa9xidrPgWSev6j8jC5.jM!/b/dFMBAAAAAAAA&amp;bo=zADaAMwA2gARGS4!&amp;rf=viewer_4" alt><br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/OJ0mpZH4z1GBmvVyPYgtUiengE6r*78DPKn.ynq4WTc!/b/dMUAAAAAAAAA&amp;bo=nQI*AZ0CPwERGS4!&amp;rf=viewer_4" alt><br>成功生成图片马，然后我们将图片马上传并抓包将后缀改为php，因为web容器是根据后缀去解析不同的文件的，所以我们将他改成php<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/dUa5qe571hvX4y8kSTfD*rEs.jxaziSx8mmE0Yo.9sI!/b/dIQAAAAAAAAA&amp;bo=8ATgA*AE4AMRGS4!&amp;rf=viewer_4" alt><br>最后成功上传，并调用一句话<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/8Temr59hWbfKnh6OUyr0dRh3UCato6TZFcWnUChSbHM!/b/dL8AAAAAAAAA&amp;bo=MQWAAmgHkQMRGWU!&amp;rf=viewer_4" alt><br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/ZO3Z5LqU7MPUKOuIRhqiYTwnCmkpNEaHxm1U*T3d1.o!/b/dDQBAAAAAAAA&amp;bo=dAfXA3QH1wMRCT4!&amp;rf=viewer_4" alt></p>
+<h2 id="3-黑名单绕过"><a href="#3-黑名单绕过" class="headerlink" title="3.黑名单绕过"></a>3.黑名单绕过</h2><p>查看源码<br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/Nb6czO9WTB4*L6e6mQuqQ7Agi.ex2aNHMb*tv6W2SgM!/b/dLYAAAAAAAAA&amp;bo=ZQW9AmUFvQIRCT4!&amp;rf=viewer_4" alt><br>发现是一个黑名单绕过，它拦截了.asp,.aspx,.php,.jsp后缀的文件，但他拦截了php，是不是就意味着我们就不能上传php文件了呢？其实不是的，在默认状态下<strong>php，php3，php4，php5，phtml</strong>是会被解析成php的，请看下图<br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/ekwZbyk2edL5EupB09P8Jmdsc2QvPzfargMfRfWj03U!/b/dMAAAAAAAAAA&amp;bo=LgGkAC4BpAARCT4!&amp;rf=viewer_4" alt><br>我们将图片马后缀改成php3，成功将上传，调用一句话，最后成功调用，证明是可以php3是可以被php解析的；<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/ER3vfEB2o6Cz20fHXHQSnQVYaezJOBDlDhVPMMSlH4o!/b/dL8AAAAAAAAA&amp;bo=ewfSA3sH0gMRGS4!&amp;rf=viewer_4" alt></p>
+<h2 id="4-htaccess文件绕过"><a href="#4-htaccess文件绕过" class="headerlink" title="4. .htaccess文件绕过"></a>4. .htaccess文件绕过</h2><p><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/mEWjMDZU2Q7YDuklJEEfcKIcukqlBjU8U*FNNsBltTw!/b/dDIBAAAAAAAA&amp;bo=VAXJAlQFyQIRGS4!&amp;rf=viewer_4" alt><br>.htaccess是什么？.htaccess文件也被称为分布式配置文件，提供了针对目录改变配置的方法，在一个特定的文档目录中放置一个包含一个或者多个指令的文件，以作用于此目录及其所有子目录。<br>.htaccess功能：<br>文件密码保护，用户自定义重定向，自定义404页面，扩展名伪静态化，禁止特定ip地址的用户，但这个功能默认是不开启的。</p>
+<p>.htaccess中有一条指令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-php .jpg</span><br></pre></td></tr></table></figure>
+<p>这个指令代表着.jpg文件会当做php来解析。</p>
+<p>只要我们把带有这条指令的.htaccess配置文件上传上去到有黑名单拦截的上传点，那就意味着我们就能将图片马直接上传上去了！</p>
+<p>图形化界面是不允许我们将文件命名为空文件名 .htaccess，所以这里通过cmd命令来进行重命名：<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/*Z8xWXTZLwkgcga9IhymWx*oWoG6MnmR9M.DajlIFl8!/b/dE0BAAAAAAAA&amp;bo=WwTQAlsE0AIRGS4!&amp;rf=viewer_4" alt><br>成功命名，<br>我们接下来，只需要先将.htaccess配置文件先传上去，在将图片马传上去即可；<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/QjmHLIRy7nOP*i6x2BoPnYS58mG3WipMkEMJnsztUyk!/b/dLYAAAAAAAAA&amp;bo=gAfcA4AH3AMRGS4!&amp;rf=viewer_4" alt></p>
+<h2 id="5-后缀大小写绕过"><a href="#5-后缀大小写绕过" class="headerlink" title="5.后缀大小写绕过"></a>5.后缀大小写绕过</h2><p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/NsiHDYDfN.Hj.9yD1bRwXVg.UMyHnH6x.WU0p0PPKtY!/b/dFMBAAAAAAAA&amp;bo=YAXIAmAFyAIRCT4!&amp;rf=viewer_4" alt></p>
+<p>在这里，虽然使用了很多过滤，过滤了很多文件类型，但却没将文件后缀统一转化为小写，所以我们是能通过后缀大小写来绕过上传的：</p>
+<p><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/yOlNuyZEw.zicCi8Edmbs5BKc1fH.HnwoPjmqQwes4Q!/b/dFMBAAAAAAAA&amp;bo=ZwCCAGcAggARGS4!&amp;rf=viewer_4" alt></p>
+<p>我们将做成图片马直接将后缀改成Php，进行上传<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/kvso.KNy1R2IDA9JC.lM4CZqaR4Py5qhwuvutwnx8ME!/b/dE8BAAAAAAAA&amp;bo=gAfZA4AH2QMRGS4!&amp;rf=viewer_4" alt></p>
+<h2 id="6-文件后缀（空）绕过"><a href="#6-文件后缀（空）绕过" class="headerlink" title="6.文件后缀（空）绕过"></a>6.文件后缀（空）绕过</h2><p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/ctpzNLW1hvfPIv.T4z0Dkrsak5SyY67FtTJu8nlEkzQ!/b/dDQBAAAAAAAA&amp;bo=ZwXFAmcFxQIRCT4!&amp;rf=viewer_4" alt></p>
+<p>这里相对于前面关卡的代码是少了一个消除两旁空格的函数trim();所以我们我们可以通过在后缀加个空格尝试绕过，<strong>黑名单机制中，是不允许上传什么，但如果我们传上去的文件与所限制的稍有不一样，那是不是就可以直接绕过黑名单了</strong></p>
+<p>我们进行将带有一句话的php文件上传并抓包</p>
+<p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/d*pCj2unPGzQ7rMhKzo8QEfPa7tBLtExl229Qs*79HE!/b/dL4AAAAAAAAA&amp;bo=8ATgA*AE4AMRCT4!&amp;rf=viewer_4" alt></p>
+<p>在后缀加个空格，上传</p>
+<p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/kvso.KNy1R2IDA9JC.lM4CZqaR4Py5qhwuvutwnx8ME!/b/dE8BAAAAAAAA&amp;bo=gAfZA4AH2QMRCT4!&amp;rf=viewer_4" alt></p>
+<h2 id="7-文件后缀-点-绕过"><a href="#7-文件后缀-点-绕过" class="headerlink" title="7.文件后缀(点)绕过"></a>7.文件后缀(点)绕过</h2><p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/m1IqTO83xMSNLK8m2qvEU8CwZUTsqPY3GoAIPB1aFdY!/b/dL8AAAAAAAAA&amp;bo=CQWAAmAFqwIRCXw!&amp;rf=viewer_4" alt><br>这里是少了一个删除末尾的点的函数</p>
+<p>我们还是进行将带有一句话的php文件上传并抓包</p>
+<p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/qiENQR89aUzEeuVUhohrosTDte9YlnwFnZr1bGrfjko!/b/dL8AAAAAAAAA&amp;bo=8ATgA*AE4AMRCT4!&amp;rf=viewer_4" alt><br>在后缀加个点，上传，在上传到服务器后，服务器会自动将点去掉，只读取前面有用的后缀；<br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/synsgTwLVgNk6k9.rkhjouhz5iuujzkRNdYZALQkaCg!/b/dDcBAAAAAAAA&amp;bo=gAfbA4AH2wMRCT4!&amp;rf=viewer_4" alt></p>
+<h2 id="8-DATA（Windows文件流绕过）"><a href="#8-DATA（Windows文件流绕过）" class="headerlink" title="8.::$DATA（Windows文件流绕过）"></a>8.::$DATA（Windows文件流绕过）</h2><p>::$DATA（Windows文件流绕过）（这里利用到了NTFS交换数据流(ADS)，ADS是NTFS磁盘格式的一个特性，在NTFS文件系统下，每个文件都存在许多个数据流。通俗理解，就是其他文件可以“寄宿”在某个文件身上，而在资源管理器中却只能看到宿主文件，找不到寄宿问文件。）</p>
+<p>例如在cmd命令下运行：echo abcd&gt;&gt;a.txt:b.txt 很明显生成一个a.txt，但是会是空值，因为系统将值写到寄宿文件上去了；</p>
+<p>然后再运行 echo 123&gt;&gt;a.txt::$DATA，是会在a.txt中输出123的，因为<br>::$DATA相当是个空值，不是一个寄宿文件，所以还是会将文件写入到a.txt中去，不修改文件存储过程；</p>
+<p>在利用Windows特性，可在后缀加上“ ::$DATA ”绕过。<br>跟之前一样的思路，抓包改包绕过。<br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/ZxgolmKjvTPXMgVANvNagukSCz3aQqzZw.zzqXbcpS4!/b/dEgBAAAAAAAA&amp;bo=8ATgA*AE4AMRCT4!&amp;rf=viewer_4" alt></p>
+<p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/.jYmXUYDdeLg0syadDStJOYrClaPTtwNCJ92IdU5zYs!/b/dLYAAAAAAAAA&amp;bo=fgfSA34H0gMRCT4!&amp;rf=viewer_4" alt></p>
+<h2 id="9-构造文件后缀绕过"><a href="#9-构造文件后缀绕过" class="headerlink" title="9.构造文件后缀绕过"></a>9.构造文件后缀绕过</h2><p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/u0nPUSpkCll3GfBBIDmRopaaxgVdUrxPl0kX1o15lXo!/b/dMAAAAAAAAAA&amp;bo=awXNAmsFzQIRCT4!&amp;rf=viewer_4" alt><br>第九关好像用了我们前面关卡的所有过滤，那我们可不可以构造一个文件名后缀111.php. . 过滤参数在发现.时会将.去掉，在将空格去掉，最后只剩下111.php. 这样还是可以绕过黑名单机制的，因为111.php.不等于111.php，所以还是能绕过上传；<br><img src="http://m.qpic.cn/psb?/V133mrMy3dol57/b3gpzQ8zgA4BwI3BdF4*1rxQ4lONy3af9pXegTyO3Gg!/b/dLgAAAAAAAAA&amp;bo=8ATgA*AE4AMRGS4!&amp;rf=viewer_4" alt></p>
+<h2 id="10双写文件后缀绕过"><a href="#10双写文件后缀绕过" class="headerlink" title="10双写文件后缀绕过"></a>10双写文件后缀绕过</h2><p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/ypZhRcfDvAhSB.SfJLlAWG2DK8tmHOECM2ZWrfGyWtU!/b/dIQAAAAAAAAA&amp;bo=agUEAmoFBAIRCT4!&amp;rf=viewer_4" alt></p>
+<p>会将符合条件的文件后缀删除，我们只需要将文件后缀进行双写，令他删除后合并就能成功绕过！</p>
+<p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/4OigHcJUMtz6dSWTiGju0oMns0AxY1eM0u*O.o.QG7E!/b/dL8AAAAAAAAA&amp;bo=8ATgA*AE4AMRCT4!&amp;rf=viewer_4" alt><br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/LG5JK1ZorQZBrglBO1UAbGKez.B5lgA3DPErpWLP77M!/b/dDcBAAAAAAAA&amp;bo=cgfWA3IH1gMRCT4!&amp;rf=viewer_4" alt></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传漏洞："><span class="toc-number">1.</span> <span class="toc-text">文件上传漏洞：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#webshell："><span class="toc-number">2.</span> <span class="toc-text">webshell：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传漏洞的原因："><span class="toc-number">3.</span> <span class="toc-text">文件上传漏洞的原因：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传常见检测："><span class="toc-number">4.</span> <span class="toc-text">文件上传常见检测：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-客户端检测"><span class="toc-number">4.0.1.</span> <span class="toc-text">1.客户端检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-服务端检测"><span class="toc-number">4.0.2.</span> <span class="toc-text">2.服务端检测</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#靶场实战"><span class="toc-number">5.</span> <span class="toc-text">靶场实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-前端验证绕过"><span class="toc-number">5.1.</span> <span class="toc-text">1.前端验证绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Content-Type方式绕过"><span class="toc-number">5.2.</span> <span class="toc-text">2.Content-Type方式绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-黑名单绕过"><span class="toc-number">5.3.</span> <span class="toc-text">3.黑名单绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-htaccess文件绕过"><span class="toc-number">5.4.</span> <span class="toc-text">4. .htaccess文件绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-后缀大小写绕过"><span class="toc-number">5.5.</span> <span class="toc-text">5.后缀大小写绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-文件后缀（空）绕过"><span class="toc-number">5.6.</span> <span class="toc-text">6.文件后缀（空）绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-文件后缀-点-绕过"><span class="toc-number">5.7.</span> <span class="toc-text">7.文件后缀(点)绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-DATA（Windows文件流绕过）"><span class="toc-number">5.8.</span> <span class="toc-text">8.::$DATA（Windows文件流绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-构造文件后缀绕过"><span class="toc-number">5.9.</span> <span class="toc-text">9.构造文件后缀绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10双写文件后缀绕过"><span class="toc-number">5.10.</span> <span class="toc-text">10双写文件后缀绕过</span></a></li></ol></li>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&text=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&is_video=false&description=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=文件上传解析漏洞-解析、验证、伪造&body=Check out this article: http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&title=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&name=文件上传解析漏洞-解析、验证、伪造&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/文件上传解析漏洞-解析、验证、伪造/&t=文件上传解析漏洞-解析、验证、伪造"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

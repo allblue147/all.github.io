@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="post注入的介绍post注入也是sql注入的一种类型，通过post进行传参的注入，post传参一般是通过表单的方式提交，但本质上和get注入没有多大的区别。通过伪造插入修改语句，使得用户插入的数据也被当成sql代码去执行。 post注入的高危点** 网页登陆框 网页查询框 与数据库有交互的提交框  一般情况下，当我们通过HTML表单提交数据到服务器时，服务端都会在数据库中检查我们输入的数据是否符">
+<meta property="og:type" content="article">
+<meta property="og:title" content="post注入">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/sql2/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="post注入的介绍post注入也是sql注入的一种类型，通过post进行传参的注入，post传参一般是通过表单的方式提交，但本质上和get注入没有多大的区别。通过伪造插入修改语句，使得用户插入的数据也被当成sql代码去执行。 post注入的高危点** 网页登陆框 网页查询框 与数据库有交互的提交框  一般情况下，当我们通过HTML表单提交数据到服务器时，服务端都会在数据库中检查我们输入的数据是否符">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/IQ8PuQYXRfQeKFbKXgUUpLG8c0u9bRyDxpMCb8JUO7A!/b/dLkAAAAAAAAA&bo=3wSdAQAAAAADB2U!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/.s0IqEEnc82GeYcsj6bUgw654mtuR57kW6RYZGKKnYU!/b/dFYBAAAAAAAA&bo=8AWAAAAAAAADF0c!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/kb0Ha8Mr6gvwbdZjJfLhBBPpydpnzihcImL2JKqDjP8!/b/dLYAAAAAAAAA&bo=MwY0AgAAAAADJwE!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/4LkCwAdfoqRthpNHMTnA.EeKDTK*IDTWRjU7*WDKHX4!/b/dLYAAAAAAAAA&bo=tgQRAgAAAAADJ6M!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/n8nIF5JiU1*uydG*pNEl36opJ4RjWDONYFA.ivtECCE!/b/dL8AAAAAAAAA&bo=lAS0AQAAAAADJyc!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/cdMGniPDlkmYnllHrJ8gvx8RMgPKV7bG.DcxpiXeJj8!/b/dFQBAAAAAAAA&bo=jwGZAAAAAAADFyU!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/49Ye2S7pk7SkFSpT1If6A2IfwjT24AjCvEEdme0Plwg!/b/dFQBAAAAAAAA&bo=QgPcAAAAAAADF68!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/GQZ9l8h2oJXVpEu6vbrD87kOiB1DuduyH7aVTXGPsUQ!/b/dL4AAAAAAAAA&bo=LAdfAAAAAAADF0Y!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/JClWQRPGxeIFbUauSoQ2SczVYuSJmlM5JW.2AyJPhNY!/b/dLgAAAAAAAAA&bo=RQfGAQAAAAADB6c!&rf=viewer_4">
+<meta property="og:updated_time" content="2019-12-06T17:50:44.692Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="post注入">
+<meta name="twitter:description" content="post注入的介绍post注入也是sql注入的一种类型，通过post进行传参的注入，post传参一般是通过表单的方式提交，但本质上和get注入没有多大的区别。通过伪造插入修改语句，使得用户插入的数据也被当成sql代码去执行。 post注入的高危点** 网页登陆框 网页查询框 与数据库有交互的提交框  一般情况下，当我们通过HTML表单提交数据到服务器时，服务端都会在数据库中检查我们输入的数据是否符">
+<meta name="twitter:image" content="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/IQ8PuQYXRfQeKFbKXgUUpLG8c0u9bRyDxpMCb8JUO7A!/b/dLkAAAAAAAAA&bo=3wSdAQAAAAADB2U!&rf=viewer_4">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>post注入</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/sqlkzj/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/sql1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql2/&text=post注入"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql2/&is_video=false&description=post注入"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=post注入&body=Check out this article: http://allblue147.github.io/2019/12/07/sql2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql2/&name=post注入&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql2/&t=post注入"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#post注入的介绍"><span class="toc-number">1.</span> <span class="toc-text">post注入的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#post注入的高危点"><span class="toc-number">2.</span> <span class="toc-text">post注入的高危点**</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        post注入
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.441Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="post注入的介绍"><a href="#post注入的介绍" class="headerlink" title="post注入的介绍"></a>post注入的介绍</h3><p>post注入也是sql注入的一种类型，通过post进行传参的注入，post传参一般是通过表单的方式提交，但本质上和get注入没有多大的区别。通过伪造插入修改语句，使得用户插入的数据也被当成sql代码去执行。</p>
+<h3 id="post注入的高危点"><a href="#post注入的高危点" class="headerlink" title="post注入的高危点**"></a>post注入的高危点**</h3><ul>
+<li>网页登陆框</li>
+<li>网页查询框</li>
+<li>与数据库有交互的提交框</li>
+</ul>
+<p>一般情况下，当我们通过HTML表单提交数据到服务器时，服务端都会在数据库中检查我们输入的数据是否符合要求，然后根据数据库搜索结果返回相应的数据给客户端，但如果我们能控制输入，构造一些“恶意”的SQL语句，“欺骗”后台数据库执行系统不愿意用户执行的操作，那么就产生了SQL注入。这就是我们常说的POST注入。</p>
+<p><strong>这里以sqli-less-11做post注入例题讲解：</strong></p>
+<p>我们点进去，看到一张登陆的表单，我们思考一下应该如何进行注入</p>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/IQ8PuQYXRfQeKFbKXgUUpLG8c0u9bRyDxpMCb8JUO7A!/b/dLkAAAAAAAAA&amp;bo=3wSdAQAAAAADB2U!&amp;rf=viewer_4" alt></p>
+<p>我们先通过用一个单引号在username上进行测试，发现出现错误信息，结果显示是对’的处理所产生的错误<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/.s0IqEEnc82GeYcsj6bUgw654mtuR57kW6RYZGKKnYU!/b/dFYBAAAAAAAA&amp;bo=8AWAAAAAAAADF0c!&amp;rf=viewer_4" alt></p>
+<p>我们通过闭合’,在再后面加上or 1=1再将后面注释掉，竟然发现登陆了进去<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/kb0Ha8Mr6gvwbdZjJfLhBBPpydpnzihcImL2JKqDjP8!/b/dLYAAAAAAAAA&amp;bo=MwY0AgAAAAADJwE!&amp;rf=viewer_4" alt></p>
+<p>这是为什么呢？显而易见，or ’1’ = ‘1’恒为真，而且#后面的密码直接被注释了，那么我们可以直接登录到后台了。<br>那我们能不能通过构造 get 注入中用到的其他的语句代替 or 1=1 进行注入。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos; order by 3#</span><br></pre></td></tr></table></figure>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/4LkCwAdfoqRthpNHMTnA.EeKDTK*IDTWRjU7*WDKHX4!/b/dLYAAAAAAAAA&amp;bo=tgQRAgAAAAADJ6M!&amp;rf=viewer_4" alt><br>登陆失败，显示报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos; order by 2#</span><br></pre></td></tr></table></figure>
+<p><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/n8nIF5JiU1*uydG*pNEl36opJ4RjWDONYFA.ivtECCE!/b/dL8AAAAAAAAA&amp;bo=lAS0AQAAAAADJyc!&amp;rf=viewer_4" alt><br>登陆失败，无显示,说明字段为2。</p>
+<p>我们尝试下猜数据库版本：<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/cdMGniPDlkmYnllHrJ8gvx8RMgPKV7bG.DcxpiXeJj8!/b/dFQBAAAAAAAA&amp;bo=jwGZAAAAAAADFyU!&amp;rf=viewer_4" alt></p>
+<p>发现不仅登陆成功，并爆出了版本号<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/49Ye2S7pk7SkFSpT1If6A2IfwjT24AjCvEEdme0Plwg!/b/dFQBAAAAAAAA&amp;bo=QgPcAAAAAAADF68!&amp;rf=viewer_4" alt></p>
+<p>这时的sql语句如下：<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/GQZ9l8h2oJXVpEu6vbrD87kOiB1DuduyH7aVTXGPsUQ!/b/dL4AAAAAAAAA&amp;bo=LAdfAAAAAAADF0Y!&amp;rf=viewer_4" alt><br>去数据库查询了username=1，但查询不到，则联合查询了后面的语句，爆出了数据库版本5.5.53；</p>
+<p>在爆出数据库<br><img src="http://m.qpic.cn/psb?/V10ZDHQP0EtwOl/JClWQRPGxeIFbUauSoQ2SczVYuSJmlM5JW.2AyJPhNY!/b/dLgAAAAAAAAA&amp;bo=RQfGAQAAAAADB6c!&amp;rf=viewer_4" alt></p>
+<p>再通过系统库爆出表，字段，来进一步进行注入！</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#post注入的介绍"><span class="toc-number">1.</span> <span class="toc-text">post注入的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#post注入的高危点"><span class="toc-number">2.</span> <span class="toc-text">post注入的高危点**</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql2/&text=post注入"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql2/&is_video=false&description=post注入"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=post注入&body=Check out this article: http://allblue147.github.io/2019/12/07/sql2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql2/&title=post注入"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql2/&name=post注入&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql2/&t=post注入"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

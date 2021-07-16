@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="我们开始进行代码审计、漏洞挖掘 网站重装漏洞一般我要做一个CMS网站，首先要访问目录中的安装目录，进行安装、注册管理员账号。那我们站在黑客角度上想一想，我们如果知道了一个cms的安装目录路径，那我们是不是能进行二次访问进行重新安装呢？这样的话我们是不是就可以重置管理员账号和密码，登入后台进行getshell呢？这样我们就可以进行重新安装了，而数据库账号密码，我们可以弄一个虚拟空间数据库，比如注入时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql注入--0day审计案例(二)">
+<meta property="og:url" content="http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="我们开始进行代码审计、漏洞挖掘 网站重装漏洞一般我要做一个CMS网站，首先要访问目录中的安装目录，进行安装、注册管理员账号。那我们站在黑客角度上想一想，我们如果知道了一个cms的安装目录路径，那我们是不是能进行二次访问进行重新安装呢？这样的话我们是不是就可以重置管理员账号和密码，登入后台进行getshell呢？这样我们就可以进行重新安装了，而数据库账号密码，我们可以弄一个虚拟空间数据库，比如注入时">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418sjhanvj31h60rbwgy.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418t83yofj31h90pwdj9.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418thvsawj31h80osac3.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418tqqwkwj31h60qkdi5.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418u2kpw2j31gj0qhq6z.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418ub5ui9j31hc0sgk2s.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418uije5fj313b0i4tdu.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418uxubm8j30z40rkq4p.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wavb2qj31h80pqjt2.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wjbjauj30z40rkmyy.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wjbjauj30z40rkmyy.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wxhl9tj30z50h1wfx.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418x765fgj30z40rktag.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418xeyzpej30z40rkjtw.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418xro0upj30z40rkacp.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418xzi127j31560lgaeh.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418ydsotkj30z40rktbf.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418yodkozj30z40rkq6i.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418yzxxk0j31gg0ovtaj.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418z7jwb3j31ha0ky3zn.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418zidhbij30z40rk760.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418zussp9j31hc0sm49l.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g41902f5r4j30z40rkwg9.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4190a2wpfj31hb0i6aae.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4190jiyuoj31hc0lndhp.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4193ify2nj31hc0mlq4z.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4193tropfj30z40rkwgc.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194117l1j31hc0sm116.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194argjyj31dy0q7n3k.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194mh7qkj31cy0oudle.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194usqr2j31h90nxtas.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g41953pdecj30zh0kydhq.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4195bynenj31ga0nltar.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4195kp9p5j31hc0fdt8t.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4195ssd3yj30xz0hrq4w.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g41964opglj31hc0omjv5.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4196cvcatj31hc0bsdgs.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4196lq5n3j30st05pt8r.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4196v5eboj31gt0q4wft.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g419766cocj31e10osn4c.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4197f34tlj31hc0m241t.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4197mhek1j31h90jqtac.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4197vln3uj31h80k40t7.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g4198wnf3nj30z40ni0ue.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g419azj97kj30h10n73zx.jpg">
+<meta property="og:updated_time" content="2019-12-06T17:51:18.313Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sql注入--0day审计案例(二)">
+<meta name="twitter:description" content="我们开始进行代码审计、漏洞挖掘 网站重装漏洞一般我要做一个CMS网站，首先要访问目录中的安装目录，进行安装、注册管理员账号。那我们站在黑客角度上想一想，我们如果知道了一个cms的安装目录路径，那我们是不是能进行二次访问进行重新安装呢？这样的话我们是不是就可以重置管理员账号和密码，登入后台进行getshell呢？这样我们就可以进行重新安装了，而数据库账号密码，我们可以弄一个虚拟空间数据库，比如注入时">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007DFXDhgy1g418sjhanvj31h60rbwgy.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>sql注入--0day审计案例(二)</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2019/12/07/SSRF-服务器端请求伪造/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2019/12/07/sql注入--0day审计案例(1)/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&text=sql注入--0day审计案例(二)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&is_video=false&description=sql注入--0day审计案例(二)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sql注入--0day审计案例(二)&body=Check out this article: http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&name=sql注入--0day审计案例(二)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&t=sql注入--0day审计案例(二)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#网站重装漏洞"><span class="toc-number">1.</span> <span class="toc-text">网站重装漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS跨站脚本攻击"><span class="toc-number">2.</span> <span class="toc-text">XSS跨站脚本攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sql注入漏洞"><span class="toc-number">3.</span> <span class="toc-text">sql注入漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#登录框万能密码登录"><span class="toc-number">4.</span> <span class="toc-text">登录框万能密码登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#X-Forwarded-For注入"><span class="toc-number">5.</span> <span class="toc-text">X-Forwarded-For注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库备份文件泄露"><span class="toc-number">6.</span> <span class="toc-text">数据库备份文件泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件包含"><span class="toc-number">7.</span> <span class="toc-text">文件包含</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        sql注入--0day审计案例(二)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-06T17:03:10.458Z" itemprop="datePublished">2019-12-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>我们开始进行代码审计、漏洞挖掘</p>
+<h3 id="网站重装漏洞"><a href="#网站重装漏洞" class="headerlink" title="网站重装漏洞"></a>网站重装漏洞</h3><p>一般我要做一个CMS网站，首先要访问目录中的安装目录，进行安装、注册管理员账号。那我们站在黑客角度上想一想，我们如果知道了一个cms的安装目录路径，那我们是不是能进行二次访问进行重新安装呢？这样的话我们是不是就可以重置管理员账号和密码，登入后台进行getshell呢？<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418sjhanvj31h60rbwgy.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418t83yofj31h90pwdj9.jpg" alt><br>这样我们就可以进行重新安装了，而数据库账号密码，我们可以弄一个虚拟空间数据库，比如注入时用到的香港云。</p>
+<h3 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h3><p>我们再来看这个网站，一般而言网站有展示类和功能类。</p>
+<p>展示类（比如新闻站、门户站）</p>
+<p>功能类（比如商城、OA、系统）</p>
+<p>我们看到前台有一个注册功能，如果我们可以拿到一个普通用户的权限是不是更加容易渗透测试？测试的点是不是更多？<br>那么我们去注册一个账户吧！<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418thvsawj31h80osac3.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418tqqwkwj31h60qkdi5.jpg" alt><br>在注册之前，我们先开下burp，看下提交注册的数据包发往哪里去<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418u2kpw2j31gj0qhq6z.jpg" alt><br>发现它通过post方式将参数发送user.php ,我们注意到里面有act传进参数do_reg,我们通过代码审计工具找到user.php<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418ub5ui9j31hc0sgk2s.jpg" alt><br>我们发现这里是检查传进来的注册参数是否为空和有没有空格，并且加入一些检查格式<br>而我们在下面发现sql插入语句<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418uije5fj313b0i4tdu.jpg" alt><br>发现它并没有将注册的值进行过滤，而直接插入数据库中。那么这就很有可能存在XSS和sql注入。</p>
+<p>我们先通过一个弹窗看看是否有xss，先抓一个包，并对其邮箱进行插入弹窗语句<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418uxubm8j30z40rkq4p.jpg" alt><br>成功弹窗，这里是一个存储型的XSS。<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wavb2qj31h80pqjt2.jpg" alt></p>
+<h3 id="sql注入漏洞"><a href="#sql注入漏洞" class="headerlink" title="sql注入漏洞"></a>sql注入漏洞</h3><p>在插入语句中<br><code>&quot;INSERT INTO &quot;.table(&#39;user&#39;).&quot; (user_id, user_name, pwd, email, reg_time, last_login_time) VALUES (&#39;&#39;, &#39;$user_name&#39;, md5(&#39;$pwd&#39;), &#39;$email&#39;, &#39;$timestamp&#39;, &#39;$timestamp&#39;)&quot;;</code><br>这里插入没有过滤，由于email变量由一对单引号包着，所以我们试着在邮箱后面加个’,看看是否会报错<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wjbjauj30z40rkmyy.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wjbjauj30z40rkmyy.jpg" alt><br>发现还是注册成功了，那我们进后台看看<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418wxhl9tj30z50h1wfx.jpg" alt><br>发现’好像被实体化了，就是被\转义了，这好像是php配置中开启了魔术引号，那我们应该想到之前的宽字节注入，在引号前加%df，使其与\%5c合并,从而避免’被转义。<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418x765fgj30z40rktag.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418xeyzpej30z40rkjtw.jpg" alt><br>发现报错了，那就说明存在注入<br>尝试使用updatexml的报错<br>构建下语句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO blue_user (user_id, user_name, pwd, email, reg_time, last_login_time) VALUES (&apos;&apos;, &apos;allblue1234&apos;, md5(&apos;allblue1234&apos;), &apos;allblue1234@qq.com�\&apos; or updatexml(1,concat(0x7e,(SELECT database())),1),1,1)#\&apos;&apos;, &apos;1560443115&apos;, &apos;1560443115&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>发现报错，没有显示我们想要的信息<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418xro0upj30z40rkacp.jpg" alt><br>但我发现放进数据库执行，却能成功(需将%df\  去掉)<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418xzi127j31560lgaeh.jpg" alt><br>那我们只能通过盲注<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO blue_user (user_id, user_name, pwd, email, reg_time, last_login_time) VALUES (&apos;&apos;, &apos;allblue1234&apos;, md5(&apos;allblue1234&apos;), &apos;allblue1234@qq.com�\&apos; or sleep(10),1,1)#\&apos;&apos;, &apos;1560443115&apos;, &apos;1560443115&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>以这种格式继续盲注下去。</p>
+<p>但我们想到，insert into 是能插入多条数据呢，那我们是不是能通过语句构建，再建立一个用户，然后用子查询填充邮箱处，然后我们登陆这个账号是不是就可以看到邮箱字段里面的内容？<br>我们先抓包<br>这样就插入了两组数据，而在第二组数据中的邮箱就是管理员密码<br>我们执行一下，发现执行失败<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418ydsotkj30z40rktbf.jpg" alt><br>因为这里魔术引号会将引号转义，所以我们利用宽字节知识，将其转为16进制编码<br>allblue2019==&gt;0x616C6C626C756532303139<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418yodkozj30z40rkq6i.jpg" alt><br>注册成功，登录<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418yzxxk0j31gg0ovtaj.jpg" alt><br>将邮箱值进行md5解密，成功得到管理员密码<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418z7jwb3j31ha0ky3zn.jpg" alt></p>
+<h3 id="登录框万能密码登录"><a href="#登录框万能密码登录" class="headerlink" title="登录框万能密码登录"></a>登录框万能密码登录</h3><p>我们尝试登录抓包<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418zidhbij30z40rk760.jpg" alt><br>找到传参的位置，在审计工具查找<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g418zussp9j31hc0sm49l.jpg" alt><br>发现这里判断了是否为管理员，没有对登录参数进行限制，这可能存在POST注入<br>post注入，首先尝试着使用万能密码登录<br><code>%df&#39;) or 1=1#</code><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g41902f5r4j30z40rkwg9.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4190a2wpfj31hb0i6aae.jpg" alt><br>成功登录<br>然后登录后修改资料处也存在SQL注入和XSS</p>
+<h3 id="X-Forwarded-For注入"><a href="#X-Forwarded-For注入" class="headerlink" title="X-Forwarded-For注入"></a>X-Forwarded-For注入</h3><p>我们通过一个普通用户发布了新闻<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4190jiyuoj31hc0lndhp.jpg" alt><br>通过重新注册一个用户对其进行评论<br>评论成功<br>那么这可能也存在XSS。<br>我们评论时先抓个包看看<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4193ify2nj31hc0mlq4z.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4193tropfj30z40rkwgc.jpg" alt><br>发现他会将参数send提交到comment.php,那么我们去看一看</p>
+<p>我们发现这里面有一些函数<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194117l1j31hc0sm116.jpg" alt></p>
+<ul>
+<li><p>intval()<br>intval() 函数用于获取变量的整数值。<br>intval() 函数通过使用指定的进制 base 转换（默认是十进制），返回变量 var 的 integer 数值。 intval() 不能用于 object，否则会产生 E_NOTICE 错误并返回 1。</p>
+</li>
+<li><p>htmlspecialchars()<br>把预定义的字符 “&lt;” （小于）和 “&gt;” （大于）转换为 HTML 实体</p>
+</li>
+<li><p>nl2br()<br>在字符串中的新行（\n）之前插入换行符<br>所以XSS肯定是没戏了。</p>
+</li>
+</ul>
+<p>这时，我们看到了他在插入的时候，记录了评论用户的ip，我们发现了getip函数，我们定位一下函数<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194argjyj31dy0q7n3k.jpg" alt><br>找到了定义的函数，这里有一个getenv，实际上就是获取系统的环境变量</p>
+<p>第一个HTTP_CLIENT_IP这个环境变量没有成标准，很多服务器完全没法获取</p>
+<p>第二个X-Forwarded-For是个扩展请求头，这个东西可以通过HTTP请求头来修改。<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194mh7qkj31cy0oudle.jpg" alt><br>那么我们是不是可以修改X-Forwarder-For的参数，将参数插入到ip中，那么ip的值就会放入sql语句中执行呢?<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4194usqr2j31h90nxtas.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g41953pdecj30zh0kydhq.jpg" alt><br>我们给个分号测试一下<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4195bynenj31ga0nltar.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4195kp9p5j31hc0fdt8t.jpg" alt><br>发现成功报错<br>因为X-Forwarded-For是直接获取的，所以不会出现魔术引号。<br>这里我们直接用sqlmap 就能直接跑出来了<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4195ssd3yj30xz0hrq4w.jpg" alt></p>
+<h3 id="数据库备份文件泄露"><a href="#数据库备份文件泄露" class="headerlink" title="数据库备份文件泄露"></a>数据库备份文件泄露</h3><p>有时候，管理员在备份数据库的时候，直接默认将备份文件直接放在网站目录下，这样其实是很危险的，很容易被黑客摸出来。<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g41964opglj31hc0omjv5.jpg" alt><br>我们登入后台，发现了一个数据库备份，好，那我们将数据库备份<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4196cvcatj31hc0bsdgs.jpg" alt><br>我们到网站目录看一下<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4196lq5n3j30st05pt8r.jpg" alt><br>发现他的命名规则是备份的年月日，那如果我们拿到一个CMS，知道他的备份目录，是不是可以尝试着爆破一下备份文件<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4196v5eboj31gt0q4wft.jpg" alt></p>
+<h3 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h3><p>文件包含，首先需要找到包含函数<br>我们在找到了一个貌似可以控制的include函数，不过需要act参数=pay的时候才能执行<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g419766cocj31e10osn4c.jpg" alt><br>最后在购买充值卡那找到<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4197f34tlj31hc0m241t.jpg" alt><br>我们先找到一个能上传图片马的上传点<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4197mhek1j31h90jqtac.jpg" alt><br>成功上传<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4197vln3uj31h80k40t7.jpg" alt><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include &apos;include/payment/&apos;.$_POST[&apos;pay&apos;].&quot;/index.php&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>文件包含的路径</p>
+<p>那么我们将木马路径传入到post参数中，那么路径为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pay=../../data/upload/face_pic/15605135978.jpg</span><br></pre></td></tr></table></figure></p>
+<p>这样的话，包含语句就会变成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include &apos;include/payment/../../data/upload/face_pic/15605135978.jpg/index.php&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>但是这样的话，后面还有个index。php，他会去加载index.php,会对加载图片马有所影响，那么我们需要将index.php截取掉，这里00截断试过了，php低版本才会存在这样的截断。</p>
+<p>在这里我们可以尝试一个字符串截断的方法（Windows的路径不能超过60个字符）在Windows API中，路径的最大长度为MAX_PATH，MAX_PATH被定义为260。</p>
+<p>那么我们是不是可以尝试在传参的后面加点进行截断，因为点最后会被windows给处理掉，但是填充了点之后，只会保留包含前面15605093967.png，在传参后的index.php因为路径超过260个字符后的东西都会被舍弃，于是乎我们直接传参后加260个点就可以截断了。<br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g4198wnf3nj30z40ni0ue.jpg" alt><br><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g419azj97kj30h10n73zx.jpg" alt></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#网站重装漏洞"><span class="toc-number">1.</span> <span class="toc-text">网站重装漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS跨站脚本攻击"><span class="toc-number">2.</span> <span class="toc-text">XSS跨站脚本攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sql注入漏洞"><span class="toc-number">3.</span> <span class="toc-text">sql注入漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#登录框万能密码登录"><span class="toc-number">4.</span> <span class="toc-text">登录框万能密码登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#X-Forwarded-For注入"><span class="toc-number">5.</span> <span class="toc-text">X-Forwarded-For注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库备份文件泄露"><span class="toc-number">6.</span> <span class="toc-text">数据库备份文件泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件包含"><span class="toc-number">7.</span> <span class="toc-text">文件包含</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&text=sql注入--0day审计案例(二)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&is_video=false&description=sql注入--0day审计案例(二)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sql注入--0day审计案例(二)&body=Check out this article: http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&title=sql注入--0day审计案例(二)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&name=sql注入--0day审计案例(二)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql注入--0day审计案例(2)/&t=sql注入--0day审计案例(二)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
