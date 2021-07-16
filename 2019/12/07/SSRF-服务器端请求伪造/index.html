@@ -1,148 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="zh-CN">
 
-<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ALL BLUE">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://allblue147.github.io">
+    <!--SEO-->
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<meta name="keywords" content>
 
-    <!--Description-->
+
+<meta name="description" content="什么是SSRF?SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的内部...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
     
-        <meta name="description" content="什么是SSRF?SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的内部系统。（因为他是从内部系统访问的，所以可以通过它攻击外网无法访问的内部系统(即内网)，也就是把目标网站当中">
+    SSRF-服务器端请求伪造 |
     
+    ALL BLUE
+</title>
 
-    <!--Author-->
-    
-        <meta name="author" content="JYP">
-    
+<link rel="alternate" href="/atom.xml" title="ALL BLUE" type="application/atom+xml">
 
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="SSRF-服务器端请求伪造">
-    
 
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="ALL BLUE">
+<link rel="icon" href="/favicon.ico">
 
-    <!--Page Cover-->
-    
-        <meta property="og:image" content>
-    
-
-    <!-- Title -->
-    
-    <title>SSRF-服务器端请求伪造 - ALL BLUE</title>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/main.css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.css" type="text/css" rel="stylesheet">
-
-    <!-- Google Analytics -->
     
 
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
 
-    <!--Favicon-->
+
+
+
     
 
-</head>
-
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
 <body>
-
-<!-- Menu -->
-<!-- Navigation -->
-<header>
-    <div class="logo">
-        <a href="/">ALL BLUE</a>
-    </div><!-- end logo -->
-
-    <div id="menu_icon"></div>
-    <nav>
-        <ul>
+    <header class="main-header" style="background-image:url(
+    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="JYP">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
             
-            <li>
-                <a href="/">Home</a>
-            </li>
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
             
-            <li>
-                <a href="/archives">Archives</a>
-            </li>
-            
-        </ul>
-    </nav><!-- end navigation menu -->
-
-    <div class="footer clearfix">
-        <ul class="social clearfix">
-            
-            
-                <li><a href="https://www.facebook.com/" class="fb" target="_blank" data-title="Facebook"></a></li>
-            
-            
-                <li><a href="https://www.behance.net/" class="behance" target="_blank" data-title="Behance"></a></li>
-            
-            
-                <li><a href="https://plus.google.com/+Pixelhint/posts" class="google" target="_blank" data-title="Google+"></a></li>
-            
-            
-                <li><a href="https://dribbble.com/pixelhint" class="dribble" target="_blank" data-title="Dribble"></a></li>
-            
-            
-            
-            
-        </ul><!-- end social -->
-
-        <div class="rights">
-            <p>Copyright © 2014 magnetic.</p>
-            <p>Template by <a href="http://pixelhint.com/magnetic-free-html5-responsive-photography-website-template/">Pixelhint.com</a></p>
-            <p>Hexo Theme by <a href="http://www.codeblocq.com/">Jonathan K.</a></p>
-        </div><!-- end rights -->
-    </div><!-- end footer -->
-</header><!-- end header -->
-
-
-<!-- Main Content -->
-<section class="main clearfix">
-
-    <section class="top" style="background: url('http://placehold.it/1300x500');">
-        <div class="wrapper content_header clearfix">
-            
-
-<div class="work_nav">
-
-    <ul class="btn clearfix">
-        
-        <li><a href="/2019/12/07/unserialize反序列化漏洞/" class="previous" data-title="PHP unserialize反序列化漏洞"></a></li>
-        
-        <li><a href="/" class="grid" data-title="Portfolio"></a></li>
-        
-        <li><a href="/2019/12/07/sql注入--0day审计案例(2)/" class="next" data-title="sql注入--0day审计案例(二..."></a></li>
-        
-    </ul>
-
-</div><!-- end work_nav -->
-            <h1 class="title">SSRF-服务器端请求伪造</h1>
         </div>
-    </section><!-- end top -->
-
-    <section class="wrapper">
-        <div class="content">
-
-            <!-- Gallery -->
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://allblue147.github.io">
+                        ALL BLUE</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/前端/"><i class="fa "></i>
+                                前端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/后端/"><i class="fa "></i>
+                                后端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/工具/"><i class="fa "></i>
+                                工具</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="SSRF-服务器端请求伪造">
             
-
-            <!-- Content -->
-            <h1 id="什么是SSRF"><a href="#什么是SSRF" class="headerlink" title="什么是SSRF?"></a>什么是SSRF?</h1><p>SSRF(Server-Side Request Forgery:<strong>服务器端</strong>请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的<strong>内部系统</strong>。（因为他是从内部系统访问的，所以可以通过它攻击外网无法访问的<strong>内部系统(即内网)</strong>，也就是把目标网站当中间人;即<strong>利用一个可发起网络请求的服务当做跳板来攻击其他服务;</strong></p>
+            SSRF-服务器端请求伪造
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/12/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                587</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="什么是SSRF"><a href="#什么是SSRF" class="headerlink" title="什么是SSRF?"></a>什么是SSRF?</h1><p>SSRF(Server-Side Request Forgery:<strong>服务器端</strong>请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF是要目标网站的<strong>内部系统</strong>。（因为他是从内部系统访问的，所以可以通过它攻击外网无法访问的<strong>内部系统(即内网)</strong>，也就是把目标网站当中间人;即<strong>利用一个可发起网络请求的服务当做跳板来攻击其他服务;</strong></p>
 <p>通俗的说就是浏览器去访问服务都是通过浏览器本地去访问的，而SSRF就是攻击者通过命令服务器端去访问另一个服务，<strong>服务器端去访问</strong>并返回了访问数据</p>
 <h2 id="SSRF原理详解"><a href="#SSRF原理详解" class="headerlink" title="SSRF原理详解"></a>SSRF原理详解</h2><p>首先，我们要对目标网站的架构了解，脑子了要有一个架构图。比如 ： A网站，是一个所有人都可以访问的外网网站并可以发起网络请求，B网站是一个他们内部的OA网站。</p>
 <p>所以，我们普通用户只可以访问a网站，不能访问b网站。但是我们可以通过a网站做中间人，<strong>让a网站去代替我们去访问b网站，并返回数据，</strong>从而达到攻击b网站需求。那如果b网站是个内网网站，那我们就可以去通过a网站进入<strong>攻击外网无法访问的内网系统</strong>，攻击所在内网中网站、程序；</p>
@@ -161,43 +197,115 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line"> &lt;methodName&gt;pingback.ping&lt;/methodName&gt;</span><br><span class="line"> &lt;params&gt;</span><br><span class="line">    &lt;string&gt;http://127.0.0.1:1&lt;/string&gt;</span><br><span class="line"> &lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure>
 <p>通过刷新抓包，将请求方式修改为POST方式，并将poc代码放到下面<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4norujuj30z40qf40e.jpg" alt><br>这段poc说简单点，就是他会通过服务器端去ping内网的地址，并返回信息，通过返回信息知道端口的开放。<br>由于我们不知道开放端口，所以通过burp进行端口爆破<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4o051cyj30z40ouq6c.jpg" alt><br>发现开放了两个端口，我们通过提示知道了内网88端口映射12388端口,<br>我们对12388端口进行访问，抓包看返回头，得到flag<br><img src="https://tva1.sinaimg.cn/large/007rAy9hgy1g3e4oa3liaj30z40ovju0.jpg" alt></p>
 
-
-            <!-- Tags -->
-            
-
-
-<div class="tags">
+    </div>
     
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/12/07/unserialize反序列化漏洞/" class="pre-post btn btn-default" title="PHP unserialize反序列化漏洞">
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            PHP unserialize反序列化漏洞</span>
+    </a>
+    
+    
+    <a href="/2019/12/07/sql注入--0day审计案例(2)/" class="next-post btn btn-default" title="sql注入--0day审计案例(二)">
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            sql注入--0day审计案例(二)</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+    appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是SSRF"><span class="toc-text">什么是SSRF?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF原理详解"><span class="toc-text">SSRF原理详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF的作用"><span class="toc-text">SSRF的作用</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
-            <!-- Comments -->
-            <div>
-                
-
-
-
-
-            </div>
-        </div><!-- end content -->
-    </section>
-</section><!-- end main -->
-
-<!-- After footer scripts -->
-
-<!-- jQuery -->
-<script src="/js/jquery.js"></script>
-
-<!-- Custom Code -->
-<script src="/js/main.js"></script>
-
-<!-- Gallery -->
-<script src="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Disqus Comments -->
-
-
+<script src="/js/app.js?rev=@@hash"></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
-
 </html>

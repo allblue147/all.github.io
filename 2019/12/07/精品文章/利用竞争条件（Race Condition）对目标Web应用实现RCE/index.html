@@ -1,148 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="zh-CN">
 
-<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ALL BLUE">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://allblue147.github.io">
+    <!--SEO-->
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<meta name="keywords" content>
 
-    <!--Description-->
+
+<meta name="description" content="本文讲述了作者在某邀请测试项目中，通过对SQL注入和竞争条件（Race Condition）的组合利用，利用上传文件到服务器和服务器转移上传文件到Amazon S3的时间差，最终实现了对目标应用...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
     
-        <meta name="description" content="本文讲述了作者在某邀请测试项目中，通过对SQL注入和竞争条件（Race Condition）的组合利用，利用上传文件到服务器和服务器转移上传文件到Amazon S3的时间差，最终实现了对目标应用的RCE漏洞。由于该RCE漏洞的发现相对独特，所以作者在本文中着重从竞争条件（Race Condition">
+    利用竞争条件（Race Condition）对目标Web应用实现RCE |
     
+    ALL BLUE
+</title>
 
-    <!--Author-->
-    
-        <meta name="author" content="JYP">
-    
+<link rel="alternate" href="/atom.xml" title="ALL BLUE" type="application/atom+xml">
 
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="利用竞争条件（Race Condition）对目标Web应用实现RCE">
-    
 
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="ALL BLUE">
+<link rel="icon" href="/favicon.ico">
 
-    <!--Page Cover-->
-    
-        <meta property="og:image" content>
-    
-
-    <!-- Title -->
-    
-    <title>利用竞争条件（Race Condition）对目标Web应用实现RCE - ALL BLUE</title>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/main.css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.css" type="text/css" rel="stylesheet">
-
-    <!-- Google Analytics -->
     
 
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
 
-    <!--Favicon-->
+
+
+
     
 
-</head>
-
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
 <body>
-
-<!-- Menu -->
-<!-- Navigation -->
-<header>
-    <div class="logo">
-        <a href="/">ALL BLUE</a>
-    </div><!-- end logo -->
-
-    <div id="menu_icon"></div>
-    <nav>
-        <ul>
+    <header class="main-header" style="background-image:url(
+    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="JYP">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
             
-            <li>
-                <a href="/">Home</a>
-            </li>
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
             
-            <li>
-                <a href="/archives">Archives</a>
-            </li>
-            
-        </ul>
-    </nav><!-- end navigation menu -->
-
-    <div class="footer clearfix">
-        <ul class="social clearfix">
-            
-            
-                <li><a href="https://www.facebook.com/" class="fb" target="_blank" data-title="Facebook"></a></li>
-            
-            
-                <li><a href="https://www.behance.net/" class="behance" target="_blank" data-title="Behance"></a></li>
-            
-            
-                <li><a href="https://plus.google.com/+Pixelhint/posts" class="google" target="_blank" data-title="Google+"></a></li>
-            
-            
-                <li><a href="https://dribbble.com/pixelhint" class="dribble" target="_blank" data-title="Dribble"></a></li>
-            
-            
-            
-            
-        </ul><!-- end social -->
-
-        <div class="rights">
-            <p>Copyright © 2014 magnetic.</p>
-            <p>Template by <a href="http://pixelhint.com/magnetic-free-html5-responsive-photography-website-template/">Pixelhint.com</a></p>
-            <p>Hexo Theme by <a href="http://www.codeblocq.com/">Jonathan K.</a></p>
-        </div><!-- end rights -->
-    </div><!-- end footer -->
-</header><!-- end header -->
-
-
-<!-- Main Content -->
-<section class="main clearfix">
-
-    <section class="top" style="background: url('http://placehold.it/1300x500');">
-        <div class="wrapper content_header clearfix">
-            
-
-<div class="work_nav">
-
-    <ul class="btn clearfix">
-        
-        <li><a href="/2019/12/07/精品文章/最新版wordpress任意文件删除漏洞复现/" class="previous" data-title="最新版wordpress任意文件删除漏洞复现"></a></li>
-        
-        <li><a href="/" class="grid" data-title="Portfolio"></a></li>
-        
-        <li><a href="/2019/12/07/精品文章/windows创建隐藏用户/" class="next" data-title="windows创建隐藏用户"></a></li>
-        
-    </ul>
-
-</div><!-- end work_nav -->
-            <h1 class="title">利用竞争条件（Race Condition）对目标Web应用实现RCE</h1>
         </div>
-    </section><!-- end top -->
-
-    <section class="wrapper">
-        <div class="content">
-
-            <!-- Gallery -->
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://allblue147.github.io">
+                        ALL BLUE</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/前端/"><i class="fa "></i>
+                                前端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/后端/"><i class="fa "></i>
+                                后端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/工具/"><i class="fa "></i>
+                                工具</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="利用竞争条件（Race Condition）对目标Web应用实现RCE">
             
-
-            <!-- Content -->
-            <p><img src="https://image.3001.net/images/20190927/1569574102_5d8dccd6280d4.jpeg" alt><br><strong>本文讲述了作者在某邀请测试项目中，通过对SQL注入和竞争条件（Race Condition）的组合利用，利用上传文件到服务器和服务器转移上传文件到Amazon S3的时间差，最终实现了对目标应用的RCE漏洞。由于该RCE漏洞的发现相对独特，所以作者在本文中着重从竞争条件（Race Condition）的触发机制说起，和大家分享。</strong></p>
+            利用竞争条件（Race Condition）对目标Web应用实现RCE
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/漏洞/">漏洞</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/12/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                587</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p><img src="https://image.3001.net/images/20190927/1569574102_5d8dccd6280d4.jpeg" alt><br><strong>本文讲述了作者在某邀请测试项目中，通过对SQL注入和竞争条件（Race Condition）的组合利用，利用上传文件到服务器和服务器转移上传文件到Amazon S3的时间差，最终实现了对目标应用的RCE漏洞。由于该RCE漏洞的发现相对独特，所以作者在本文中着重从竞争条件（Race Condition）的触发机制说起，和大家分享。</strong></p>
 <p>竞争条件（Race Condition）：计算机运行过程中，并发、无序、大量的进程在使用有限、独占、不可抢占的资源，由于进程无限，资源有限，产生矛盾，这种矛盾称为竞争（Race）。竞争条件（Race Condition）旨在描述一个系统或者进程的输出依赖于不受控制的事件出现顺序或者出现时机。由于两个或者多个进程竞争使用不能被同时访问的资源，使得这些进程有可能因为时间上推进的先后原因而出现问题。</p>
 <h2 id="漏洞详情"><a href="#漏洞详情" class="headerlink" title="漏洞详情"></a>漏洞详情</h2><p><strong>第一个上传功能点upload.php</strong><br>这里的前提是，我已经通过SQL注入获取到了目标Web应用的管理员账户凭据，然后登录到其内部管理界面后，我发现可通过该管理面板中的upload.php功能发布新闻或文章：<br><img src="https://image.3001.net/images/20190927/1569573792_5d8dcba09f119.png" alt></p>
 <p>没做太多考虑，我就直接通过upload.php尝试上传了一个.php文件shell，但问题是该上传功能限制了对.php格式文件的上传，在变化.PhP、.php3、phpphp、空字符等形式的绕过方法后，还是不行：</p>
@@ -169,43 +205,115 @@
 <h2 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h2><p>在上传文件本身被转移到云端S3存储桶之前，我们有可能获得上传文件的本地路径。哪怕只有1或2秒，就足以触发上传shell的成功反弹；</p>
 <p>可多对上传或编辑功能点进行分析，如果它们是独立的调用，那么则需要比较它们可具体实现的操作。</p>
 
-
-            <!-- Tags -->
-            
-
-
-<div class="tags">
+    </div>
     
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/12/07/精品文章/最新版wordpress任意文件删除漏洞复现/" class="pre-post btn btn-default" title="最新版wordpress任意文件删除漏洞复现">
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            最新版wordpress任意文件删除漏洞复现</span>
+    </a>
+    
+    
+    <a href="/2019/12/07/精品文章/windows创建隐藏用户/" class="next-post btn btn-default" title="windows创建隐藏用户">
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            windows创建隐藏用户</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+    appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞详情"><span class="toc-text">漏洞详情</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#用竞争条件（Race-Condition）反弹Shell并实现RCE"><span class="toc-text">用竞争条件（Race Condition）反弹Shell并实现RCE</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#经验总结"><span class="toc-text">经验总结</span></a></li>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
-            <!-- Comments -->
-            <div>
-                
-
-
-
-
-            </div>
-        </div><!-- end content -->
-    </section>
-</section><!-- end main -->
-
-<!-- After footer scripts -->
-
-<!-- jQuery -->
-<script src="/js/jquery.js"></script>
-
-<!-- Custom Code -->
-<script src="/js/main.js"></script>
-
-<!-- Gallery -->
-<script src="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Disqus Comments -->
-
-
+<script src="/js/app.js?rev=@@hash"></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
-
 </html>

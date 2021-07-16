@@ -1,149 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="zh-CN">
 
-<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ALL BLUE">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://allblue147.github.io">
+    <!--SEO-->
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<meta name="keywords" content>
 
-    <!--Description-->
+
+<meta name="description" content="文件上传漏洞：文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
     
-        <meta name="description" content="文件上传漏洞：文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利用技术门槛非常的低，对于攻击者来说很容易实施。
-文件上传漏洞本身就是一个危害巨大的漏洞，WebShell更">
+    文件上传解析漏洞-解析、验证、伪造 |
     
+    ALL BLUE
+</title>
 
-    <!--Author-->
-    
-        <meta name="author" content="JYP">
-    
+<link rel="alternate" href="/atom.xml" title="ALL BLUE" type="application/atom+xml">
 
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="文件上传解析漏洞-解析、验证、伪造">
-    
 
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="ALL BLUE">
+<link rel="icon" href="/favicon.ico">
 
-    <!--Page Cover-->
-    
-        <meta property="og:image" content>
-    
-
-    <!-- Title -->
-    
-    <title>文件上传解析漏洞-解析、验证、伪造 - ALL BLUE</title>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/main.css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.css" type="text/css" rel="stylesheet">
-
-    <!-- Google Analytics -->
     
 
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
 
-    <!--Favicon-->
+
+
+
     
 
-</head>
-
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
 <body>
-
-<!-- Menu -->
-<!-- Navigation -->
-<header>
-    <div class="logo">
-        <a href="/">ALL BLUE</a>
-    </div><!-- end logo -->
-
-    <div id="menu_icon"></div>
-    <nav>
-        <ul>
+    <header class="main-header" style="background-image:url(
+    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="JYP">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
             
-            <li>
-                <a href="/">Home</a>
-            </li>
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
             
-            <li>
-                <a href="/archives">Archives</a>
-            </li>
-            
-        </ul>
-    </nav><!-- end navigation menu -->
-
-    <div class="footer clearfix">
-        <ul class="social clearfix">
-            
-            
-                <li><a href="https://www.facebook.com/" class="fb" target="_blank" data-title="Facebook"></a></li>
-            
-            
-                <li><a href="https://www.behance.net/" class="behance" target="_blank" data-title="Behance"></a></li>
-            
-            
-                <li><a href="https://plus.google.com/+Pixelhint/posts" class="google" target="_blank" data-title="Google+"></a></li>
-            
-            
-                <li><a href="https://dribbble.com/pixelhint" class="dribble" target="_blank" data-title="Dribble"></a></li>
-            
-            
-            
-            
-        </ul><!-- end social -->
-
-        <div class="rights">
-            <p>Copyright © 2014 magnetic.</p>
-            <p>Template by <a href="http://pixelhint.com/magnetic-free-html5-responsive-photography-website-template/">Pixelhint.com</a></p>
-            <p>Hexo Theme by <a href="http://www.codeblocq.com/">Jonathan K.</a></p>
-        </div><!-- end rights -->
-    </div><!-- end footer -->
-</header><!-- end header -->
-
-
-<!-- Main Content -->
-<section class="main clearfix">
-
-    <section class="top" style="background: url('http://placehold.it/1300x500');">
-        <div class="wrapper content_header clearfix">
-            
-
-<div class="work_nav">
-
-    <ul class="btn clearfix">
-        
-        <li><a href="/2019/12/07/文件上传解析漏洞3/" class="previous" data-title="文件上传解析漏洞——解析、验证、伪造（三）"></a></li>
-        
-        <li><a href="/" class="grid" data-title="Portfolio"></a></li>
-        
-        <li><a href="/2019/12/07/支付漏洞/" class="next" data-title="支付漏洞"></a></li>
-        
-    </ul>
-
-</div><!-- end work_nav -->
-            <h1 class="title">文件上传解析漏洞-解析、验证、伪造</h1>
         </div>
-    </section><!-- end top -->
-
-    <section class="wrapper">
-        <div class="content">
-
-            <!-- Gallery -->
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://allblue147.github.io">
+                        ALL BLUE</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/前端/"><i class="fa "></i>
+                                前端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/后端/"><i class="fa "></i>
+                                后端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/工具/"><i class="fa "></i>
+                                工具</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="文件上传解析漏洞-解析、验证、伪造">
             
-
-            <!-- Content -->
-            <h1 id="文件上传漏洞："><a href="#文件上传漏洞：" class="headerlink" title="文件上传漏洞："></a>文件上传漏洞：</h1><p>文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利用技术门槛非常的低，对于攻击者来说很容易实施。</p>
+            文件上传解析漏洞-解析、验证、伪造
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/笔记/">笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/12/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                587</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="文件上传漏洞："><a href="#文件上传漏洞：" class="headerlink" title="文件上传漏洞："></a>文件上传漏洞：</h1><p>文件上传漏洞是指网络攻击者上传了一个可执行的文件到服务器并执行。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，部分文件上传漏洞的利用技术门槛非常的低，对于攻击者来说很容易实施。</p>
 <p>文件上传漏洞本身就是一个危害巨大的漏洞，WebShell更是将这种漏洞的利用无限扩大。大多数的上传漏洞被利用后攻击者都会留下WebShell以方便后续进入系统。攻击者在受影响系统放置或者插入WebShell后，可通过该WebShell更轻松，更隐蔽的在服务中为所欲为。</p>
 <p>这里需要特别说明的是上传漏洞的利用经常会使用WebShell，而WebShell的植入远不止文件上传这一种方式。</p>
 <h1 id="webshell："><a href="#webshell：" class="headerlink" title="webshell："></a>webshell：</h1><p>WebShell就是以asp、php、jsp或者cgi等网页文件形式存在的一种命令执行环境，也可以将其称之为一种网页后门。攻击者在入侵了一个网站后，通常会将这些asp或php后门文件与网站服务器web目录下正常的网页文件混在一起，然后使用浏览器来访问这些后门，得到一个命令执行环境，以达到控制网站服务器的目的（可以上传下载或者修改文件，操作数据库，执行任意命令等）。</p>
@@ -194,43 +229,115 @@
 <p>会将符合条件的文件后缀删除，我们只需要将文件后缀进行双写，令他删除后合并就能成功绕过！</p>
 <p><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/4OigHcJUMtz6dSWTiGju0oMns0AxY1eM0u*O.o.QG7E!/b/dL8AAAAAAAAA&amp;bo=8ATgA*AE4AMRCT4!&amp;rf=viewer_4" alt><br><img src="https://m.qpic.cn/psb?/V133mrMy3dol57/LG5JK1ZorQZBrglBO1UAbGKez.B5lgA3DPErpWLP77M!/b/dDcBAAAAAAAA&amp;bo=cgfWA3IH1gMRCT4!&amp;rf=viewer_4" alt></p>
 
-
-            <!-- Tags -->
-            
-
-
-<div class="tags">
+    </div>
     
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/12/07/文件上传解析漏洞3/" class="pre-post btn btn-default" title="文件上传解析漏洞——解析、验证、伪造（三）">
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            文件上传解析漏洞——解析、验证、伪造（三）</span>
+    </a>
+    
+    
+    <a href="/2019/12/07/支付漏洞/" class="next-post btn btn-default" title="支付漏洞">
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            支付漏洞</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+    appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传漏洞："><span class="toc-text">文件上传漏洞：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#webshell："><span class="toc-text">webshell：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传漏洞的原因："><span class="toc-text">文件上传漏洞的原因：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件上传常见检测："><span class="toc-text">文件上传常见检测：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-客户端检测"><span class="toc-text">1.客户端检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-服务端检测"><span class="toc-text">2.服务端检测</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#靶场实战"><span class="toc-text">靶场实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-前端验证绕过"><span class="toc-text">1.前端验证绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Content-Type方式绕过"><span class="toc-text">2.Content-Type方式绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-黑名单绕过"><span class="toc-text">3.黑名单绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-htaccess文件绕过"><span class="toc-text">4. .htaccess文件绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-后缀大小写绕过"><span class="toc-text">5.后缀大小写绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-文件后缀（空）绕过"><span class="toc-text">6.文件后缀（空）绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-文件后缀-点-绕过"><span class="toc-text">7.文件后缀(点)绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-DATA（Windows文件流绕过）"><span class="toc-text">8.::$DATA（Windows文件流绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-构造文件后缀绕过"><span class="toc-text">9.构造文件后缀绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10双写文件后缀绕过"><span class="toc-text">10双写文件后缀绕过</span></a></li></ol></li>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
-            <!-- Comments -->
-            <div>
-                
-
-
-
-
-            </div>
-        </div><!-- end content -->
-    </section>
-</section><!-- end main -->
-
-<!-- After footer scripts -->
-
-<!-- jQuery -->
-<script src="/js/jquery.js"></script>
-
-<!-- Custom Code -->
-<script src="/js/main.js"></script>
-
-<!-- Gallery -->
-<script src="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Disqus Comments -->
-
-
+<script src="/js/app.js?rev=@@hash"></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
-
 </html>

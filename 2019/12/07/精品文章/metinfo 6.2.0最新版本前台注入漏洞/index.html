@@ -1,150 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="zh-CN">
 
-<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ALL BLUE">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://allblue147.github.io">
+    <!--SEO-->
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<meta name="keywords" content>
 
-    <!--Description-->
+
+<meta name="description" content="metinfo 6.2.0最新版本前台注入漏洞https://nosec.org/home/detail/2436.htmlhttps://xz.aliyun.com/t/4508
+漏洞环境：d...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
     
-        <meta name="description" content="metinfo 6.2.0最新版本前台注入漏洞https://nosec.org/home/detail/2436.htmlhttps://xz.aliyun.com/t/4508
-漏洞环境：docker pull zksmile/vul:metinfov6.2.0
-概述:看到某个表哥发的metin">
+    metinfo 6.2.0最新版本前台注入漏洞 |
     
+    ALL BLUE
+</title>
 
-    <!--Author-->
-    
-        <meta name="author" content="JYP">
-    
+<link rel="alternate" href="/atom.xml" title="ALL BLUE" type="application/atom+xml">
 
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="metinfo 6.2.0最新版本前台注入漏洞">
-    
 
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="ALL BLUE">
+<link rel="icon" href="/favicon.ico">
 
-    <!--Page Cover-->
-    
-        <meta property="og:image" content>
-    
-
-    <!-- Title -->
-    
-    <title>metinfo 6.2.0最新版本前台注入漏洞 - ALL BLUE</title>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/main.css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.css" type="text/css" rel="stylesheet">
-
-    <!-- Google Analytics -->
     
 
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
 
-    <!--Favicon-->
+
+
+
     
 
-</head>
-
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
 <body>
-
-<!-- Menu -->
-<!-- Navigation -->
-<header>
-    <div class="logo">
-        <a href="/">ALL BLUE</a>
-    </div><!-- end logo -->
-
-    <div id="menu_icon"></div>
-    <nav>
-        <ul>
+    <header class="main-header" style="background-image:url(
+    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="JYP">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
             
-            <li>
-                <a href="/">Home</a>
-            </li>
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
             
-            <li>
-                <a href="/archives">Archives</a>
-            </li>
-            
-        </ul>
-    </nav><!-- end navigation menu -->
-
-    <div class="footer clearfix">
-        <ul class="social clearfix">
-            
-            
-                <li><a href="https://www.facebook.com/" class="fb" target="_blank" data-title="Facebook"></a></li>
-            
-            
-                <li><a href="https://www.behance.net/" class="behance" target="_blank" data-title="Behance"></a></li>
-            
-            
-                <li><a href="https://plus.google.com/+Pixelhint/posts" class="google" target="_blank" data-title="Google+"></a></li>
-            
-            
-                <li><a href="https://dribbble.com/pixelhint" class="dribble" target="_blank" data-title="Dribble"></a></li>
-            
-            
-            
-            
-        </ul><!-- end social -->
-
-        <div class="rights">
-            <p>Copyright © 2014 magnetic.</p>
-            <p>Template by <a href="http://pixelhint.com/magnetic-free-html5-responsive-photography-website-template/">Pixelhint.com</a></p>
-            <p>Hexo Theme by <a href="http://www.codeblocq.com/">Jonathan K.</a></p>
-        </div><!-- end rights -->
-    </div><!-- end footer -->
-</header><!-- end header -->
-
-
-<!-- Main Content -->
-<section class="main clearfix">
-
-    <section class="top" style="background: url('http://placehold.it/1300x500');">
-        <div class="wrapper content_header clearfix">
-            
-
-<div class="work_nav">
-
-    <ul class="btn clearfix">
-        
-        <li><a href="/2019/12/07/精品文章/ThinkPHP5.x 路由缺陷导致远程代码执行/" class="previous" data-title="ThinkPHP5.x 路由缺陷导致远程代码执行"></a></li>
-        
-        <li><a href="/" class="grid" data-title="Portfolio"></a></li>
-        
-        <li><a href="/2019/12/07/精品文章/CVE-2017-7269 IIS6.0远程代码执行漏洞复现/" class="next" data-title="CVE-2017-7269 IIS..."></a></li>
-        
-    </ul>
-
-</div><!-- end work_nav -->
-            <h1 class="title">metinfo 6.2.0最新版本前台注入漏洞</h1>
         </div>
-    </section><!-- end top -->
-
-    <section class="wrapper">
-        <div class="content">
-
-            <!-- Gallery -->
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://allblue147.github.io">
+                        ALL BLUE</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/前端/"><i class="fa "></i>
+                                前端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/后端/"><i class="fa "></i>
+                                后端</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/工具/"><i class="fa "></i>
+                                工具</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="metinfo 6.2.0最新版本前台注入漏洞">
             
-
-            <!-- Content -->
-            <p>metinfo 6.2.0最新版本前台注入漏洞<br><a href="https://nosec.org/home/detail/2436.html" target="_blank" rel="noopener">https://nosec.org/home/detail/2436.html</a><br><a href="https://xz.aliyun.com/t/4508" target="_blank" rel="noopener">https://xz.aliyun.com/t/4508</a></p>
+            metinfo 6.2.0最新版本前台注入漏洞
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/漏洞/">漏洞</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/12/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                587</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>metinfo 6.2.0最新版本前台注入漏洞<br><a href="https://nosec.org/home/detail/2436.html" target="_blank" rel="noopener">https://nosec.org/home/detail/2436.html</a><br><a href="https://xz.aliyun.com/t/4508" target="_blank" rel="noopener">https://xz.aliyun.com/t/4508</a></p>
 <h2 id="漏洞环境："><a href="#漏洞环境：" class="headerlink" title="漏洞环境："></a>漏洞环境：</h2><p>docker pull zksmile/vul:metinfov6.2.0</p>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述:"></a>概述:</h2><p>看到某个表哥发的metinfo 6.1.3最新注入（<a href="https://xz.aliyun.com/t/4508)，以前我发过metinfo利用注入getshell的文章，这里正好可以结合。（https://nosec.org/home/detail/2324.html)，在检查官方发布的最新版6.2.0版本的时候，发现该漏洞并未修复。" target="_blank" rel="noopener">https://xz.aliyun.com/t/4508)，以前我发过metinfo利用注入getshell的文章，这里正好可以结合。（https://nosec.org/home/detail/2324.html)，在检查官方发布的最新版6.2.0版本的时候，发现该漏洞并未修复。</a></p>
 <h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p>前台，（<a href="https://xz.aliyun.com/t/4508" target="_blank" rel="noopener">https://xz.aliyun.com/t/4508</a> ）作者在这里说需要注册会员，其实有一处不需要。漏洞详情<br>这里关键点在auth类的encode()和decode()方法。看下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class auth &#123;</span><br><span class="line">    </span><br><span class="line">    public $auth_key;</span><br><span class="line">    </span><br><span class="line">    public function __construct() &#123;</span><br><span class="line">        global $_M;</span><br><span class="line">        $this-&gt;auth_key = $_M[&apos;config&apos;][&apos;met_webkeys&apos;];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public function decode($str, $key = &apos;&apos;)&#123;</span><br><span class="line">        return $this-&gt;authcode($str, &apos;DECODE&apos;, $this-&gt;auth_key.$key);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public function encode($str, $key = &apos;&apos;, $time = 0)&#123;</span><br><span class="line">        return $this-&gt;authcode($str, &apos;ENCODE&apos;, $this-&gt;auth_key.$key, $time);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
@@ -179,43 +214,115 @@
 <p><img src="http://zone.secevery.com/uploads/article/20190403/cad87ae8e18e3d19c199915e1cc701d9.png" alt></p>
 <p>文章转载于：<a href="http://zone.secevery.com/article/1058" target="_blank" rel="noopener">http://zone.secevery.com/article/1058</a></p>
 
-
-            <!-- Tags -->
-            
-
-
-<div class="tags">
+    </div>
     
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/12/07/精品文章/ThinkPHP5.x 路由缺陷导致远程代码执行/" class="pre-post btn btn-default" title="ThinkPHP5.x 路由缺陷导致远程代码执行">
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            ThinkPHP5.x 路由缺陷导致远程代码执行</span>
+    </a>
+    
+    
+    <a href="/2019/12/07/精品文章/CVE-2017-7269 IIS6.0远程代码执行漏洞复现/" class="next-post btn btn-default" title="CVE-2017-7269 IIS6.0远程代码执行漏洞复现">
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            CVE-2017-7269 IIS6.0远程代码执行漏洞复现</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+    appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞环境："><span class="toc-text">漏洞环境：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-text">概述:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用条件"><span class="toc-text">利用条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload"><span class="toc-text">payload</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、不需要登陆"><span class="toc-text">1、不需要登陆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、-需要登陆"><span class="toc-text">2、 需要登陆</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-text">修复方案</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
-            <!-- Comments -->
-            <div>
-                
-
-
-
-
-            </div>
-        </div><!-- end content -->
-    </section>
-</section><!-- end main -->
-
-<!-- After footer scripts -->
-
-<!-- jQuery -->
-<script src="/js/jquery.js"></script>
-
-<!-- Custom Code -->
-<script src="/js/main.js"></script>
-
-<!-- Gallery -->
-<script src="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Disqus Comments -->
-
-
+<script src="/js/app.js?rev=@@hash"></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
-
 </html>
