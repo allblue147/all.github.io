@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="WDJA CMS 1.5.2模板注入漏洞 漏洞发掘分析 前言 这是年初无聊在家审的一个小众的CMS，漏洞官方已经修复，现在分享出来给大家，希望一起共同学习和进步。 代码审计 漏洞文件：\common\incfiles\function.inc.php 全局搜索中发现这个cms的模板引擎是使用eval来实现的。  我们 跟进ii_eval()函数。非常这里$strers可控疑似存在代码执行。我们在继">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="WDJA CMS 1.5.2模板注入漏洞 漏洞发掘分析 前言 这是年初无聊在家审的一个小众的CMS，漏洞官方已经修复，现在分享出来给大家，希望一起共同学习和进步。 代码审计 漏洞文件：\common\incfiles\function.inc.php 全局搜索中发现这个cms的模板引擎是使用eval来实现的。  我们 跟进ii_eval()函数。非常这里$strers可控疑似存在代码执行。我们在继">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/1576941887696.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769419845118.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769420731387.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769423583552.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769426132007.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769428105956.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769430952853.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769431224043.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/image-20191221234802438.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769412265912.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769412702349.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/微信图片_20201102133040.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769414579686.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/15769415518386.png">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="WDJA CMS 1.5.2模板注入漏洞 漏洞发掘分析 前言 这是年初无聊在家审的一个小众的CMS，漏洞官方已经修复，现在分享出来给大家，希望一起共同学习和进步。 代码审计 漏洞文件：\common\incfiles\function.inc.php 全局搜索中发现这个cms的模板引擎是使用eval来实现的。  我们 跟进ii_eval()函数。非常这里$strers可控疑似存在代码执行。我们在继">
+<meta name="twitter:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/WDJACMS1.5.2模板注入漏洞/1576941887696.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/WellCMS/WellCMS 2.0 Beta3 后台任意文件上传/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/vBulletin/CVE-2019-16759 vBulletin 5.x 0day pre-auth RCE exploit/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:37.632Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>WDJA CMS 1.5.2模板注入漏洞 漏洞发掘分析 前言 这是年初无聊在家审的一个小众的CMS，漏洞官方已经修复，现在分享出来给大家，希望一起共同学习和进步。 代码审计 <code>漏洞文件：\common\incfiles\function.inc.php</code> 全局搜索中发现这个cms的模板引擎是使用eval来实现的。 <img src="WDJACMS1.5.2模板注入漏洞/1576941887696.png" alt="img"> 我们 跟进<code>ii_eval()</code>函数。非常这里<code>$strers</code>可控疑似存在代码执行。我们在继续跟进<code>ii_eval()</code>看谁调用了他。 <img src="WDJACMS1.5.2模板注入漏洞/15769419845118.png" alt="img"> <code>漏洞文件：\common\incfiles\function.inc.php</code> 只有一个地方对他进行了调用，他是<code>ii_creplace()</code>函数 <img src="WDJACMS1.5.2模板注入漏洞/15769420731387.png" alt="img"> 我们看<code>ii_creplace()</code>代码，<code>$strers</code>可控，但是它必须匹配<code>({\$=(.[^\}]*)})</code>这个正则类似于下面： <code>{$=phpinfo()}</code> <img src="WDJACMS1.5.2模板注入漏洞/15769423583552.png" alt="img"> <code>漏洞文件passport\address\common\incfiles\manage_config.inc.php</code> 那么我们继续跟进<code>ii_creplace()</code>函数看谁对他进行了调用，找了很多但是都对函数中的<code>$</code>进行了转义，但是在<code>passport\address\common\incfiles\manage_config.inc.php</code>中的<code>wdja_cms_admin_manage_list()</code>并未做任何过滤。我们继续跟进。 <img src="WDJACMS1.5.2模板注入漏洞/15769426132007.png" alt="img"> 我们发现<code>\passport\address\manage.php</code>对<code>passport\address\common\incfiles\manage_config.inc.php</code>进行了包含并调用了<code>wdja_cms_admin_manage_action()</code>,而它调用了<code>wdja_cms_admin_manage_list()</code>,那么很明显我们只需将符合<code>{\$=(.[^\}]*)}</code>正则的payload传入即可导致getshell. <img src="WDJACMS1.5.2模板注入漏洞/15769428105956.png" alt="img"> 那么从哪传入呢，我们直接把<code>wdja_cms_admin_manage_list()</code>中的sql语句打印出来即可知道。 <img src="WDJACMS1.5.2模板注入漏洞/15769430952853.png" alt="img"> <img src="WDJACMS1.5.2模板注入漏洞/15769431224043.png" alt="img"> 很明显是从用户地址中获取。 <img src="WDJACMS1.5.2模板注入漏洞/image-20191221234802438.png" alt="image-20191221234802438"> Getshell 先注册一个会员 <code>http://www.域名.com/passport/?type=register</code> 在添加地址出写入要注入的命令,确认添加地址即可。 <code>http://www.域名.com/passport/address/index.php?type=list</code> <img src="WDJACMS1.5.2模板注入漏洞/15769412265912.png" alt="img"> <img src="WDJACMS1.5.2模板注入漏洞/15769412702349.png" alt="img"> getshell exp,同样方法在地址出写入下面代码即可在<code>passport\address</code>路径下生成一个shell.php <img src="WDJACMS1.5.2模板注入漏洞/微信图片_20201102133040.png" alt="http://goodcheerleung.gitee.io/blog/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20201102133040.png"> <img src="WDJACMS1.5.2模板注入漏洞/15769414579686.png" alt="img"> <img src="WDJACMS1.5.2模板注入漏洞/15769415518386.png" alt="img"></p>
+<p><a href="https://bbs.ichunqiu.com/forum.php?mod=misc&amp;action=viewthreadmod&amp;tid=59066" target="_blank" rel="noopener">本主题由 村长CZ 于 2020-11-17 18:53 添加图章 100元奖金</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/WDJACMS/WDJACMS1.5.2模板注入漏洞/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

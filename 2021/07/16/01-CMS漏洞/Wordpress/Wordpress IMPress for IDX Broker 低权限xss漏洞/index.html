@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="​    CVE-2020-11512分析 ​     首先看到在插件的目录plugins\idx-broker-platinum\idx\initiate-plugin.php文件下的277行的idx_update_recaptcha_key函数中接收了POST参数idx_recaptcha_site_key数据，在279行被update_option函数调用 ​    注：在当前账户权限下，执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="​    CVE-2020-11512分析 ​     首先看到在插件的目录plugins\idx-broker-platinum\idx\initiate-plugin.php文件下的277行的idx_update_recaptcha_key函数中接收了POST参数idx_recaptcha_site_key数据，在279行被update_option函数调用 ​    注：在当前账户权限下，执">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029545342-0.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/10295432F-1.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/102954C55-2.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029546116-3.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/10295454C-4.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029541155-5.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029545J5-6.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029545632-7.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029544206-8.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/102954B10-9.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/10295434M-10.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029544K7-11.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029541607-12.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/10295435O-13.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029545950-14.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/102954J91-15.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029543246-16.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029546342-17.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/10295442O-18.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/102954MP-19.png">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="​    CVE-2020-11512分析 ​     首先看到在插件的目录plugins\idx-broker-platinum\idx\initiate-plugin.php文件下的277行的idx_update_recaptcha_key函数中接收了POST参数idx_recaptcha_site_key数据，在279行被update_option函数调用 ​    注：在当前账户权限下，执">
+<meta name="twitter:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/Wordpress%20IMPress%20for%20IDX%20Broker%20低权限xss漏洞/1029545342-0.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/Wordpress/WordPress_4.4_SSRF/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/Wordpress/Wordpress File-manager任意⽂件上传/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-11512利用"><span class="toc-number">1.</span> <span class="toc-text">CVE-2020-11512利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-9514漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">CVE-2020-9514漏洞分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-9514漏洞利用"><span class="toc-number">3.</span> <span class="toc-text">CVE-2020-9514漏洞利用</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#防御"><span class="toc-number"></span> <span class="toc-text">防御</span></a>
+    </li></div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:37.974Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>​    CVE-2020-11512分析</p>
+<p>​     首先看到在插件的目录plugins\idx-broker-platinum\idx\initiate-plugin.php文件下的277行的idx_update_recaptcha_key函数中接收了POST参数idx_recaptcha_site_key数据，在279行被update_option函数调用</p>
+<p>​    注：在当前账户权限下，执行修改初始化信息只可以用这个验证，返回信息只有一个1，如果不是1说明修改失败 在在当前用户全下载通过Wordpress IMPress for IDX Broker可以越权操作IMPress for IDX  Brokerc插件的初始化信息，通过xss漏洞获取管理员敏感信息。</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029545342-0.png" alt="img"></p>
+<p>​    下面我们看下update_option函数对该数据的操作，该函数是对wordpress中的options参数的进行更新数据，我们看到上面对options的传入参数为idx_recaptcha_site_key，即更新该参数的值<br> <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/10295432F-1.png" alt="img"></p>
+<p>​    在390行我们看到执行了update参数，更新了数据库中的数据<br> <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/102954C55-2.png" alt="img"><br> <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029546116-3.png" alt="img"><br> 我们在update_option函数中调用了wp_protect_special_option对option参数名进行html过滤，却没有对value进行过滤，引发了xss漏洞<br> <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/10295454C-4.png" alt="img"></p>
+<p>​    下面我们看下函数idx_update_recaptcha_key的调用位置，在initiate-plugin.php文件下的34行hook在wp_ajax_idx_update_recaptcha_key tag上，</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029541155-5.png" alt="img"><br>  我們在admin-ajax.php页面中159行中获取到action参数，使用is_user_logged_in判断了用户权限后，直接将action参数拼接到do_action函数中进行执行，而is_user_logged_in只是判断用户是否存在，没有进行权限判断。</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029545J5-6.png" alt="img"></p>
+<h3 id="CVE-2020-11512利用"><a href="#CVE-2020-11512利用" class="headerlink" title="CVE-2020-11512利用"></a>CVE-2020-11512利用</h3><p>​    通过user1用户（订阅者权限）发送数据包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol>
+<li>​        POST /wordpress/wp-admin/admin-ajax.php HTTP/1.1</li>
+<li>​        Host: localhost</li>
+<li>​        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0</li>
+<li>​        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,<em>/</em>;q=0.8</li>
+<li>​        Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</li>
+<li>​        Connection: close</li>
+<li>​        Cookie:  wordpress_bbfa5b726c6b7a9cf3cda9370be3ee91=user1%7C1591004988%7CPrKGAmfSsNxfsQ9QAGID3aK8sMmvLnJtimfdGugoqCN%7C2850d94c57420c45398bd86aa49445eb60914036c0482cd3ebc755de5a8b1239; wordpress_test_cookie=WP+Cookie+check;  wordpress_logged_in_bbfa5b726c6b7a9cf3cda9370be3ee91=user1%7C1591004988%7CPrKGAmfSsNxfsQ9QAGID3aK8sMmvLnJtimfdGugoqCN%7Cc1e4006d123d6f33199624e0a514319b21b93859faa5af2a60fc0ceda066fb73; wp-settings-time-2=1590832197</li>
+<li>​        Upgrade-Insecure-Requests: 1</li>
+<li>​        Content-Type: application/x-www-form-urlencoded</li>
+<li>​        Content-Length: 0</li>
+<li>​         </li>
+<li>​        action=idx_update_recaptcha_key&amp;idx_recaptcha_site_key=a22212322123”&gt;&lt;svg onload=alert(/~xss~/)&gt;’</li>
+</ol>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029545632-7.png" alt="img"></p>
+<p>​    此时管理员对该插件进行设置操作：</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029544206-8.png" alt="img"></p>
+<h3 id="CVE-2020-9514漏洞分析"><a href="#CVE-2020-9514漏洞分析" class="headerlink" title="CVE-2020-9514漏洞分析"></a>CVE-2020-9514漏洞分析</h3><p>​     从\wp-content\plugins\idx-broker-platinum\idx\wrappers.php文件中idx_ajax_create_dynamic_page函数中202行看到函数通过post_title参数中获取到了title数据，211行获取到了wrapper_page_id参数，在214和215行更新了数据库，并在218行针对给定的id进行更新元字段。 <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/102954B10-9.png" alt="img"></p>
+<p>​    继续看236行的idx_ajax_delete_dynamic_page函数，接收到post参数wrapper_page_id，然后进行删除该数据操作</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/10295434M-10.png" alt="img"></p>
+<p>​    我们找一下这两个函数的调用位置：</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029544K7-11.png" alt="img"></p>
+<p>​    好了，可以看到这两个函数全部挂钩在wp_ajax开头的钩子上，利用上面的越权操作即可操作</p>
+<h3 id="CVE-2020-9514漏洞利用"><a href="#CVE-2020-9514漏洞利用" class="headerlink" title="CVE-2020-9514漏洞利用"></a>CVE-2020-9514漏洞利用</h3><p>​    首先添加一个Wrapper页面</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029541607-12.png" alt="img"></p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/10295435O-13.png" alt="img"></p>
+<p>​    下面使用user1用户进行create操作：</p>
+<p>​    首先在页面中获取上面创建的id值：6</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029545950-14.png" alt="img"></p>
+<p>​    操作如下：</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/102954J91-15.png" alt="img"></p>
+<p>​    发现该页面数据已改变，并且由user1修改</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029543246-16.png" alt="img"></p>
+<p>​    同样执行删除操作</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/1029546342-17.png" alt="img"></p>
+<p>​    发现已经无了：</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/10295442O-18.png" alt="img"></p>
+<h2 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h2><p>​    通过查看对比补丁信息，新的版本使用current_user_can函数判断当前用户的权限，并验证nonce机制防御CSRF攻击。</p>
+<p>​    <img src="Wordpress IMPress for IDX Broker 低权限xss漏洞/102954MP-19.png" alt="img"></p>
+<p>​     </p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-11512利用"><span class="toc-number">1.</span> <span class="toc-text">CVE-2020-11512利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-9514漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">CVE-2020-9514漏洞分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-9514漏洞利用"><span class="toc-number">3.</span> <span class="toc-text">CVE-2020-9514漏洞利用</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#防御"><span class="toc-number"></span> <span class="toc-text">防御</span></a>
+    </li></div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Wordpress/Wordpress IMPress for IDX Broker 低权限xss漏洞/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

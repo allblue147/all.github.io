@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="0x00 漏洞概述影响版本：ecshop4.1.0及以下是否需要身份认证：否，前台漏洞漏洞类型：SQL注入CNVD编号：CNVD-2020-58823，*https://www.cnvd.org.cn/flaw/show/2454613源码获取：https://www.ecshop.com/*，登录注册下载，最新版本为4.1.1(**已修复**)。 0x01 漏洞详情漏洞代码：/source/ec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="0x00 漏洞概述影响版本：ecshop4.1.0及以下是否需要身份认证：否，前台漏洞漏洞类型：SQL注入CNVD编号：CNVD-2020-58823，*https://www.cnvd.org.cn/flaw/show/2454613源码获取：https://www.ecshop.com/*，登录注册下载，最新版本为4.1.1(**已修复**)。 0x01 漏洞详情漏洞代码：/source/ec">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="0x00 漏洞概述影响版本：ecshop4.1.0及以下是否需要身份认证：否，前台漏洞漏洞类型：SQL注入CNVD编号：CNVD-2020-58823，*https://www.cnvd.org.cn/flaw/show/2454613源码获取：https://www.ecshop.com/*，登录注册下载，最新版本为4.1.1(**已修复**)。 0x01 漏洞详情漏洞代码：/source/ec">
+<meta name="twitter:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/ECShop4.1.0前台免登录SQL注入/640">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/FineCMS/FineCMS_v5.0.8两处getshell/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/Ecshop/ecshop2.x_命令执行/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-漏洞概述"><span class="toc-number">1.</span> <span class="toc-text">0x00 漏洞概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-漏洞详情"><span class="toc-number">2.</span> <span class="toc-text">0x01 漏洞详情</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-注入漏洞利用分析"><span class="toc-number">3.</span> <span class="toc-text">0x02 注入漏洞利用分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#思路一：获取注入获取管理员密码md5"><span class="toc-number">3.1.</span> <span class="toc-text">思路一：获取注入获取管理员密码md5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路二：获取管理员session"><span class="toc-number">3.2.</span> <span class="toc-text">思路二：获取管理员session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路三-ecshop-api-client-includes-lib-api-php-写入shell"><span class="toc-number">3.3.</span> <span class="toc-text">思路三: ecshop/api/client/includes/lib_api.php 写入shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最后getshell"><span class="toc-number">3.4.</span> <span class="toc-text">最后getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-结束语"><span class="toc-number">4.</span> <span class="toc-text">0x03 结束语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-参考"><span class="toc-number">5.</span> <span class="toc-text">0x04 参考</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:35.474Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="0x00-漏洞概述"><a href="#0x00-漏洞概述" class="headerlink" title="0x00 漏洞概述"></a><strong>0x00 漏洞概述</strong></h2><p>影响版本：<strong>ecshop4.1.0及以下</strong><br>是否需要身份认证：<strong>否，前台漏洞</strong><br>漏洞类型：<strong>SQL注入</strong><br>CNVD编号：<strong>CNVD-2020-58823，*</strong><a href="https://www.cnvd.org.cn/flaw/show/2454613" target="_blank" rel="noopener">https://www.cnvd.org.cn/flaw/show/2454613</a><em><br>源码获取：</em><a href="https://www.ecshop.com/*，登录注册下载，最新版本为4.1.1(**已修复**)。" target="_blank" rel="noopener">https://www.ecshop.com/*，登录注册下载，最新版本为4.1.1(**已修复**)。</a></p>
+<h2 id="0x01-漏洞详情"><a href="#0x01-漏洞详情" class="headerlink" title="0x01 漏洞详情"></a><strong>0x01 漏洞详情</strong></h2><p><strong>漏洞代码</strong>：/source/ecshop/delete_cart_goods.php,16行</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">漏洞代码</p>
+<p>$_POST变量直接传入sql语句进行拼接，再进入数据库查询，触发漏洞。</p>
+<p>如果有对ecshop进行过代码审计的话，应该会知道在includes/safety.php存在个waf，<strong>但是在这个版本并没有生效，这里漏洞触发可以不进入这里的过滤防护逻辑</strong>。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">includes/safety.php</p>
+<p>本地搭建验证如下，配置默认是开了报错，线上的测试环境也是，不存在报错的话可以通过盲注验证。报错注入的截图证明如下。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">本地漏洞验证</p>
+<p>漏洞修复：对请求参数进行过滤。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">漏洞修复</p>
+<h2 id="0x02-注入漏洞利用分析"><a href="#0x02-注入漏洞利用分析" class="headerlink" title="0x02 注入漏洞利用分析"></a><strong>0x02 注入漏洞利用分析</strong></h2><h3 id="思路一：获取注入获取管理员密码md5"><a href="#思路一：获取注入获取管理员密码md5" class="headerlink" title="思路一：获取注入获取管理员密码md5"></a>思路一：获取注入获取管理员密码md5</h3><p>ecshop默认密码不加盐，所以可以直接注入找到ecs_admin_user表获取管理员密码的md5.</p>
+<h3 id="思路二：获取管理员session"><a href="#思路二：获取管理员session" class="headerlink" title="思路二：获取管理员session"></a>思路二：获取管理员session</h3><p>如果管理员使用了较为复杂的密码，md5解不出来时，可以考虑获取session。即cookie中ECSCP_ID的值。<br>登录用户的session存在ecs_sessions表，但是只有sesskey。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">ecs_sessions表</p>
+<p>代码中登录成功后cookie设置：<code>setcookie($this-&gt;session_name, $this-&gt;session_id . $this-&gt;gen_session_key($this-&gt;session_id), 0, $this-&gt;session_cookie_path, $this-&gt;session_cookie_domain,  $this-&gt;session_cookie_secure, TRUE);</code>.</p>
+<p>其中<code>$this-&gt;session_name</code> 就是ECSCP_ID， <code>$this-&gt;session_id . $this-&gt;gen_session_key($this→session_id)</code>就是最终cookie的值，数据库中sesskey对应的是<code>$this-&gt;session_id</code>，至于后半部分是通过gen_session_key这个函数生成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function gen_session_key($session_id)</span><br><span class="line">    &#123;</span><br><span class="line">        static $ip = &apos;&apos;;</span><br><span class="line">        if ($ip == &apos;&apos;)</span><br><span class="line">        &#123;</span><br><span class="line">            $ip = substr($this-&gt;_ip, 0, strrpos($this-&gt;_ip, &apos;.&apos;));</span><br><span class="line">        &#125; </span><br><span class="line">        return sprintf(&apos;%08x&apos;, crc32(ROOT_PATH . $ip . $session_id));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>后半部分gen_session_key通过ip和ROOT_PATH来确认，ip也在session表中可以找到，至于ROOT_PATH，可以通过猜测或者部分路径的报错拿到。最后拼凑到的，就是最终的cookie。</p>
+<h3 id="思路三-ecshop-api-client-includes-lib-api-php-写入shell"><a href="#思路三-ecshop-api-client-includes-lib-api-php-写入shell" class="headerlink" title="思路三: ecshop/api/client/includes/lib_api.php 写入shell"></a>思路三: ecshop/api/client/includes/lib_api.php 写入shell</h3><p>api/client 的访问需要登录，位于ecshop/api/client/includes/lib_api.php的API_UserLogin接口。这里登录是直接校验密码md5，也就是说当思路一解不出来时，这里也能用上密码的md5。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">api登录</p>
+<p>登录成功后访问api接口，可以利用一个任意写入漏洞。触发点为upload_image函数，在API_AddBrand函数中被调用。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">upload_image函数</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">调用upload_image函数</p>
+<p>最后登录成功后写入文件的payload为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">URL: http://localhost/ecshop/api/client/api.php</span><br><span class="line"></span><br><span class="line">POST: Json= &#123;&quot;Action&quot;:&quot;AddBrand&quot;,&quot;brand_name&quot;:&quot;test&quot;,&quot;brand_logo&quot;:&#123;&quot;Data&quot;:&quot;xx,&quot;Type&quot;:&quot;xx&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="最后getshell"><a href="#最后getshell" class="headerlink" title="最后getshell"></a>最后getshell</h3><p>ecshop后台能读写文件的地方，大多做了限制。现在找到能shell的地方，就是在利用smarty模板渲染来执行代码，可参考ecshop原来爆过的一个任意代码执行漏洞，这里简要概述下。</p>
+<ol>
+<li>首先插入代码，在模板管理里找到邮件模板，修改为<code>{str:{\$asd&#39;];assert(base64_decode(&#39;ZmlsZV9wdXRfY29udGVudHMoJ3hjaGVjay5waHAnLCc8P3BocCBwaHBpbmZvKCk7Jyk7IA==&#39;));//}x</code></li>
+</ol>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">payload</p>
+<ol>
+<li>再回到管理密码找回页面，点击确定，即可触发。</li>
+</ol>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">触发页面</p>
+<p>分析如下：<code>$template[&#39;template_content&#39;]</code>为我们插入的数据。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">触发入口</p>
+<p>跟进fetch函数，进入eval函数前还有个fetch_str函数，会对payload进行一些过滤，这里不展开细节。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">fetch函数</p>
+<p><code>_eval</code>函数将过滤后的字符串拿过来进行执行。由于是无回显，所以payload采用的是写文件的方式。</p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片">eval执行</p>
+<h2 id="0x03-结束语"><a href="#0x03-结束语" class="headerlink" title="0x03 结束语"></a><strong>0x03 结束语</strong></h2><p>这个前台SQL注入较为简单，但是危害较高，只通过一些简单字符匹配规则去找类似这种漏洞的话，整个项目大概有三百多个，其中前台的风险大多被单双引号包裹且开了GPC防护</p>
+<h2 id="0x04-参考"><a href="#0x04-参考" class="headerlink" title="0x04 参考"></a><strong>0x04 参考</strong></h2><p><em>Ecshop 2.x/3.x SQL注入/任意代码执行漏洞分析：<a href="https://www.secrss.com/articles/4965" target="_blank" rel="noopener">https://www.secrss.com/articles/4965</a></em></p>
+<p><img src="ECShop4.1.0前台免登录SQL注入/640" alt="图片"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-漏洞概述"><span class="toc-number">1.</span> <span class="toc-text">0x00 漏洞概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-漏洞详情"><span class="toc-number">2.</span> <span class="toc-text">0x01 漏洞详情</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-注入漏洞利用分析"><span class="toc-number">3.</span> <span class="toc-text">0x02 注入漏洞利用分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#思路一：获取注入获取管理员密码md5"><span class="toc-number">3.1.</span> <span class="toc-text">思路一：获取注入获取管理员密码md5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路二：获取管理员session"><span class="toc-number">3.2.</span> <span class="toc-text">思路二：获取管理员session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路三-ecshop-api-client-includes-lib-api-php-写入shell"><span class="toc-number">3.3.</span> <span class="toc-text">思路三: ecshop/api/client/includes/lib_api.php 写入shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最后getshell"><span class="toc-number">3.4.</span> <span class="toc-text">最后getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-结束语"><span class="toc-number">4.</span> <span class="toc-text">0x03 结束语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-参考"><span class="toc-number">5.</span> <span class="toc-text">0x04 参考</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/Ecshop/ECShop4.1.0前台免登录SQL注入/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

