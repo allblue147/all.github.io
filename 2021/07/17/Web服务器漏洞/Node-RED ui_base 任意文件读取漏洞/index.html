@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
     <meta name="description" content="Node-RED ui_base 任意文件读取漏洞漏洞描述Node-RED 在/nodes/ui_base.js中，URL与’/ui_base/js/*’匹配，然后传递给path.join， 缺乏对最终路径的验证会导致路径遍历漏洞，可以利用这个漏洞读取服务器上的敏感数据，比如settings.js 漏洞影响 [!NOTE] Node-RED  FOFA [!NOTE] title=”Node-RE">
 <meta property="og:type" content="article">
-<meta property="og:title" content="A1LB1ue">
+<meta property="og:title" content="Node-RED ui_base 任意文件读取漏洞">
 <meta property="og:url" content="http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/index.html">
 <meta property="og:site_name" content="A1LB1ue">
 <meta property="og:description" content="Node-RED ui_base 任意文件读取漏洞漏洞描述Node-RED 在/nodes/ui_base.js中，URL与’/ui_base/js/*’匹配，然后传递给path.join， 缺乏对最终路径的验证会导致路径遍历漏洞，可以利用这个漏洞读取服务器上的敏感数据，比如settings.js 漏洞影响 [!NOTE] Node-RED  FOFA [!NOTE] title=”Node-RE">
@@ -16,9 +16,9 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/346971a9318cc350e4a2e701ae15460c.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/0b7ef8b4a6f8c62354d491da385c0da6.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/7e922f160ad22a13c67e04b91230f150.png">
-<meta property="og:updated_time" content="2021-07-17T13:57:48.654Z">
+<meta property="og:updated_time" content="2021-07-17T14:07:44.023Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="A1LB1ue">
+<meta name="twitter:title" content="Node-RED ui_base 任意文件读取漏洞">
 <meta name="twitter:description" content="Node-RED ui_base 任意文件读取漏洞漏洞描述Node-RED 在/nodes/ui_base.js中，URL与’/ui_base/js/*’匹配，然后传递给path.join， 缺乏对最终路径的验证会导致路径遍历漏洞，可以利用这个漏洞读取服务器上的敏感数据，比如settings.js 漏洞影响 [!NOTE] Node-RED  FOFA [!NOTE] title=”Node-RE">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/346971a9318cc350e4a2e701ae15460c.png">
     
@@ -40,7 +40,7 @@
       
     
     <!-- title -->
-    <title>A1LB1ue</title>
+    <title>Node-RED ui_base 任意文件读取漏洞</title>
     <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
     <!-- persian styles -->
@@ -92,16 +92,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&text=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&is_video=false&description=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Node-RED ui_base 任意文件读取漏洞&body=Check out this article: http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&name=Node-RED ui_base 任意文件读取漏洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&t=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -118,7 +118,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        
+        Node-RED ui_base 任意文件读取漏洞
     </h1>
 
 
@@ -137,6 +137,11 @@
 
 
       
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/任意文件读取/">任意文件读取</a>
+    </div>
+
 
       
 
@@ -192,16 +197,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&text=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&is_video=false&description=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Node-RED ui_base 任意文件读取漏洞&body=Check out this article: http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&title=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&name=Node-RED ui_base 任意文件读取漏洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/17/Web服务器漏洞/Node-RED ui_base 任意文件读取漏洞/&t=Node-RED ui_base 任意文件读取漏洞"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
