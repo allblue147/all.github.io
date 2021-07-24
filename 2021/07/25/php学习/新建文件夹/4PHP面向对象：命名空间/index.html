@@ -9,7 +9,7 @@
     <meta name="description" content="转载于：黑马程序员武汉中心命名空间 学习目标：理解命名空间的概念，掌握命名空间存在的价值以及解决的实际问题，利用命名空间实现复杂项目开发   命名空间基础 子空间 命名空间访问 全局空间 命名空间引入   概念  命名空间：namespace，指人为的将内存进行分隔，让不同内存区域的同名结构共存，从而解决在大型项目中可能出现的重名结构问题  PHP中，同一脚本运行周期内不允许出现同名结构 常量 函">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php面向对象:命令空间">
-<meta property="og:url" content="http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/index.html">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/index.html">
 <meta property="og:site_name" content="A1LB1ue">
 <meta property="og:description" content="转载于：黑马程序员武汉中心命名空间 学习目标：理解命名空间的概念，掌握命名空间存在的价值以及解决的实际问题，利用命名空间实现复杂项目开发   命名空间基础 子空间 命名空间访问 全局空间 命名空间引入   概念  命名空间：namespace，指人为的将内存进行分隔，让不同内存区域的同名结构共存，从而解决在大型项目中可能出现的重名结构问题  PHP中，同一脚本运行周期内不允许出现同名结构 常量 函">
 <meta property="og:locale" content="zh-CN">
@@ -73,10 +73,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇 " href="/2021/07/25/php学习/5面向对象：PDO/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/25/php学习/新建文件夹/5面向对象：PDO/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇 " href="/2021/07/25/php学习/3PHP面向对象：设计模式/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/25/php学习/新建文件夹/3PHP面向对象：设计模式/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -89,17 +89,17 @@
     <br>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&text=php面向对象:命令空间"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&is_video=false&description=php面向对象:命令空间"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=php面向对象:命令空间&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&name=php面向对象:命令空间&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&t=php面向对象:命令空间"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&text=php面向对象:命令空间"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&is_video=false&description=php面向对象:命令空间"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象:命令空间&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&name=php面向对象:命令空间&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&t=php面向对象:命令空间"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -732,17 +732,17 @@ new space2\Man();                # 使用引入空间的最后一级空间访问
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&text=php面向对象:命令空间"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&is_video=false&description=php面向对象:命令空间"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=php面向对象:命令空间&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&name=php面向对象:命令空间&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/4PHP面向对象：命名空间/&t=php面向对象:命令空间"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&text=php面向对象:命令空间"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&is_video=false&description=php面向对象:命令空间"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象:命令空间&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&title=php面向对象:命令空间"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&name=php面向对象:命令空间&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/4PHP面向对象：命名空间/&t=php面向对象:命令空间"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
