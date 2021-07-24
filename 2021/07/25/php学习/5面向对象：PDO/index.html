@@ -9,7 +9,7 @@
     <meta name="description" content="转载于：黑马程序员武汉中心PDO 学习目标：学习别人写好的类的使用，掌握PDO类对数据库的操作，并且能够基于PDO进行二次封装来实现更快捷的项目开发   PDO扩展 PDO操作 PDO异常 封装PDO   概念  PDO：php Data Object，是一种纯面向对象的数据库操作扩展  PDO在php5以后的版本增加，是目前通用的php操作数据库的扩展 PDO能够支持多种数据库操作，不限定数据库">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php面向对象:PDO">
-<meta property="og:url" content="http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/index.html">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/index.html">
 <meta property="og:site_name" content="A1LB1ue">
 <meta property="og:description" content="转载于：黑马程序员武汉中心PDO 学习目标：学习别人写好的类的使用，掌握PDO类对数据库的操作，并且能够基于PDO进行二次封装来实现更快捷的项目开发   PDO扩展 PDO操作 PDO异常 封装PDO   概念  PDO：php Data Object，是一种纯面向对象的数据库操作扩展  PDO在php5以后的版本增加，是目前通用的php操作数据库的扩展 PDO能够支持多种数据库操作，不限定数据库">
 <meta property="og:locale" content="zh-CN">
@@ -89,17 +89,17 @@
     <br>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&text=php面向对象:PDO"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&is_video=false&description=php面向对象:PDO"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=php面向对象:PDO&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&name=php面向对象:PDO&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&t=php面向对象:PDO"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&text=php面向对象:PDO"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&is_video=false&description=php面向对象:PDO"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象:PDO&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&name=php面向对象:PDO&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&t=php面向对象:PDO"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -1209,17 +1209,17 @@ public function my_query($sql,$only = true){
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&text=php面向对象:PDO"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&is_video=false&description=php面向对象:PDO"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=php面向对象:PDO&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&name=php面向对象:PDO&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/新建文件夹/5面向对象：PDO/&t=php面向对象:PDO"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&text=php面向对象:PDO"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&is_video=false&description=php面向对象:PDO"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象:PDO&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&title=php面向对象:PDO"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&name=php面向对象:PDO&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/5面向对象：PDO/&t=php面向对象:PDO"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
