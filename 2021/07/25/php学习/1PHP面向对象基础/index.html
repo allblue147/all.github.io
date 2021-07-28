@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="转载自：黑马程序员武汉中心面向对象基础 学习目标：理解面向对象编程思想，了解计算机编程语言的演变过程，掌握PHP面向对象的基础语法，使用面向对象编程思想和面向对象语法实现编程解决需求问题   计算机语言发展史 面向过程编程思想 面向对象编程思想 面向对象基础语法 综合运用   概念  编程语法发展史：计算机编程在历史的发展长河中，经历了多次版本变革，变化的轨迹是伴随着硬件的发展和人们对于计算机的认">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php面向对象基础">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/index.html">
+<meta property="og:site_name" content="A1LB1ue">
+<meta property="og:description" content="转载自：黑马程序员武汉中心面向对象基础 学习目标：理解面向对象编程思想，了解计算机编程语言的演变过程，掌握PHP面向对象的基础语法，使用面向对象编程思想和面向对象语法实现编程解决需求问题   计算机语言发展史 面向过程编程思想 面向对象编程思想 面向对象基础语法 综合运用   概念  编程语法发展史：计算机编程在历史的发展长河中，经历了多次版本变革，变化的轨迹是伴随着硬件的发展和人们对于计算机的认">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-07-28T13:24:59.963Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php面向对象基础">
+<meta name="twitter:description" content="转载自：黑马程序员武汉中心面向对象基础 学习目标：理解面向对象编程思想，了解计算机编程语言的演变过程，掌握PHP面向对象的基础语法，使用面向对象编程思想和面向对象语法实现编程解决需求问题   计算机语言发展史 面向过程编程思想 面向对象编程思想 面向对象基础语法 综合运用   概念  编程语法发展史：计算机编程在历史的发展长河中，经历了多次版本变革，变化的轨迹是伴随着硬件的发展和人们对于计算机的认">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>php面向对象基础</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<script type="text/javascript" src="../source/js/love.js"></script>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/07/25/php学习/2PHP面向对象高级/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/25/php学习/5面向对象：PDO/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&text=php面向对象基础"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&is_video=false&description=php面向对象基础"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象基础&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&name=php面向对象基础&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&t=php面向对象基础"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#转载自：黑马程序员武汉中心"><span class="toc-number">1.</span> <span class="toc-text">转载自：黑马程序员武汉中心</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#面向对象基础"><span class="toc-number"></span> <span class="toc-text">面向对象基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、面向对象编程思想"><span class="toc-number"></span> <span class="toc-text">一、面向对象编程思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、面向对象基础"><span class="toc-number"></span> <span class="toc-text">二、面向对象基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、面向对象关键字说明"><span class="toc-number"></span> <span class="toc-text">1、面向对象关键字说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、面向对象简单技术实现"><span class="toc-number"></span> <span class="toc-text">2、面向对象简单技术实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、类成员"><span class="toc-number"></span> <span class="toc-text">3、类成员</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实例化"><span class="toc-number"></span> <span class="toc-text">实例化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#属性访问"><span class="toc-number"></span> <span class="toc-text">属性访问</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方法访问"><span class="toc-number"></span> <span class="toc-text">方法访问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4、访问修饰限定符"><span class="toc-number"></span> <span class="toc-text">4、访问修饰限定符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、类内部对象"><span class="toc-number"></span> <span class="toc-text">5、类内部对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、面向对象开发规范"><span class="toc-number"></span> <span class="toc-text">6、面向对象开发规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、构造方法"><span class="toc-number"></span> <span class="toc-text">7、构造方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8、析构方法"><span class="toc-number"></span> <span class="toc-text">8、析构方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9、对象传值"><span class="toc-number"></span> <span class="toc-text">9、对象传值</span></a>
+    </li></ol></li></div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        php面向对象基础
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-24T16:01:28.115Z" itemprop="datePublished">2021-07-25</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h4 id="转载自：黑马程序员武汉中心"><a href="#转载自：黑马程序员武汉中心" class="headerlink" title="转载自：黑马程序员武汉中心"></a>转载自：<a href="https://space.bilibili.com/434398031?spm_id_from=333.788.b_765f7570696e666f.1" target="_blank" rel="noopener">黑马程序员武汉中心</a></h4><h1 id="面向对象基础"><a href="#面向对象基础" class="headerlink" title="面向对象基础"></a>面向对象基础</h1><blockquote>
+<p>学习目标：理解面向对象编程思想，了解计算机编程语言的演变过程，掌握PHP面向对象的基础语法，使用面向对象编程思想和面向对象语法实现编程解决需求问题</p>
+</blockquote>
+<ul>
+<li>计算机语言发展史</li>
+<li>面向过程编程思想</li>
+<li>面向对象编程思想</li>
+<li>面向对象基础语法</li>
+<li>综合运用</li>
+</ul>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>编程语法发展史</strong>：计算机编程在历史的发展长河中，经历了多次<code>版本变革</code>，变化的轨迹是伴随着硬件的发展和人们对于计算机的认知以及需求。</p>
+<ul>
+<li><p>机器语言：即开发者（科学家）使用<code>0</code>和<code>1</code>组成命令，然后在特定计算机上执行</p>
+<ul>
+<li><p>优点：执行效率高</p>
+</li>
+<li><p>缺点：开发难度大、移植性差、开发成本高</p>
+</li>
+</ul>
+</li>
+<li><p>汇编语言：开发者使用简洁<code>英文字母</code>和<code>符号</code>组成，让计算机读取后根据符号进行加工执行</p>
+<ul>
+<li>优点：指令简单明了、推广性高</li>
+<li>缺点：移植性差、功能简单</li>
+</ul>
+</li>
+<li><p>高级计算机语言：开发者使用类似自然语言的<code>符号</code>组成，高级语言根据编程思想分为<code>面向过程编程</code>和<code>面向对象编程</code>两种，然后系统对程序代码进行编译（需要第三方编译器）然后执行</p>
+<ul>
+<li>优点：移植性强、可读性强、推广性非常高</li>
+<li>缺点：执行效率降低</li>
+</ul>
+</li>
+</ul>
+<p><strong>面向过程编程</strong></p>
+<ul>
+<li><p>将要解决的问题（功能需求）分解成具体的步骤，然后通过<strong>函数编程</strong>实现每一个步骤，最后通过函数规定好的顺序调用完成</p>
+</li>
+<li><p>面向过程编程思想的优点</p>
+<ul>
+<li>能够针对步骤拆分，进行模块化封装（函数）</li>
+<li>可以实现代码复用，从而节省开发成本</li>
+</ul>
+</li>
+<li><p>面向过程编程思想的缺点</p>
+<ul>
+<li>不够灵活维护，流程一旦确定就必须按照既定方式执行到底。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<p>1、计算机编程从对开发人员要求极高到要求不高，是一代代人坚持不懈的结果</p>
+<p>2、面向对象编程是目前最为符合人类思维逻辑的一种编程思想</p>
+<h2 id="一、面向对象编程思想"><a href="#一、面向对象编程思想" class="headerlink" title="一、面向对象编程思想"></a>一、面向对象编程思想</h2><blockquote>
+<p>目标：理解面向对象编程思想与面向过程编程思想的区别，了解面向对象编程思想的核心，建立面向对象编程思想</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>面向对象编程思想</strong>：面向对象编程也叫做OOP编程（Objected Oriented Programming），是一种基于面向过程的开发思想。与面向过程强调分解事务步骤相似，面向对象更需要追求事务操作的“主体”，也就是<code>对象</code></p>
+<ul>
+<li><p>面向对象编程是一种编程思想，不是一种具体技术</p>
+</li>
+<li><p>面向对象是在面向过程基础之上发展而来，因此也是一种模块化编程思想（有函数）</p>
+</li>
+<li><p>面向对象能够更加方便的实现代码的重复利用（适用于大型项目）</p>
+</li>
+<li><p>在面向对象思维中，任何动作的执行或者数据都属于对象（一切皆对象）</p>
+</li>
+</ul>
+<blockquote>
+<p>原理</p>
+</blockquote>
+<p>1、面向过程编程思想原理<br>2、面向对象编程思想原理</p>
+<blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<ol>
+<li>面向对象编程是一种编程思想，与技术无关</li>
+<li>面向对象编程的本质是增加数据和功能的操作主体，即对象</li>
+<li>面向对象中所有的数据和功能都是由主体（对象）来调用和操作</li>
+</ol>
+<h2 id="二、面向对象基础"><a href="#二、面向对象基础" class="headerlink" title="二、面向对象基础"></a><strong>二、面向对象基础</strong></h2><blockquote>
+<p>学习目标：掌握面向对象的基础语法，能够使用面向对象思想和语法来解决需求问题</p>
+</blockquote>
+<ul>
+<li>面向对象关键字</li>
+<li>类的定义、实例化和对象</li>
+<li>类成员</li>
+<li>访问修饰限定符</li>
+<li>内部对象$this</li>
+<li>面向对象开发规范</li>
+<li>魔术方法</li>
+<li>成员访问</li>
+<li>静态成员</li>
+<li>自动加载</li>
+<li>克隆</li>
+<li>综合运用</li>
+</ul>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、面向过程的方式实现一个功能：购买商品</p>
+<pre><code># 定义函数购买商品
+function buy($goods_id,$num = 1){
+    echo &apos;商品：&apos; . $goods_id . &apos;购买：&apos; . $num . &apos;个！&apos;;
+    return ;
+}
+
+# 调用解决
+buy(1,10);    # 输出： 商品：1购买10个
+</code></pre><p>2、面向对象的方式实现一个功能：购买商品</p>
+<pre><code># 确定是消费者购买（类）
+class Buyer{
+    # 拥有购买功能（方法）
+    function buy($id,$num = 1){
+        echo &apos;商品：&apos; . $goods_id . &apos;购买：&apos; . $num . &apos;个！&apos;;
+        return ;
+    }
+}
+
+# 确定具体买家购买
+$b = new Buyer();    # 产生具体买家（对象）
+$b-&gt;buy(1,10);        # 输出： 商品：1购买10个
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、面向对象是一种编程思想，编程语言要实现这种编程思想就会有一些相应的语法格式出现</p>
+<p>2、使用面向对象语法格式实现的功能才属于面向对象编程（OOP）</p>
+<h3 id="1、面向对象关键字说明"><a href="#1、面向对象关键字说明" class="headerlink" title="1、面向对象关键字说明"></a><strong>1、面向对象关键字说明</strong></h3><blockquote>
+<p>目标：了解面向对象编程中一些关键字的意义</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>面向对象关键字</strong>：基于面向对象开发时，所用到的一些关键字，用来表明不同的结构或者类型</p>
+<ul>
+<li><p>类：class，是定义面向对象主体的最外层结构，用来包裹主体的数据和功能（函数）。类是一类具有共性事务的代表，代表的是事务的共性。</p>
+</li>
+<li><p>对象：object，是某类事务的具体代表，也是实际数据和功能操作的具体单元，也被称之为实例（instance）</p>
+</li>
+<li><p>实例化：new，从一个抽象的概念得到一个符合抽象概念的具体实例的过程</p>
+</li>
+<li><p>类成员：member，指类class结构中的所有内容，类成员里有三种</p>
+<ul>
+<li>方法：method，本质是在类class结构中创建的函数，也称之为<code>成员方法</code>或者成员函数</li>
+<li>属性：property，本质是在类class结构中创建的变量，也称之为<code>成员变量</code></li>
+<li>类常量：const，本质是在类class结构中创建的常量</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、因为面向对象思想的出现，会多出一些结构语法关键字</p>
+<p>2、了解关键字的作用后，才能更灵活的应用关键字实现面向对象编程</p>
+<h3 id="2、面向对象简单技术实现"><a href="#2、面向对象简单技术实现" class="headerlink" title="2、面向对象简单技术实现"></a><strong>2、面向对象简单技术实现</strong></h3><blockquote>
+<p>目标：掌握类、对象和实例化之间的关系</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>类</strong>：根据对象分析后得到的一种通用结构（分类）</p>
+<ul>
+<li>class关键字声明类</li>
+<li>类名：自定义名字，通常首字母大写，一般多单词组成类使用驼峰法（大驼峰法）</li>
+<li><p>大括号：类内部的结构（member，类成员）</p>
+<p>class 类名{</p>
+<p>}</p>
+</li>
+<li><p>实例化：类产生对象的过程</p>
+<p>new 类名;<br>new 类名();    # 使用较多</p>
+</li>
+<li><p>对象：根据类产生的某个具体存在的实体（instance），对象一般使用变量保存</p>
+<p>$object = new 类名();</p>
+</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、根据需求产生类结构（class）</p>
+<ul>
+<li>分析类拥有的数据</li>
+<li>分析类的行为</li>
+</ul>
+<p>2、在需要使用对象的地方，对类进行实例化（new），并保存对象</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、定义类基本语法：class 类名{}</p>
+<pre><code># 定义一个空类
+class Nothing{
+}
+</code></pre><p>2、类实例化产生对象：new</p>
+<pre><code># 实例化，并将产生的对象保存在变量中
+$n = new Nothing();
+# 打印对象
+var_dump($n);
+
+# 打印结果分析
+object(Nothing)#1 (0) { } 
+object：对象
+(Nothing)：所属类名 
+#1：对象编号，与类无关，是整个脚本中对象的序号，从1开始
+(0)：成员变量（属性）个数   
+{}：具体成员变量信息（键值对）
+</code></pre><p>3、类class是一种结构，如果写好没有语法错误的情况下，代码不会执行（与函数定义一样），也无法打印输出</p>
+<pre><code># 直接打印类名
+var_dump(Nothing);        # 错误，提示未定义的常量
+</code></pre><p>4、类的命名规范：类的命名规范与函数类似，区别在于人为的通常会将类名的首字母大写</p>
+<pre><code># 有效类名
+class My1{}
+class My_1{}
+class _My1{}
+
+# 无效类名
+class 1My{}
+class 1_my{}
+</code></pre><p>5、如果碰到多单词组成的类名，通常使用驼峰法</p>
+<pre><code>class MyClass{}
+</code></pre><blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<ol>
+<li>通过class关键字 + 类名 +{}创建类</li>
+<li>类是一种结构，不会自动运行，也不能输出</li>
+<li>通过new 类名实例化对象得到类的具体对象</li>
+<li>可以通过new实例化无限个对象</li>
+</ol>
+<h3 id="3、类成员"><a href="#3、类成员" class="headerlink" title="3、类成员"></a><strong>3、类成员</strong></h3><blockquote>
+<p>目标：了解类成员的类型，类成员的作用，能够运用类成员去创建有效类</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>类成员</strong>：指<strong>直接定义</strong>在类结构{}内部的一级成员，即直接依赖{}的成员</p>
+<ul>
+<li>类成员分类<ul>
+<li>成员变量（属性）：给对象存储数据的变量</li>
+<li>成员函数（方法）：给对象调用解决问题的函数</li>
+<li>类常量：属于类内部的常量，使用const关键字定义</li>
+</ul>
+</li>
+<li><p>属性和方法需要使用<strong>访问修饰限定符修饰</strong>，姑且使用public修饰</p>
+<p>class 类名{</p>
+<pre><code># 类常量（可以多个）
+const 常量名 = 值;
+# 属性（可以多个）
+public $属性名 [ = 值];    # 可以赋值也可以不赋值，只声明
+# 方法（可以多个）
+[public] function 方法名([形参列表]){
+    # 方法体（返回值）
+}
+</code></pre><p>}</p>
+</li>
+<li><p>成员访问：属性和方法都属于对象访问，类常量属于类访问（后续再讲）</p>
+<ul>
+<li>对象访问属性和方法，使用<code>-&gt;</code></li>
+</ul>
+<h1 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h1><p>$object = new 类名();</p>
+<h1 id="属性访问"><a href="#属性访问" class="headerlink" title="属性访问"></a>属性访问</h1><p>$object-&gt;属性名;        # 此时不带属性本身的$符号（前面保存对象的变量带$符号，object-&gt;属性名是整体）</p>
+<h1 id="方法访问"><a href="#方法访问" class="headerlink" title="方法访问"></a>方法访问</h1><p>$object-&gt;方法名([实参列表]);</p>
+</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、声明类结构</p>
+<p>2、明确类产生的对象是否需要有数据的存储：确定属性</p>
+<p>3、明确类产生的对象是否需要函数实现功能：确定方法</p>
+<p>4、明确类是否需要定义常量：确定类常量</p>
+<p>5、对象实例化</p>
+<p>6、类成员访问（属性和方法）</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、声明类结构</p>
+<pre><code># 定义买家类：买家有姓名，有钱
+class Buyer{
+    # 属性声明
+    $name;                # 错误，类内部属性必须使用访问修饰限定符
+    public $name;        # 正确：没有赋值
+    public $money = 0;    # 正确：有赋值
+
+    # 方法声明
+    function display(){
+        echo __CLASS__;    # 魔术常量，输出类名
+    }
+
+    # 类常量声明
+    const BIG_NAME = &apos;BUYER&apos;;
+}
+</code></pre><p>2、成员变量访问（属性和方法）：成员必须通过对象才能进行访问，需要先通过实例化得到对象，然后通过对象实现对成员进行操作</p>
+<pre><code># 实例化对象
+$b = new Buyer();
+# 访问属性
+echo $b-&gt;money;
+# 修改属性
+$b-&gt;money = 1000;
+# 删除属性
+unset($b-&gt;name);
+# 新增属性
+$b-&gt;age = 20;
+
+# 访问方法
+$b-&gt;display();
+</code></pre><p><strong>注意</strong></p>
+<ul>
+<li><p>删除属性和新增属性通常使用较少，更多的属性操作是访问和修改</p>
+</li>
+<li><p>类常量不是由对象来进行访问，所以暂时不做访问讲解，到后面知识再讲</p>
+</li>
+<li><p>属性和方法的使用都必须确保类中已经定义（属性可以新增）</p>
+</li>
+</ul>
+<p>3、类成员中：属性、类常量和方法都可以无限定义，但是定义的原则是相关性。除了以上三个类成员，不能在类结构{}中直接写其他任何代码</p>
+<pre><code>class Buyer{
+    echo __CLASS__;                    # 错误
+    define(&apos;PI&apos;,3.14);                 # 错误
+    if(true){ echo &apos;hello world&apos;}    # 错误
+}    
+</code></pre><blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<p>1、PHP类结构中有且仅有三种成员：属性、方法和类常量，其他直接属于类的内容都会报错</p>
+<p>2、类声明需要根据业务来确定类成员的存在和数量</p>
+<p>3、类中属性和方法的访问方式都是通过对象来调用：$对象-&gt;属性名/方法名()；注意属性名不带$符号</p>
+<p>4、类中定义属性不能直接属性名，需要使用符号public修饰（访问修饰限定符中的一种）</p>
+<h3 id="4、访问修饰限定符"><a href="#4、访问修饰限定符" class="headerlink" title="4、访问修饰限定符"></a><strong>4、访问修饰限定符</strong></h3><blockquote>
+<p>目标：理解访问修饰限定符的作用，掌握访问修饰限定符的实际运用</p>
+</blockquote>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>访问修饰限定符</strong>：用在属性或者方法前的修饰关键字，是用来控制属性或者方法的访问位置</p>
+<ul>
+<li>访问修饰限定符分类<ul>
+<li>public：公有，类内和类外都可以访问</li>
+<li>protected：受保护，只允许在相关类内部访问</li>
+<li>private：私有，只允许在定义类内部访问</li>
+</ul>
+</li>
+<li>属性必须有访问修饰限定符，方法可以没有访问修饰限定符（默认public）</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、声明类结构</p>
+<p>2、确定类成员</p>
+<p>3、确定类成员的访问位置限定，使用对应访问修饰限定符</p>
+<p>4、只能在对应位置访问被修饰的成员</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、公有成员访问</p>
+<pre><code>class Saler{
+    # 属性
+    public $count = 100;
+    # 方法
+    public function getCount(){
+        echo __METHOD__;        # 魔术常量，显示当前方法名（包含类名）
+    }
+
+    function setCount(){
+        echo __METHOD__;
+    }
+}
+
+# 实例化对象
+$s = new Saler();
+
+# 访问（类外）
+echo $s-&gt;count;
+$s-&gt;getCount();
+$s-&gt;setCount();
+</code></pre><p>2、受保护和私有成员设定（当前受保护和私有一致，需要高阶知识才会有区别）</p>
+<pre><code>class Buyer{
+    # 属性
+    protected $money = 10;
+    private $account = &apos;6226000000000001&apos;;
+
+    # 方法
+    protected function getMoney(){
+        echo __METHOD__;
+    }
+
+    private function getAccount(){
+        echo __METHOD__;
+    }
+}
+
+# 实例化
+$b = new Buyer();
+echo $b-&gt;money;        # 错误：当前属于类外部，不能访问
+echo $b-&gt;account;    # 错误：当前属于类外部，不能访问
+
+$b-&gt;getMoney();        # 错误：当前属于类外部，不能访问
+$b-&gt;getAccount();    # 错误：当前属于类外部，不能访问
+</code></pre><blockquote>
+<p><strong>总结</strong></p>
+</blockquote>
+<p>1、访问修饰限定符分为三种：public、protected和private，访问权限依次降低（类对成员控制权限依次增加）</p>
+<p>2、访问修饰限定符限定的是成员到底在哪里能被访问，私有和受保护都只能在类内部访问，公有可以在任何地方访问（但都必须是对象去访问）</p>
+<p>3、属性必须写清楚访问修饰限定符，方法可以省去（不建议），因为系统默认是public</p>
+<h3 id="5、类内部对象"><a href="#5、类内部对象" class="headerlink" title="5、类内部对象"></a><strong>5、类内部对象</strong></h3><blockquote>
+<p>目标：理解内部对象的概念，掌握内部对象对成员的访问</p>
+</blockquote>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>内部对象</strong>：$this，<strong>方法内部</strong>内置的一个对象，会自动指向来调用方法的对象</p>
+<ul>
+<li>$this存在于方法内部（仅限内部使用），所以相当于在类的结构内部<ul>
+<li>可以访问任意访问修饰限定符修饰的成员</li>
+<li>私有成员都是通过公有方法来实现访问（公有方法可以在类外部访问）</li>
+</ul>
+</li>
+<li>类内部对类成员的访问也需要通过对象才能访问，所以必须通过$this内部对象访问类成员</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、声明类结构</p>
+<p>2、明确私有成员（不限定成员的访问修饰限定符）</p>
+<p>3、私有成员需要在某种情况下被访问：增加方法，在方法里使用$this访问</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、尝试在类内部方法中访问属性</p>
+<pre><code>class Saler{
+      # 属性
+      public $count = 100;
+      protected $discount = 0.8;
+      private $money = 100;
+
+    public function getAll(){
+        echo $count,$discount,$money;    # 全部错误：提示未定义的“变量”
+    }                    
+}
+$s = new Saler();
+$s-&gt;getAll();
+</code></pre><p><strong>注意</strong>：方法本质是定义在类内部的函数，因此受制于作用域的问题，在方法内部访问的变量系统认定为局部变量（必须内部定义或者参数传入），否则就会提示未定义</p>
+<p>2、类内部访问类成员，需要通过对象来进行访问</p>
+<pre><code>class Saler{
+      # 属性
+      public $count = 100;
+      protected $discount = 0.8;
+      private $money = 100;
+
+    public function getAll(){
+        # 需要获取到对象名字：因为方法本身就是函数，访问外部全局变量可以通过global引入实现
+        global $s;
+        echo $s-&gt;count,$s-&gt;discount,$s-&gt;money;        #正确输出
+    }                    
+}
+
+$s = new Saler();
+$s-&gt;getAll();
+</code></pre><p><strong>注意</strong>：上述代码规定死了以后对象只能是$s，不能有其他对象或者其他命名，所以非常不友好</p>
+<p>3、使用内置对象$this访问</p>
+<pre><code>class Saler{
+      # 属性
+      public $count = 100;
+      protected $discount = 0.8;
+      private $money = 100;
+
+    public function getAll(){
+        var_dump($this);
+        echo $this-&gt;count,$this-&gt;discount,$this-&gt;money;        #正确输出
+    }                    
+}
+
+$s = new Saler();
+$s-&gt;getAll();
+</code></pre><p><strong>注意</strong>：$this代表的是对象，而$this所在环境为类内部的方法内部，所以$this对象是在类内部访问，因此可以访问所有的属性和方法，不受访问修饰限定符限制</p>
+<blockquote>
+<p>$this、class和new之间的关系原理</p>
+</blockquote>
+<ul>
+<li><p>class是定义类结构，属于非执行段代码，因此会被加载到代码段（编译阶段）</p>
+</li>
+<li><p>new是实例化对象，先判定类在内存（代码段）是否存在</p>
+<ul>
+<li>类不存在，报错；</li>
+<li>类存在，将类内部的属性部分复制一份，然后在内存（堆区）开辟一块内存空间，将属性放到里面，同时内部有一个<strong>指针</strong>指向类的内存空间（代码段）</li>
+<li>对象访问属性即访问的是对象空间里存储的部分</li>
+<li>对象访问方法是对象通过<strong>内部指针</strong>找到类空间中的方法，然后在内存（栈区）开辟运行</li>
+</ul>
+</li>
+<li><p>$this是系统在方法内置的对象通用名字</p>
+<ul>
+<li>对象在调用方法的时候，系统会自动找到对象所保存的内存地址（堆区），然后把地址赋值给$this</li>
+</ul>
+</li>
+<li><p>方法内部的$this就代表调用当前$this所在方法的外部对象</p>
+<ul>
+<li>$this的本质是函数内部的一个局部变量，只是系统自动对其进行赋值，而且一定是调用方法的对象本身</li>
+</ul>
+</li>
+<li>面向对象编程代码运行内存关系</li>
+</ul>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-vRLjf8Y3-1586427577961)(效果图\面向对象编程代码运行内存关系.gif)]</p>
+<blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<p>1、类内部方法内有一个内置对象$this，代表访问该方法的外部对象</p>
+<p>2、类在实例化对象的时候要保证内存中有该类</p>
+<p>3、一个类可以实例化多个对象，每个对象访问成员方法时，$this就代表对应对象</p>
+<h3 id="6、面向对象开发规范"><a href="#6、面向对象开发规范" class="headerlink" title="6、面向对象开发规范"></a><strong>6、面向对象开发规范</strong></h3><blockquote>
+<p>目标：了解面向对象的基本开发规范，熟练运用开发规范实现项目开发</p>
+</blockquote>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>开发规范</strong>：开发者约定俗成的开发设计方式</p>
+<ul>
+<li>属性的初始化<ul>
+<li>属性是类对于同类事务所抽离出来的共性<code>数据</code>，本身在类结构中没有价值，是当具体对象产生之后，属于对象本身的</li>
+<li>进行类中定义属性的时候，通常不会对属性进行初始化，除非属性本身的值也具有共性</li>
+<li>属性如果没有初始化数据，那么在产生对象后应该对属性完成初始化（有的属性是在操作过程中被初始化）</li>
+</ul>
+</li>
+<li>访问修饰限定符选择：访问修饰限定符是用来限制类成员被对象访问时对象所处位置的。访问的权限从public、protected到private依次变小（类对成员的控制权限依次变大）<ul>
+<li>设定好的类成员本身不会被外部用到，那么应该使用private或者protected</li>
+<li>设定好的类成员一定会给外部访问，使用public</li>
+<li>属性通常private居多，如果需要外部访问属性，通常会定义相关方法来实现属性的查看和修改，因为可以在方法内对数据逻辑进行代码控制，安全</li>
+<li>尽可能增加类对成员的控制（尽可能多使用private，少使用public）</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、属性初始化</p>
+<pre><code>class Saler{
+      # 属性
+      public $count;                
+    # 某个卖家拥有的商品数量，每位具体卖家对象拥有的不可能一样，所以没必要初始化
+      protected $discount;
+    # 某个卖家针对销售的折扣，同样没有统一的价值
+      private $money = 0;
+    # 某个卖家的账户余额，任何一位卖家一开始做生意的时候，账户余额都为0，所以可以初始化
+
+    # 业务初始化属性
+    public function setDiscount($discount = 1){
+        # 可以进行逻辑控制
+        $this-&gt;discount = $discount;
+    }
+}
+
+# 实例化对象，初始化属性
+$s = new Saler();
+$s-&gt;count = 100;
+
+# 打折促销：业务初始化
+$s-&gt;setDiscount(0.8);
+</code></pre><p>2、访问修饰限定符选择</p>
+<pre><code>class Saler{
+      # 属性
+      public $count;                
+      private $money = 0;
+
+    # 增加方法操作私有属性money
+    public function getMoney(){
+        return $this-&gt;money;
+    }
+    public function setMoney($money){
+        # 可以对逻辑进行修改，对数据进行安全判定，保证数据的安全性
+        $this-&gt;money = $money;
+        # $this-&gt;money是属性，$money是外部传入的参数，二者同名但是性质完全不同
+    }
+}  
+</code></pre><blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<p>1、属性在类中定义的时候，通常不会初始化值，除非所有类实例化得到的对象的某个属性需要是统一值</p>
+<p>2、应该尽可能增加类对成员的控制，即使用范围较小的访问修饰限定符优先</p>
+<p>3、属性通常是私有化的，一般是通过设定方法来实现属性的访问和修改</p>
+<h3 id="7、构造方法"><a href="#7、构造方法" class="headerlink" title="7、构造方法"></a><strong>7、构造方法</strong></h3><blockquote>
+<p>目标：了解<strong>魔术方法</strong>的概念，掌握构造方法的作用，明确构造方法的触发模式</p>
+</blockquote>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>构造方法</strong>：__construct()，是一种类结构特有的特殊方法，该方法由系统规定好，开发人员在定义的时候只需要<strong>抄</strong>一遍，有了构造方法的类在实例化对象之后，对象就会自动调用。</p>
+<ul>
+<li>构造方法是一种魔术方法：<strong>魔术方法</strong>是会自动被触发，不需要手动调用的方法</li>
+<li>构造方法的目标是为了实现对象的初始化<ul>
+<li>对象实例化之后会自动调用</li>
+<li>构造方法通常是为了实现对象所需资源的初始化（属性、资源）</li>
+</ul>
+</li>
+<li>构造方法虽然为魔术方法，但本质依然是一个方法<ul>
+<li>受访问修饰限定符控制（对象的产生位置会发生改变）</li>
+<li>对象可以选择调用（一般不会）</li>
+</ul>
+</li>
+<li>构造方法可以设定形参，形参对应的实参是在实例化对象的时候传入：new 类名(实参传递给形参)</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、确定类中需要有数据实现初始化，而且是灵活处理，每个对象都不一样的：使用构造方法</p>
+<p>2、确定初始化的数据需要外部传入：使用构造方法设定形参</p>
+<p>3、在构造方法内部利用内部对象实现初始化需求</p>
+<ul>
+<li>属性初始化</li>
+<li>资源初始化</li>
+<li>其他内置方法调用</li>
+</ul>
+<p>4、实例化对象时必须传入构造方法所需数据</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、构造方法实现：在类中增加一个方法__construct()即可</p>
+<pre><code>class Saler{
+    # 构造方法
+    public function __construct(){
+        echo __CLASS__;
+    }
+}
+</code></pre><p>2、构造方法也是一个方法，不普通的地方在于，类实例化得到的对象会马上自动调用</p>
+<pre><code># 实例化
+new Saler();                # 输出Saler
+</code></pre><p>3、构造方法的意义：构造方法是对象实例化的时候用来初始化对象的资源的，所以通常是用来初始化对象的属性或者其他资源初始化</p>
+<pre><code>class Saler{
+      # 属性
+      public $count;                
+      private $money;
+
+    # 构造方法：初始化属性
+    public function __construct(){
+        $this-&gt;count = 100;
+        $this-&gt;money = 100;
+    }
+}
+</code></pre><p>5、如果属性的数据在构造方法中初始化是固定写死的，那么与直接在定义类的时候初始化属性一样。意味着数据没有任何价值（所有对象都相同），因此通常是通过构造方法的参数来实现数据的外部传入</p>
+<pre><code>class Saler{
+      # 属性
+      public $count;                
+      private $money;
+
+    # 构造方法：初始化属性
+    public function __construct($count,$money){
+        $this-&gt;count = $count;
+        $this-&gt;money = $money;
+    }
+}
+</code></pre><p>5、一旦构造方法拥有了形参，那么对象在调用该方法的时候就需要传入对应的实参，而构造方法又是自动调用的，所以需要在实例化对象的时候使用new 类名(构造方法对应的实参列表)来实现</p>
+<pre><code># 实例化对象
+$s1 = new Saler(100,100);
+$s2 = new Saler(1000,1000);
+$s3 = new Saler;            # 错误：因为此时类有构造方法且要求传入参数，所以必须使用（）并传入数据
+</code></pre><p><strong>注意</strong>：之前所说的<code>new 类名</code> 和<code>new 类名()</code>没有区别是因为没有构造方法，或者构造方法没有参数限定，一旦构造方法有了参数，那么<code>new 类名</code> 就不能直接使用了。</p>
+<p>6、构造方法不管再怎么特殊，也是用户定义的方法，言外之意除了在实例化对象时对象会自动调用之外，我们也可以手动调用构造方法（但是一般没有价值，因为对象实例化时会自动调用）</p>
+<pre><code>class Saler{
+      # 属性
+      public $count;                
+      private $money;
+
+    # 构造方法：初始化属性
+    public function __construct($count,$money){
+        $this-&gt;count = $count;
+        $this-&gt;money = $money;
+    }
+}
+
+# 实例化
+$s = new Saler(100,100);            # 系统在new Saler(100,100)好之后，会自动调用一次
+$s-&gt;__construct(1000,1000);            # 允许手动调用
+</code></pre><blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<p>1、构造方法__construct()是一种系统内置的方法，该方法的特性是会在对象实例化之后，对象立即自动调用</p>
+<p>2、构造方法的目的就是为了初始化资源，包含对象属性和其他资源</p>
+<p>3、一旦构造方法定义好之后，且构造方法自带参数，那么就只能使用<code>new 类名(参数列表)</code>方式才能正确实例化</p>
+<p>4、构造方法可以当做普通方法由对象调用（不建议）</p>
+<h3 id="8、析构方法"><a href="#8、析构方法" class="headerlink" title="8、析构方法"></a><strong>8、析构方法</strong></h3><blockquote>
+<p>目标：了解析构方法的作用，能够实际应用析构方法</p>
+</blockquote>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>析构方法</strong>：__destruct()，也是一种类结构中魔术方法，与构造方法一样，也是系统规定好，只需要开发人员<strong>抄</strong>一遍即可，对象在被销毁时会自动调用</p>
+<ul>
+<li>析构方法是用来对象销毁时主动释放资源的</li>
+<li>对象销毁<ul>
+<li>对象无变量指向（变量指向其他数据）</li>
+<li>对象被主动销毁（unset销毁对象变量）</li>
+<li>脚本执行结束（自动释放资源）</li>
+</ul>
+</li>
+<li>PHP脚本执行结束会释放所有资源，所以一般较少使用析构方法</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、定义类结构</p>
+<p>2、确定需要在对象销毁时释放资源</p>
+<p>3、使用析构方法释放资源</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、析构方法实现：类中增加一个__destruct()方法</p>
+<pre><code>class Saler{
+      # 析构方法
+    public function __destruct(){
+        echo __FUNCTION__;
+    }
+}
+</code></pre><p>2、析构方法调用：析构方法是在对象被销毁时自动，对象的“垂死挣扎”</p>
+<pre><code># 实例化对象
+$s = new Saler();
+
+# 对象变量指向其他数据
+$s = 1;    
+
+# 主动销毁对象变量
+unset($s);            
+
+# 脚本执行结束自动释放
+</code></pre><p>3、析构方法也是普通方法，可以由对象直接调用</p>
+<pre><code># 接析构方法实现代码
+$s = new Saler();
+$s-&gt;__destruct();        # 思考：此时对象是否被销毁？
+</code></pre><blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<p>1、析构方法是一种对象销毁时自动调用的方法</p>
+<p>2、析构方法是用来对象销毁自身所占用的资源</p>
+<p>3、PHP中脚本执行结束，系统会自动回收所有资源，因此一般PHP中很少使用析构方法</p>
+<h3 id="9、对象传值"><a href="#9、对象传值" class="headerlink" title="9、对象传值"></a><strong>9、对象传值</strong></h3><blockquote>
+<p>目标：了解PHP中对象传值的方式</p>
+</blockquote>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>对象传值</strong>：将保存对象的变量赋值给另外一个变量</p>
+<ul>
+<li>在PHP中，对象的传值是<strong>引用传递</strong>的：即一个对象变量赋值给另外一个变量，两个变量指向同一个对象的内存地址，即只有一个对象。</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、定义类结构</p>
+<p>2、实例化产生对象，保存在变量中</p>
+<p>3、将保存对象的变量赋值给另外一个变量</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、对象传值就是保存对象的变量赋值给另外一个变量</p>
+<pre><code>class Saler{}
+$s1 = new Saler();
+$s2 = $s1;
+</code></pre><p>2、对象传值是引用传递，不管对象赋值给多少个变量，内存中只有一个对象</p>
+<pre><code># 证明
+var_dump($s1,$s2);        # 同一个对象
+$s1-&gt;name = &apos;Saler&apos;;    # 更改一个变量所保存对象的属性
+echo $s2-&gt;name;            # 输出Saler
+</code></pre><blockquote>
+<p><strong>小结</strong></p>
+</blockquote>
+<p>1、对象传值方式是<strong>引用传值</strong>，不论对象如何被赋值给其他变量，始终只有一个对象</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#转载自：黑马程序员武汉中心"><span class="toc-number">1.</span> <span class="toc-text">转载自：黑马程序员武汉中心</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#面向对象基础"><span class="toc-number"></span> <span class="toc-text">面向对象基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、面向对象编程思想"><span class="toc-number"></span> <span class="toc-text">一、面向对象编程思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、面向对象基础"><span class="toc-number"></span> <span class="toc-text">二、面向对象基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、面向对象关键字说明"><span class="toc-number"></span> <span class="toc-text">1、面向对象关键字说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、面向对象简单技术实现"><span class="toc-number"></span> <span class="toc-text">2、面向对象简单技术实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、类成员"><span class="toc-number"></span> <span class="toc-text">3、类成员</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实例化"><span class="toc-number"></span> <span class="toc-text">实例化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#属性访问"><span class="toc-number"></span> <span class="toc-text">属性访问</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方法访问"><span class="toc-number"></span> <span class="toc-text">方法访问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4、访问修饰限定符"><span class="toc-number"></span> <span class="toc-text">4、访问修饰限定符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、类内部对象"><span class="toc-number"></span> <span class="toc-text">5、类内部对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、面向对象开发规范"><span class="toc-number"></span> <span class="toc-text">6、面向对象开发规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、构造方法"><span class="toc-number"></span> <span class="toc-text">7、构造方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8、析构方法"><span class="toc-number"></span> <span class="toc-text">8、析构方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9、对象传值"><span class="toc-number"></span> <span class="toc-text">9、对象传值</span></a>
+    </li></ol></li></div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&text=php面向对象基础"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&is_video=false&description=php面向对象基础"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象基础&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&title=php面向对象基础"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&name=php面向对象基础&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/1PHP面向对象基础/&t=php面向对象基础"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

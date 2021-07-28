@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="转载自：黑马程序员武汉中心面向对象高级 学习目标：了解面向对象的高级特性，掌握php中面向对象的高级语法和概念   面向对象三大特性 php继承 接口 php重载 trait代码复用 对象遍历  一、 面向对象三大特性 目标：理解面向对象三大特性，了解每种特性带来的效果和价值   封装 继承 多态   概念  面向对象三大特性：面向对象是一种编程思想，其本质是以建立模型体现出来的抽象思维过程和面向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php面向对象高级">
+<meta property="og:url" content="http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/index.html">
+<meta property="og:site_name" content="A1LB1ue">
+<meta property="og:description" content="转载自：黑马程序员武汉中心面向对象高级 学习目标：了解面向对象的高级特性，掌握php中面向对象的高级语法和概念   面向对象三大特性 php继承 接口 php重载 trait代码复用 对象遍历  一、 面向对象三大特性 目标：理解面向对象三大特性，了解每种特性带来的效果和价值   封装 继承 多态   概念  面向对象三大特性：面向对象是一种编程思想，其本质是以建立模型体现出来的抽象思维过程和面向">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-07-28T13:26:47.999Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php面向对象高级">
+<meta name="twitter:description" content="转载自：黑马程序员武汉中心面向对象高级 学习目标：了解面向对象的高级特性，掌握php中面向对象的高级语法和概念   面向对象三大特性 php继承 接口 php重载 trait代码复用 对象遍历  一、 面向对象三大特性 目标：理解面向对象三大特性，了解每种特性带来的效果和价值   封装 继承 多态   概念  面向对象三大特性：面向对象是一种编程思想，其本质是以建立模型体现出来的抽象思维过程和面向">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>php面向对象高级</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<script type="text/javascript" src="../source/js/love.js"></script>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/07/25/php学习/1PHP面向对象基础/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&text=php面向对象高级"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&is_video=false&description=php面向对象高级"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象高级&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&name=php面向对象高级&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&t=php面向对象高级"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#转载自：黑马程序员武汉中心"><span class="toc-number">1.</span> <span class="toc-text">转载自：黑马程序员武汉中心</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#面向对象高级"><span class="toc-number"></span> <span class="toc-text">面向对象高级</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、-面向对象三大特性"><span class="toc-number"></span> <span class="toc-text">一、 面向对象三大特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、封装"><span class="toc-number"></span> <span class="toc-text">1、封装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、继承"><span class="toc-number"></span> <span class="toc-text">2、继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、多态"><span class="toc-number"></span> <span class="toc-text">3、多态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#父类"><span class="toc-number"></span> <span class="toc-text">父类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#子类1"><span class="toc-number"></span> <span class="toc-text">子类1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#子类2"><span class="toc-number"></span> <span class="toc-text">子类2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#父类方法统一调用：传入不同的对象"><span class="toc-number"></span> <span class="toc-text">父类方法统一调用：传入不同的对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#二、-php继承"><span class="toc-number"></span> <span class="toc-text">二、 php继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、继承相关概念和实现"><span class="toc-number"></span> <span class="toc-text">1、继承相关概念和实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、有限继承"><span class="toc-number"></span> <span class="toc-text">2、有限继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、重写Override"><span class="toc-number"></span> <span class="toc-text">3、重写Override</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、parent关键字"><span class="toc-number"></span> <span class="toc-text">4、parent关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、php继承特点"><span class="toc-number"></span> <span class="toc-text">5、php继承特点</span></a>
+    </li></ol></li></ol></li></div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        php面向对象高级
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-24T16:01:28.120Z" itemprop="datePublished">2021-07-25</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h4 id="转载自：黑马程序员武汉中心"><a href="#转载自：黑马程序员武汉中心" class="headerlink" title="转载自：黑马程序员武汉中心"></a>转载自：<a href="https://space.bilibili.com/434398031?spm_id_from=333.788.b_765f7570696e666f.1" target="_blank" rel="noopener">黑马程序员武汉中心</a></h4><h1 id="面向对象高级"><a href="#面向对象高级" class="headerlink" title="面向对象高级"></a><strong>面向对象高级</strong></h1><blockquote>
+<p>学习目标：了解面向对象的高级特性，掌握php中面向对象的高级语法和概念</p>
+</blockquote>
+<ul>
+<li>面向对象三大特性</li>
+<li>php继承</li>
+<li>接口</li>
+<li>php重载</li>
+<li>trait代码复用</li>
+<li>对象遍历</li>
+</ul>
+<h2 id="一、-面向对象三大特性"><a href="#一、-面向对象三大特性" class="headerlink" title="一、 面向对象三大特性"></a><strong>一、 面向对象三大特性</strong></h2><blockquote>
+<p>目标：理解面向对象三大特性，了解每种特性带来的效果和价值</p>
+</blockquote>
+<ul>
+<li>封装</li>
+<li>继承</li>
+<li>多态</li>
+</ul>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>面向对象三大特性</strong>：面向对象是一种编程思想，其本质是以建立模型体现出来的<strong>抽象思维过程</strong>和<strong>面向对象的方法</strong>。模型是用来反映现实世界中事物特征的。</p>
+<ul>
+<li>面向对象编程思想三大特性：封装、继承、多态</li>
+<li>三大特性是指导面向对象编程的核心思想</li>
+</ul>
+<blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、学习面向对象三大特性的目的是为了更好的理解面向对象编程思想</p>
+<h3 id="1、封装"><a href="#1、封装" class="headerlink" title="1、封装"></a><strong>1、封装</strong></h3><blockquote>
+<p>目标：理解封装的概念，掌握封装的核心理论，能够运用封装特性来支持面向对象编程</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>封装</strong>：字面意思就是将内容装到某个容器中，并进行密封保存。在面向对象思想中，封装指将<code>数据</code>和对<code>数据的操作</code>捆绑到一起，形成对外界的隐蔽，同时对外提供可以操作的<code>接口</code>。</p>
+<ul>
+<li><p>数据：即要操作的数据，在面向对象的具体体现就是类成员<strong>属性</strong>（属性和静态属性）和类常量，这些都是在类的内部定义的用来保存数据的</p>
+</li>
+<li><p>数据的操作：即数据加工过程，在面向对象的具体体现就是<strong>方法</strong>，内部定义业务逻辑对数据进行加工处理。</p>
+</li>
+<li><p>捆绑到一起：即使用类结构{}将属性、类常量和方法存放到一起，成为一个整体</p>
+</li>
+<li><p>对外提供可操作的接口：即提供可以供外部访问的类成员（通常是<strong>方法</strong>）</p>
+</li>
+</ul>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>封装类并使用</p>
+<pre><code># 封装特性
+class Saler{                # 捆绑内容到一起，形成对外界隐蔽的整体
+    const ALLOW = true;
+    private static $count = 0;
+    private $money = 0;         # 数据：属性和类常量保存
+
+    public function getMoney(){            # 数据操作
+        return $this-&gt;money;
+    }  
+}
+
+# 外部
+$s = new Saler();
+$s-&gt;getMoney();                # 外部只能访问类中公有的方法，具体实现不可见
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、封装是从对象实体抽象形成类的过程</p>
+<p>2、封装的目的是让使用者只知道类能做什么，而不知道怎么做的</p>
+<p>3、封装特性也明确了类与对象的职责：类负责处理业务逻辑，对象只要调用实现</p>
+<h3 id="2、继承"><a href="#2、继承" class="headerlink" title="2、继承"></a><strong>2、继承</strong></h3><blockquote>
+<p>目标：理解继承的概念，掌握继承架构带来的效果</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>继承</strong>：inherit，子类合法拥有父类某些权限</p>
+<ul>
+<li>继承必须满足继承关系：即存在合理的包含关系</li>
+<li>继承的本质是子类通过继承可以直接使用父类已经存在的数据和数据操作</li>
+<li>不同编程语言的继承机制和方式不一样，php中使用extends关键字表示继承</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、创建父类：通常是比较抽象的，大概的类，定义的方法和属性也都是比较大众的</p>
+<p>2、创建子类</p>
+<ul>
+<li>子类与已有父类之间属于包含关系：父类包含子类</li>
+<li>子类创建时明确继承父类：extends</li>
+</ul>
+<p>3、实例化子类对象后，子类对象可以直接访问子类不存在而父类存在的属性和方法</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、继承的基础：子类（要继承其他类的类，也称之为派生类）与父类（被继承类，也称之为基类）之间本身是一种包含于被包含关系，如此才有可继承的前提</p>
+<pre><code># 大类
+class Human{}    # 人类
+# 小类
+class Man{}
+class Woman{}    # 属于人类包含的部分，可以继承Human
+</code></pre><p>2、继承关键字：extends，子类想要继承父类，则必须在子类结构申明时明确使用extends关键字来继承相关类</p>
+<pre><code># 父类
+class Human{}    # 人类
+# 子类
+class Man extends Human{}
+class Woman extends Human{}    # 继承Human类
+</code></pre><p>3、继承效果：子类可以不用自己去实现某些功能，而可以直接访问父类中已经存在的成员</p>
+<pre><code># 父类
+class Human{
+    public function eat(){
+        echo &apos;吃饭&apos;;
+    }
+}
+# 子类
+class Man extends Human{}            # 子类为空类：没有类成员
+
+# 实例化子类对象
+$m = new Man();
+$m-&gt;eat();                            # 输出吃饭
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、继承extends是面向对象思想中实现代码重复利用的重要特性</p>
+<p>2、继承是指子类可以直接访问父类中已经存在的成员</p>
+<p>3、继承可以节省代码工作，同时允许子类中进行扩展，即在子类中增加必要的父类不存在的功能</p>
+<h3 id="3、多态"><a href="#3、多态" class="headerlink" title="3、多态"></a><strong>3、多态</strong></h3><blockquote>
+<p>目标：了解多态的概念，理解多态的作用</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>多态</strong>：多态性是指相同的操作或函数、过程可作用于多种类型的对象上并获得不同的结果</p>
+<ul>
+<li>需要发生<strong>类的继承</strong>，同时出现<strong>方法的重写（override）</strong>，即子类拥有与父类同名的方法</li>
+<li>在实例化对象的时候让父类对象指向子类对象（强制类型，php不支持）</li>
+<li>结果：父类对象表现的子类对象的特点</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、明确继承关系：子类继承父类</p>
+<p>2、子类重写父类方法</p>
+<p>3、实例化子类，但是存储子类对象的数据类型为父类对象</p>
+<p>4、实现：父类对象表现出子类对象的形态</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、多态需要强类型语言，以Java为例</p>
+<pre><code>// 父类
+class Animal{
+    public void show(){
+         System.out.println(&quot;Animal&quot;);
+    }
+}
+
+// 子类
+class Dog extends Animal{
+    // 重写show方法
+    public void show(){
+         System.out.println(&quot;Dog&quot;);
+    }
+}
+
+// 实例化：Java是强类型，必须指定保存数据的变量的类型
+Animal a = new Doc();     // 父类对象指向子类对象空间：a为父类形态
+a.show();                 // 打印Dog，父类对象调用的是子类方法：a表现出子类形态
+</code></pre><p>2、php是弱类型语言，所以不存在变量的强制类型，因此php不支持多态。但是php可以模拟多态</p>
+<ul>
+<li>多种子类继承父类</li>
+<li>子类重写父类方法</li>
+<li><p>父类定义方法实现统一重写方法调用</p>
+<h1 id="父类"><a href="#父类" class="headerlink" title="父类"></a>父类</h1><p>class Animal{</p>
+<pre><code># 统一调用被重写方法
+public static function show(Animal $obj){    
+    # Animal $obj，强制对象为Animal对象（子类对象也可以）
+    # 对象动态调用方法
+    $obj-&gt;display();
+}
+
+# 父类方法
+public function display(){
+    echo &apos;Animal&apos;;
+}
+</code></pre><p>}</p>
+<h1 id="子类1"><a href="#子类1" class="headerlink" title="子类1"></a>子类1</h1><p>class Cat extends Animal{</p>
+<pre><code># 重写父类方法
+public function display(){
+    echo &apos;cat&apos;;
+}
+</code></pre><p>}</p>
+<h1 id="子类2"><a href="#子类2" class="headerlink" title="子类2"></a>子类2</h1><p>class Dog extends Animal{</p>
+<pre><code>public function display(){
+    echo &apos;dog&apos;;
+}
+</code></pre><p>}</p>
+<h1 id="父类方法统一调用：传入不同的对象"><a href="#父类方法统一调用：传入不同的对象" class="headerlink" title="父类方法统一调用：传入不同的对象"></a>父类方法统一调用：传入不同的对象</h1><p>Animal::show(new Cat());        # 输出cat<br>Animal::show(new Dog());        # 输出dog</p>
+</li>
+</ul>
+<blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、多态的发生必须是有继承关系，并且子类要重写父类方法</p>
+<p>2、多态是指父类对象拥有子类形态，并且可以表现出子类的特性（调用子类方法）</p>
+<p>3、php是弱类型语言，不支持多态</p>
+<h2 id="二、-php继承"><a href="#二、-php继承" class="headerlink" title="二、 php继承"></a><strong>二、 php继承</strong></h2><blockquote>
+<p>学习目标：掌握php中继承的实现，理解php继承中的诸多特性，能够使用继承来实现大型项目架构</p>
+</blockquote>
+<ul>
+<li>继承语法</li>
+<li>重写</li>
+<li>parent关键字</li>
+<li>php继承特点</li>
+<li>静态延迟绑定</li>
+<li>最终类</li>
+<li>抽象类</li>
+</ul>
+<h3 id="1、继承相关概念和实现"><a href="#1、继承相关概念和实现" class="headerlink" title="1、继承相关概念和实现"></a><strong>1、继承相关概念和实现</strong></h3><blockquote>
+<p>目标：了解php继承中相关的关键字，实现php中的继承</p>
+</blockquote>
+<blockquote>
+<p><strong>概念</strong></p>
+</blockquote>
+<p><strong>继承</strong>：extends，是指子类通过继承可以<strong>访问父类的成员</strong></p>
+<ul>
+<li>父类：也叫基类，是较大的分类</li>
+<li>子类：也叫派生类，比父类的分类要小</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、根据需求先抽象出父类</p>
+<p>2、根据需求确定子类，并实现继承</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、继承基本语法：class 子类 extends 父类{}</p>
+<pre><code># 父类（基类）：人类是较大类，所有人都属于人类
+class Human{}
+
+# 子类（派生类）：小于人类，并且输入人类
+class Man extends Human{}
+</code></pre><p>2、继承效果：父类被继承的内容，可以通过子类对象进行访问（只能是子类对象）</p>
+<pre><code># 父类（基类）
+class Human{
+    public function showName(){
+        echo __CLASS__;        # 代表当前所在类名
+    }
+}
+
+# 子类（派生类）
+class Man extends Human{}
+
+# 实例化子类对象：如果实例化父类对象Human，那么与子类和继承毫无关系
+$m = new Man();
+$m-&gt;showName();                # 访问继承自父类的方法：输出Human
+</code></pre><p>3、继承目标：继承本质是针对同类有包含关系的共性继承，即父类通常是包含子类，子类属于父类。所以在父类中通常定义的是子类共有的一些特性成员，这是开发者默认遵循的规则</p>
+<pre><code>class Animal{}
+class Man extends Animal{}        # 不会有语法错误，也可以继承，但是不符合实际
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、继承是利用extends进行子类和父类的关联</p>
+<p>2、继承利用extends关键字实现</p>
+<p>3、继承是指实现继承关系后，子类对象可以访问父类被继承的成员。而父类对象（直接实例化父类得到）不可以访问子类成员（没有关系）</p>
+<h3 id="2、有限继承"><a href="#2、有限继承" class="headerlink" title="2、有限继承"></a><strong>2、有限继承</strong></h3><blockquote>
+<p>目标：理解php中继承的内容，掌握继承架构中的设计方案实现继承</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>有限继承</strong>：指子类在继承父类的成员的时候，并非继承所有内容，而是继承并使用父类部分内容</p>
+<ul>
+<li>php中继承的本质是对象继承</li>
+<li>php中继承的内容：父类所有公有成员、受保护成员和私有属性，私有方法不能继承</li>
+<li>受保护（protected）成员是专用于继承的，可以在父类或者子类内部访问</li>
+<li>私有成员的访问只能在所属类中设定公有或者受保护方法实现访问</li>
+<li>静态成员也遵循继承规则：即子类可以访问父类静态成员（满足继承条件下）</li>
+</ul>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、继承内容：php中继承是子类继承父类所有的公有成员、受保护成员和私有属性，不能继承父类的私有方法</p>
+<pre><code># 父类
+class Human{
+    const CALL = &apos;人&apos;;
+    public $name = &apos;human&apos;;
+    protected $age = &apos;100&apos;;
+    private $money = &apos;100&apos;;
+
+    public function showName(){
+        echo $this-&gt;name;
+    }
+
+    protected function showAge(){
+        echo $this-&gt;age;
+    }
+
+    private function showMoney(){
+        echo $this-&gt;money;
+    }
+}
+
+# 子类
+class Man extends Human{}
+# 实例化子类
+$m = new Man();
+var_dump($m);                # 可以看到父类私有属性：说明被继承
+$m-&gt;showName();                # 允许直接访问：方法为公有允许类外访问
+</code></pre><p>2、受保护继承protected，protected关键字的产生本身就是纯用于继承的，表示允许被子类在子类内部访问的意思，而不允许被外部直接访问。</p>
+<pre><code># 父类
+class Human{
+    protected $age = &apos;100&apos;;
+    protected function showAge(){
+        echo $this-&gt;age;
+    }
+}
+
+# 子类
+class Man extends Human{
+    # 在子类内部增加公有访问访问继承自父类的受保护成员
+    public function getProtected(){
+        echo $this-&gt;age;                # 访问父类受保护属性
+        $this-&gt;showAge();                # 访问父类受保护方法
+    }
+}
+
+# 实例化子类对象
+$m = new Man();
+$m-&gt;getProtected();                        # 正确输出：说明可以访问
+</code></pre><p>3、访问父类私有成员：子类若想访问父类私有成员，那么前提是父类提供了能够访问私有成员的接口：即提供了公有或者受保护的方法给子类访问</p>
+<pre><code># 父类
+class Human{
+    private $age = 100;
+    private $money = 100;
+    # 提供接口供子类访问：此时通常是受保护的方法，肯定不允许外部直接访问的
+    protected function getAge(){
+        echo $this-&gt;age;
+    }
+}
+
+# 子类
+class Man extends Human{
+    # 依然需要定义方法来访问继承自父类的受保护的成员
+    public function showPrivate(){
+        $this-&gt;getAge();
+    }
+}
+
+# 实例化子类对象
+$m = new Man();
+$m-&gt;showPrivate();        # 输出100，表示正确访问
+</code></pre><p><strong>注意</strong>：虽然子类可以通过以上方式来实现访问父类的私有成员（包括私有方法），但是从设计的意义上讲，私有就是不允许外部访问，所以父类通常不会提供对外的访问接口，以上案例只是为了知识说明。</p>
+<p>4、静态成员（类常量）也遵循继承规则（php继承本质是对象），只是访问方式是由类进行访问</p>
+<pre><code>class Human{
+    const NAME = &apos;人&apos;;
+    public static $count = 0;
+    protected static $type = array(&apos;黑&apos;,&apos;黄&apos;,&apos;白&apos;);
+
+    public static function getCount(){
+        echo self::NAME;
+        echo self::$count;
+    }
+    protected static function getType(){
+        print_r(self::$type);
+    }
+}
+
+class Man extends Human{
+    # 依然需要子类中访问受保护成员
+    public static function getHuman(){
+        Human::getType();
+    }
+}
+
+echo Man::$count;    # 允许直接访问
+Man::getCount();    # 访问父类静态方法
+Man::getHuman();    # 利用子类公有方法访问父类受保护成员
+</code></pre><p>5、构造方法和析构方法也可以被子类继承，此时需要注意子类对象实例化时对应的父类构造方法的参数</p>
+<pre><code># 父类
+class Human{
+    private $money;
+    public function __construct($money){
+        $this-&gt;money = $money;
+    }
+
+    public function __destruct(){
+        echo &apos;die&apos;;
+    }
+}
+
+# 子类继承
+class Man extends Human{}
+
+# 子类实例化：自身是空类，没有指定构造方法
+# $m = new Man();                    # 错误：缺少参数，因为会自动调用父类构造方法
+$m = new Man(100);                    # 正确
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、继承是有限继承，理论上是用来继承父类允许被继承的部分，即使用public或者protected修饰的成员（有限继承指的是有限能用而已）</p>
+<p>2、因为对象的属性是保存在对象内存空间，所以父类的私有属性也会继承</p>
+<p>3、父类私有成员本质不允许被子类访问，但是可以通过父类开放接口实现（一般不会这么操作）</p>
+<p>4、静态成员也可以遵循继承规则</p>
+<p>5、构造方法也可以被继承，因此在实例化子类对象的时候，要考虑到父类构造方法所使用到的参数问题</p>
+<h3 id="3、重写Override"><a href="#3、重写Override" class="headerlink" title="3、重写Override"></a><strong>3、重写Override</strong></h3><blockquote>
+<p>目标：理解重写的概念，掌握重写的意义</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>重写</strong>：override，子类中定义了与父类重名的成员</p>
+<ul>
+<li>子类可以重写父类任意类成员<ul>
+<li>属性：直接覆盖，父类对象的属性将不存在（私有除外）</li>
+<li>方法：同时存在</li>
+</ul>
+</li>
+<li>通常重写是用来重写父类的方法，用于扩展或者更改某些业务逻辑</li>
+<li>重写要求<ul>
+<li>子类对于成员的控制权不能高于父类</li>
+<li>子类重写方法时，参数要求与父类一致</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、存在继承关系</p>
+<p>2、父类存在方法，但是不满足子类业务要求</p>
+<p>3、子类重写父类方法（或者属性）</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、子类继承父类，同时子类定义与父类同名的类成员</p>
+<pre><code># 父类
+class Human{
+    public $name = &apos;Human&apos;;
+    public function show(){
+        echo __CLASS__,&apos;&lt;br/&gt;&apos;;
+    }
+}
+
+# 子类继承
+class Man extends Human{
+    # 定义同名属性
+    public $name = &apos;Man&apos;;
+    # 定义父类同名方法
+    public function show(){
+        echo __CLASS__,&apos; hello world&lt;br/&gt;&apos;;
+    }
+}
+</code></pre><p>2、重写父类成员之后，子类只会直接访问子类的成员（覆盖）</p>
+<pre><code># 接上述代码
+# 实例化子类对象
+$m = new Man();
+$m-&gt;show();                # 输出Human hello world
+var_dump($m);            # 只有子类属性$name
+</code></pre><p><strong>注意</strong>：不管是公有和是受保护属性，一旦重写，父类的就会不存在，而私有属性不会被覆盖而丢失</p>
+<p>3、重写的要求1：子类重写父类的方法，控制权不能高于父类，即子类可以比父类更开放</p>
+<pre><code># 父类
+class Human{
+    protected function show(){
+        echo __CLASS__,&apos;&lt;br/&gt;&apos;;
+    }
+}
+
+# 子类继承
+class Man extends Human{
+    # 重写
+    protected function show(){}                # 正确
+    public function show(){}                # 允许
+    private function show(){}                # 错误：控制权比父类更严格  
+}
+</code></pre><p>4、重写的要求2：php中重写要求子类重写父类方法的时候，必须保证与父类同名方法参数一致</p>
+<pre><code># 父类
+class Human{
+    protected function show(){
+        echo __CLASS__,&apos;&lt;br/&gt;&apos;;
+    }
+}
+
+# 子类继承
+class Man extends Human{
+    # 重写
+    public function show(){}
+    public function show($a){}            # 错误，与父类同名方法不一致
+}
+</code></pre><p><strong>注意</strong>：在方法参数一致不单单要求数量一致，而且数据类型要求也必须相同，但形参名字可以不同；另外，在php7以前重写对于参数这块没有要求。</p>
+<p>5、重写的要求3：重写针对的是被继承的成员，父类私有方法不会被继承，因此不受要求2规定</p>
+<pre><code># 父类
+class Human{
+    private function show(){
+        echo __CLASS__,&apos;&lt;br/&gt;&apos;;
+    }
+}
+
+# 子类
+class Man extends Human{
+    private function show($name){        # 不会报错，因为本质不存在重写（父类Human::show没有被继承）
+        echo $name,&apos;&lt;br/&gt;&apos;;
+    }
+}
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、重写override是一种在子类中定义父类同名成员的操作</p>
+<p>2、公有、受保护的属性重写是直接覆盖父类成员，私有属性不会被覆盖；公有、收保护的方法会被重写，但是私有方法不会被重写（私有方法本质没有被继承）</p>
+<p>3、重写的要求</p>
+<ul>
+<li>子类控制权不能高于父类控制权</li>
+<li>php7中要求被重写的方法必须与父类保持参数一致（数量和类型）</li>
+<li>私有方法不能继承，因此不存在重写</li>
+</ul>
+<p>4、静态成员也可以被重写，但是静态属性不会被覆盖（属于类，不属于对象）</p>
+<h3 id="4、parent关键字"><a href="#4、parent关键字" class="headerlink" title="4、parent关键字"></a>4、parent关键字</h3><blockquote>
+<p>目标：理解重写后的访问原理，使用parent实现被重写后的父类成员访问</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>parent关键字</strong>：一种明确访问父类成员的表达方式</p>
+<ul>
+<li>parent关键字是用于在被重写的方法（子类）中明确访问父类被重写成员</li>
+<li>parent可以访问父类静态属性、静态方法、类常量和普通方法</li>
+<li><p>parent使用范围解析操作符访问</p>
+<p>parent::父类方法()</p>
+</li>
+</ul>
+<blockquote>
+<p>步骤</p>
+</blockquote>
+<p>1、子类继承父类</p>
+<p>2、子类重写父类方法</p>
+<p>3、子类重写的方法内部需要访问父类成员或者明确需要访问父类成员</p>
+<p>4、使用parent访问父类方法</p>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、父类为数据库初始化类，子类为针对表的业务类：子类继承父类，但是子类也有资源要初始化，需要重写父类构造方法：但是又需要父类的构造方法执行以实现数据库的初始化操作</p>
+<pre><code>class DB{
+    protected $link;
+
+    public function __construct(){
+        $this-&gt;link = mysqli_connect(&apos;localhost&apos;,&apos;root&apos;,&apos;root&apos;,&apos;db_2&apos;,&apos;3306&apos;) or die(&apos;数据库连接失败！&apos;);
+
+        echo __METHOD__;
+    }
+}
+
+class Table extends DB{
+    # 重写父类方法
+    public function __construct(){
+        # 让父类构造方法先执行
+        parent::__construct();
+
+        # 执行其他
+        echo __METHOD__;
+    }
+}
+
+# 实例化
+$t = new Table();        # 输出DB::__construct Table::__construct
+</code></pre><p>2、静态属性重写后，需要在子类中进行访问</p>
+<pre><code>class Father{
+    public static $count = 1;
+}
+
+class Son extends Father{
+    # 重写
+    public static $count = 2;
+
+    public static function getCount(){
+        echo self::$count + parent::$count;
+    }
+}
+# 调用
+Son::getCount();
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、方法被重写后，访问调用的都是子类方法，如果想要访问父类方法，可以通过在子类方法中使用parent关键字来强制访问父类方法</p>
+<p>2、parent不能用于访问父类的属性（静态属性可以）</p>
+<h3 id="5、php继承特点"><a href="#5、php继承特点" class="headerlink" title="5、php继承特点"></a><strong>5、php继承特点</strong></h3><blockquote>
+<p>目标：了解php继承的特性，避免在使用继承过程中出现问题</p>
+</blockquote>
+<blockquote>
+<p>概念</p>
+</blockquote>
+<p><strong>php继承特点</strong>：与其他纯面向对象（从设计之初就完全由面向对象思维支配）编程语言是有一些不一样</p>
+<ul>
+<li>php只能单继承，只有一个父类</li>
+<li>php继承中，只有私有方法不能继承</li>
+<li>php允许继承父类中的构造方法和析构方法</li>
+</ul>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<p>1、php中继承只能单继承：即子类只有一个父类（有些语言支持多继承）</p>
+<pre><code>class Man{}
+class Woman{}
+class Ladyboy extends Man,Woman{}    # php中错误，不允许继承多个父类
+</code></pre><p>2、php若想继承多个类，可以使用链式继承</p>
+<pre><code>class Man{}
+class Woman extends Man{}
+class Ladyboy extends Woman{}        # Ladyboy包含了Man和Woman类中所有可继承的成员
+</code></pre><blockquote>
+<p>小结</p>
+</blockquote>
+<p>1、php中的继承与传统的面向对象继承有着一些小区别，大家在使用继承的时候要严格遵守php的继承规则</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#转载自：黑马程序员武汉中心"><span class="toc-number">1.</span> <span class="toc-text">转载自：黑马程序员武汉中心</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#面向对象高级"><span class="toc-number"></span> <span class="toc-text">面向对象高级</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、-面向对象三大特性"><span class="toc-number"></span> <span class="toc-text">一、 面向对象三大特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、封装"><span class="toc-number"></span> <span class="toc-text">1、封装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、继承"><span class="toc-number"></span> <span class="toc-text">2、继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、多态"><span class="toc-number"></span> <span class="toc-text">3、多态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#父类"><span class="toc-number"></span> <span class="toc-text">父类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#子类1"><span class="toc-number"></span> <span class="toc-text">子类1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#子类2"><span class="toc-number"></span> <span class="toc-text">子类2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#父类方法统一调用：传入不同的对象"><span class="toc-number"></span> <span class="toc-text">父类方法统一调用：传入不同的对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#二、-php继承"><span class="toc-number"></span> <span class="toc-text">二、 php继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、继承相关概念和实现"><span class="toc-number"></span> <span class="toc-text">1、继承相关概念和实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、有限继承"><span class="toc-number"></span> <span class="toc-text">2、有限继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、重写Override"><span class="toc-number"></span> <span class="toc-text">3、重写Override</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、parent关键字"><span class="toc-number"></span> <span class="toc-text">4、parent关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、php继承特点"><span class="toc-number"></span> <span class="toc-text">5、php继承特点</span></a>
+    </li></ol></li></ol></li></div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&text=php面向对象高级"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&is_video=false&description=php面向对象高级"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php面向对象高级&body=Check out this article: http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&title=php面向对象高级"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&name=php面向对象高级&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/07/25/php学习/2PHP面向对象高级/&t=php面向对象高级"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
