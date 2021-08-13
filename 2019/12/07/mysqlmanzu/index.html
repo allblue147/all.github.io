@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="A1LB1ue">
 <meta property="og:description" content="sql盲注介绍何为盲注？盲注就是在 sql 注入过程中，sql 语句执行的选择后，选择的数据不能回显到前端页面，而对于攻击者来说也缺少了非常重要的“调试信息”，此时，我们需要利用一些方法进行判断或者尝试，这个过程称之为盲注。  布尔盲注：  布尔盲注，顾名思义，只有Ture和False，也就是说它只会根据你的注入信息返回Ture跟False，也就是说，不会再显示之前的显错信息了。(我们可以利用逻辑">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-06T17:50:01.451Z">
+<meta property="og:updated_time" content="2021-08-13T07:42:19.524Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sql盲注">
 <meta name="twitter:description" content="sql盲注介绍何为盲注？盲注就是在 sql 注入过程中，sql 语句执行的选择后，选择的数据不能回显到前端页面，而对于攻击者来说也缺少了非常重要的“调试信息”，此时，我们需要利用一些方法进行判断或者尝试，这个过程称之为盲注。  布尔盲注：  布尔盲注，顾名思义，只有Ture和False，也就是说它只会根据你的注入信息返回Ture跟False，也就是说，不会再显示之前的显错信息了。(我们可以利用逻辑">
@@ -104,7 +104,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql盲注介绍"><span class="toc-number">1.</span> <span class="toc-text">sql盲注介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用盲注函数"><span class="toc-number">2.</span> <span class="toc-text">常用盲注函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#布尔盲注一般流程："><span class="toc-number">2.1.</span> <span class="toc-text">布尔盲注一般流程：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间盲注"><span class="toc-number">2.2.</span> <span class="toc-text">时间盲注</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql盲注介绍"><span class="toc-number">1.</span> <span class="toc-text">sql盲注介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用盲注函数"><span class="toc-number">2.</span> <span class="toc-text">常用盲注函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#布尔盲注一般流程："><span class="toc-number">2.1.</span> <span class="toc-text">布尔盲注一般流程：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#猜解数据库名称长度："><span class="toc-number">2.1.1.</span> <span class="toc-text">猜解数据库名称长度：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s"><span class="toc-number">2.1.2.</span> <span class="toc-text">利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）"><span class="toc-number">2.1.3.</span> <span class="toc-text">返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#猜表名：返回正常，说明数据库第一个表名的第一位是u"><span class="toc-number">2.1.4.</span> <span class="toc-text">猜表名：返回正常，说明数据库第一个表名的第一位是u</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#猜字段名：返回正常，说明表中的列名称第一位是f"><span class="toc-number">2.1.5.</span> <span class="toc-text">猜字段名：返回正常，说明表中的列名称第一位是f</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#猜内容：返回正常，说明flAg列第一位是c"><span class="toc-number">2.1.6.</span> <span class="toc-text">猜内容：返回正常，说明flAg列第一位是c</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。"><span class="toc-number">2.1.7.</span> <span class="toc-text">具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间盲注"><span class="toc-number">2.2.</span> <span class="toc-text">时间盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#通过if判断执行sql语句，如果条件为真就执行sleep-停5秒再返回，如果为假就执行1即立即返回页面"><span class="toc-number">2.2.1.</span> <span class="toc-text">通过if判断执行sql语句，如果条件为真就执行sleep 停5秒再返回，如果为假就执行1即立即返回页面</span></a></li></ol></li></ol></li></ol>
     </div>
   </span>
 </div>
@@ -156,13 +156,12 @@
 <ul>
 <li><strong>时间盲注</strong></li>
 </ul>
-<p>界面返回值只有一种结果ture，无论输出任何值,返回情况都会按ture值来返回正常页面，加入特定的时间函数，通过查看web页面返回时间差来判断注入的语句是否正确。</p>
+<p>界面返回值只有一种结果ture，无论输出任何值,返回情况都会按ture值来返回正常页面，注入的方法其实就是在布尔盲注的注入方式中加入了if判断，并通过查看web页面返回时间差来判断注入的语句是否正确。</p>
 <h2 id="常用盲注函数"><a href="#常用盲注函数" class="headerlink" title="常用盲注函数"></a>常用盲注函数</h2><ul>
 <li><p>length（）函数 返回字符串的长度</p>
 </li>
 <li><p>substr（）函数 截取字符串 </p>
 </li>
-<li></li>
 <li><p>ascii（） 返回字符串的ascii码</p>
 </li>
 <li><p>sleep（n）将程序挂起一段时间，n为n秒</p>
@@ -170,17 +169,17 @@
 <li><p>if（expr1，expr2，expr3）判断语句，如果第一个语句正确就执行第二个，如果错误，就执行第三个语句；</p>
 </li>
 </ul>
-<h3 id="布尔盲注一般流程："><a href="#布尔盲注一般流程：" class="headerlink" title="布尔盲注一般流程："></a>布尔盲注一般流程：</h3><p>猜解数据库名称长度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=1&apos;and(length(database()))&gt;9--+/23%(#)</span><br></pre></td></tr></table></figure></p>
-<p>利用ascii码猜解当前数据库名称：返回正常，说明数据库名称第一位是s</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and(ascii(substr(database(),1,1)))=115--+</span><br></pre></td></tr></table></figure>
-<p>返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……<br>）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and(ascii(substr(database(),2,1)))=101--+</span><br></pre></td></tr></table></figure></p>
-<p>猜表名：返回正常，说明数据库第一个表名的第一位是e<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and(adcii(substr((select table name from information_schema.tables where table_schema=database() limit 0,1),1,1)))=101</span><br><span class="line">--+</span><br></pre></td></tr></table></figure></p>
-<p>猜字段名：返回正常，说明zkaq表中的列名称第一位是f<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and(ascii(substr((select column_name from information_schema.columns where table_name=&apos;zkaq&apos; limit 0,1),1,1)))=102--+</span><br></pre></td></tr></table></figure></p>
-<p>猜内容：返回正常，说明zKaQ列第一位是z<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and（ascii(substr((select zKzQ from zkaq limit 4,1),1,1)))=122--+</span><br></pre></td></tr></table></figure></p>
-<p>具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入。</p>
-<h3 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h3><p>主要通过sleep函数进行注入：</p>
+<h3 id="布尔盲注一般流程："><a href="#布尔盲注一般流程：" class="headerlink" title="布尔盲注一般流程："></a>布尔盲注一般流程：</h3><h4 id="猜解数据库名称长度："><a href="#猜解数据库名称长度：" class="headerlink" title="猜解数据库名称长度："></a>猜解数据库名称长度：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=1&apos;and(length(database()))&gt;9 %23</span><br></pre></td></tr></table></figure>
+<pre><code>tips:判断数据库长度，这里由于是布尔盲注，可以使用页面回显差异来判断信息。
+</code></pre><p>后续只要通过比较大小比较，来进行判断即可以猜解出数据库的长度</p>
+<h4 id="利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s"><a href="#利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s" class="headerlink" title="利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s"></a>利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and(ascii(substr(database(),1,1)))=115--+</span><br></pre></td></tr></table></figure>
+<h4 id="返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）"><a href="#返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）" class="headerlink" title="返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）"></a>返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and(ascii(substr(database(),2,1)))=101--+</span><br></pre></td></tr></table></figure>
+<h4 id="猜表名：返回正常，说明数据库第一个表名的第一位是u"><a href="#猜表名：返回正常，说明数据库第一个表名的第一位是u" class="headerlink" title="猜表名：返回正常，说明数据库第一个表名的第一位是u"></a>猜表名：返回正常，说明数据库第一个表名的第一位是u</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and(adcii(substr((select table name from information_schema.tables where table_schema=database() limit 0,1),1,1)))=117</span><br><span class="line">--+</span><br></pre></td></tr></table></figure>
+<h4 id="猜字段名：返回正常，说明表中的列名称第一位是f"><a href="#猜字段名：返回正常，说明表中的列名称第一位是f" class="headerlink" title="猜字段名：返回正常，说明表中的列名称第一位是f"></a>猜字段名：返回正常，说明表中的列名称第一位是f</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and(ascii(substr((select column_name from information_schema.columns where table_name=&apos;users&apos; limit 0,1),1,1)))=102--+</span><br></pre></td></tr></table></figure>
+<h4 id="猜内容：返回正常，说明flAg列第一位是c"><a href="#猜内容：返回正常，说明flAg列第一位是c" class="headerlink" title="猜内容：返回正常，说明flAg列第一位是c"></a>猜内容：返回正常，说明flAg列第一位是c</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and（ascii(substr((select flAg from users limit 4,1),1,1)))=99--+</span><br></pre></td></tr></table></figure>
+<h4 id="具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。"><a href="#具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。" class="headerlink" title="具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。"></a>具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。</h4><h3 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h3><p>主要通过sleep函数进行注入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&apos;and if(ascii(substr(databse(),1,1))=115,sleep(5),1)#</span><br></pre></td></tr></table></figure>
-<p>通过if判断执行sql语句，如果条件为真就执行sleep 停5秒再返回，如果为假就执行1即立即返回页面</p>
+<h4 id="通过if判断执行sql语句，如果条件为真就执行sleep-停5秒再返回，如果为假就执行1即立即返回页面"><a href="#通过if判断执行sql语句，如果条件为真就执行sleep-停5秒再返回，如果为假就执行1即立即返回页面" class="headerlink" title="通过if判断执行sql语句，如果条件为真就执行sleep 停5秒再返回，如果为假就执行1即立即返回页面"></a>通过if判断执行sql语句，如果条件为真就执行sleep 停5秒再返回，如果为假就执行1即立即返回页面</h4><p>时间盲注 步骤其实只是比布尔多一步而已，只是加入了时间函数作为判断罢了，这里就不再赘述了。</p>
 
   </div>
 </article>
@@ -206,7 +205,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql盲注介绍"><span class="toc-number">1.</span> <span class="toc-text">sql盲注介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用盲注函数"><span class="toc-number">2.</span> <span class="toc-text">常用盲注函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#布尔盲注一般流程："><span class="toc-number">2.1.</span> <span class="toc-text">布尔盲注一般流程：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间盲注"><span class="toc-number">2.2.</span> <span class="toc-text">时间盲注</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql盲注介绍"><span class="toc-number">1.</span> <span class="toc-text">sql盲注介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用盲注函数"><span class="toc-number">2.</span> <span class="toc-text">常用盲注函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#布尔盲注一般流程："><span class="toc-number">2.1.</span> <span class="toc-text">布尔盲注一般流程：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#猜解数据库名称长度："><span class="toc-number">2.1.1.</span> <span class="toc-text">猜解数据库名称长度：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s"><span class="toc-number">2.1.2.</span> <span class="toc-text">利用ascii码猜解当前数据库名称第一位：返回正常，说明数据库名称第一位是s</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）"><span class="toc-number">2.1.3.</span> <span class="toc-text">返回正常，说明数据库名称第二位是e（通过移动第二位数来一位一位的猜出……）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#猜表名：返回正常，说明数据库第一个表名的第一位是u"><span class="toc-number">2.1.4.</span> <span class="toc-text">猜表名：返回正常，说明数据库第一个表名的第一位是u</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#猜字段名：返回正常，说明表中的列名称第一位是f"><span class="toc-number">2.1.5.</span> <span class="toc-text">猜字段名：返回正常，说明表中的列名称第一位是f</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#猜内容：返回正常，说明flAg列第一位是c"><span class="toc-number">2.1.6.</span> <span class="toc-text">猜内容：返回正常，说明flAg列第一位是c</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。"><span class="toc-number">2.1.7.</span> <span class="toc-text">具体就是一位一位的猜……其实这样挺麻烦的，可以通过sqlmap进行注入，CTF的话则建议直接写脚本。</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间盲注"><span class="toc-number">2.2.</span> <span class="toc-text">时间盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#通过if判断执行sql语句，如果条件为真就执行sleep-停5秒再返回，如果为假就执行1即立即返回页面"><span class="toc-number">2.2.1.</span> <span class="toc-text">通过if判断执行sql语句，如果条件为真就执行sleep 停5秒再返回，如果为假就执行1即立即返回页面</span></a></li></ol></li></ol></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

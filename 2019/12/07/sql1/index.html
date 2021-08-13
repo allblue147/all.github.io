@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
     <meta name="description" content="sql injection介绍： 我们称之为 sql 注入。何为 sql，英文：Structured Query Language，叫做结构化查询语言。常见的结构化数据库有 MySQL，MS SQL ,Oracle 以及 Postgresql。Sql语言就是我们在管理数据库时用到的一种。在我们的应用系统使用 sql 语句进行管理应用数据库时，往往采用拼接的方式形成一条完整的数据库语言，而危险的是，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sql注入原理分析">
+<meta property="og:title" content="A1LB1ue">
 <meta property="og:url" content="http://allblue147.github.io/2019/12/07/sql1/index.html">
 <meta property="og:site_name" content="A1LB1ue">
 <meta property="og:description" content="sql injection介绍： 我们称之为 sql 注入。何为 sql，英文：Structured Query Language，叫做结构化查询语言。常见的结构化数据库有 MySQL，MS SQL ,Oracle 以及 Postgresql。Sql语言就是我们在管理数据库时用到的一种。在我们的应用系统使用 sql 语句进行管理应用数据库时，往往采用拼接的方式形成一条完整的数据库语言，而危险的是，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-06T17:50:35.964Z">
+<meta property="og:updated_time" content="2021-08-11T03:35:25.915Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="sql注入原理分析">
+<meta name="twitter:title" content="A1LB1ue">
 <meta name="twitter:description" content="sql injection介绍： 我们称之为 sql 注入。何为 sql，英文：Structured Query Language，叫做结构化查询语言。常见的结构化数据库有 MySQL，MS SQL ,Oracle 以及 Postgresql。Sql语言就是我们在管理数据库时用到的一种。在我们的应用系统使用 sql 语句进行管理应用数据库时，往往采用拼接的方式形成一条完整的数据库语言，而危险的是，">
     
     
@@ -36,7 +36,7 @@
       
     
     <!-- title -->
-    <title>sql注入原理分析</title>
+    <title>A1LB1ue</title>
     <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
     <!-- persian styles -->
@@ -90,21 +90,21 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql1/&text=sql注入原理分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql1/&is_video=false&description=sql注入原理分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=sql注入原理分析&body=Check out this article: http://allblue147.github.io/2019/12/07/sql1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql1/&name=sql注入原理分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql1/&t=sql注入原理分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql1/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql1/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2019/12/07/sql1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql1/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql1/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql-injection介绍："><span class="toc-number">1.</span> <span class="toc-text">sql injection介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入原理："><span class="toc-number">2.</span> <span class="toc-text">sql注入原理：</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql-injection介绍："><span class="toc-number">1.</span> <span class="toc-text">sql injection介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入实现的两大条件"><span class="toc-number">2.</span> <span class="toc-text">sql注入实现的两大条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入攻击的原理"><span class="toc-number">3.</span> <span class="toc-text">sql注入攻击的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入攻击的典型手段"><span class="toc-number">4.</span> <span class="toc-text">SQL注入攻击的典型手段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#information-schema库"><span class="toc-number">5.</span> <span class="toc-text">information_schema库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一般的数据注入流程为："><span class="toc-number">6.</span> <span class="toc-text">一般的数据注入流程为：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入是怎么产生的？"><span class="toc-number">7.</span> <span class="toc-text">SQL注入是怎么产生的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库修复建议"><span class="toc-number">8.</span> <span class="toc-text">数据库修复建议</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -116,7 +116,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        sql注入原理分析
+        
     </h1>
 
 
@@ -135,11 +135,6 @@
 
 
       
-    <div class="article-category">
-        <i class="fas fa-archive"></i>
-        <a class="category-link" href="/categories/笔记/">笔记</a>
-    </div>
-
 
       
 
@@ -149,35 +144,51 @@
 
   <div class="content" itemprop="articleBody">
     <h2 id="sql-injection介绍："><a href="#sql-injection介绍：" class="headerlink" title="sql injection介绍："></a>sql injection介绍：</h2><hr>
-<p>我们称之为 sql 注入。何为 sql，英文：Structured Query Language，<br>叫做结构化查询语言。常见的结构化数据库有 MySQL，MS SQL ,Oracle 以及 Postgresql。Sql<br>语言就是我们在管理数据库时用到的一种。在我们的应用系统使用 sql 语句进行管理应用数<br>据库时，往往<code>采用拼接的方式形成一条完整的数据库语言，而危险的是，在拼接 sql 语句的<br>时候，我们可以改变 sql 语句。从而让数据执行我们想要执行的语句</code>，这就是我们常说的sql注入。</p>
-<h2 id="sql注入原理："><a href="#sql注入原理：" class="headerlink" title="sql注入原理："></a>sql注入原理：</h2><hr>
-<p><strong>sql注入攻击的原理</strong></p>
-<p>就是将用户输出的数据当成代码然后被服务器放到数据库上去执行了。</p>
-<p><strong>sql注入实现的两大条件</strong></p>
-<p>1.用户能够控制输出.</p>
+<p>我们称之为 sql 注入。何为 sql，英文：Structured Query Language，<br>叫做结构化查询语言。常见的结构化数据库有 MySQL，MS SQL ,Oracle 以及 Postgresql。Sql<br>语言就是我们在管理数据库时用到的一种。在我们的应用系统使用 sql 语句进行管理应用数<br>据库时，往往<code>采用拼接的方式形成一条完整的数据库语言，而危险的是，在拼接 sql 语句的<br>时候，没有对拼接数据进行过滤或者过滤不严谨，导致我们可以改变 sql 语句。从而让数据执行我们想要执行的语句</code>，这就是我们常说的sql注入。</p>
+<h2 id="sql注入实现的两大条件"><a href="#sql注入实现的两大条件" class="headerlink" title="sql注入实现的两大条件"></a>sql注入实现的两大条件</h2><p>1.用户能够控制输出.</p>
 <p>2.原本程序要执行的代码，拼接了用户输入的数据</p>
-<p><strong>SQL注入攻击的典型手段</strong></p>
-<ol>
+<h2 id="sql注入攻击的原理"><a href="#sql注入攻击的原理" class="headerlink" title="sql注入攻击的原理"></a>sql注入攻击的原理</h2><p>简单的说就是将用户输出的数据当成代码然后被服务器放到数据库上去执行。</p>
+<p>比如原始数据库语句为select username from users where id =’$a’;</p>
+<p>而$a是我们可控的参数，那么就很有可能被攻击者所利用，从而构造恶意语句如下：</p>
+<p>1’ union select 1,databases(),user()–+</p>
+<p>攻击者输入的语句直接带入数据库进行查询，数据库语句如下：</p>
+<p>select username from users where id = ‘1’ union select 1,databases(),user() –+’</p>
+<p>在这里的–+是注释的意思，会将注释符后的语句进行注释，那么我们要做的就是将前面的语句闭合，所以构造1’，闭合前面的语句。接着要做的就是构造攻击者想要的查询语句：union select 1,databases(),user() ，由于我们手动闭合后，语句后面会多出来一个引号，我们可以通过注释符进行注释，从而达到语句拼接的目的。</p>
+<h2 id="SQL注入攻击的典型手段"><a href="#SQL注入攻击的典型手段" class="headerlink" title="SQL注入攻击的典型手段"></a>SQL注入攻击的典型手段</h2><ol>
 <li>判断应用程序是否存在注入漏洞</li>
 <li>收集信息、并判断数据库类型</li>
 <li>根据注入参数类型，重构SQL语句的原貌</li>
 <li>猜解表名、字段名</li>
 <li>获取账户信息、攻击web或为下一步攻击做准备</li>
 </ol>
-<p><strong>information_schema库</strong></p>
-<p>information_schema库是php5.0以后自动生成的系统库，通常我们可以通过系统库查询到很多信息，比如information_schema库里面的tables表中就放着所有的表名，information_schema库里面的columns表放着所有列名。而数据库我们可以通过database()函数爆出也可以通过系统库的schemata库去查询。我们知道以上信息，就可以通过sql语句一步步爆出数据库隐密信息！</p>
-<p><strong>一般的流程为：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select schema_name from information_schema.schemata</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select table_name from information_schema.tables where table_schema=&quot;数据库名&quot;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select column_name from information_schema.columns where table_name=&quot;表名&quot;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 字段名 from 表</span><br></pre></td></tr></table></figure>
-<p><strong><em>SQL注入是怎么产生的？</em></strong></p>
-<ol>
+<h2 id="information-schema库"><a href="#information-schema库" class="headerlink" title="information_schema库"></a>information_schema库</h2><p>在mysql5.0以上的版本中，为了方便管理，系统自动生成了information_schema这个系统库，用来存储数据库元信息。其中就有我们在注入中需要用到的一些表：schemata(数据库名)、tables(表名)、columns(列名或字段名)，通常我们可以通过系统库查询到很多信息，最常见的mysql注入也是根据该库来完成的。</p>
+<p><strong>在schemata表中，schema_name字段用来存储数据库名。</strong></p>
+<p><strong>在tables表中，table_schema和table_name分别用来存储数据名和表名。</strong></p>
+<p><strong>在columns表中，table_schema(数据库名)、table_name(表名)、column_name(字段名)</strong></p>
+<h2 id="一般的数据注入流程为："><a href="#一般的数据注入流程为：" class="headerlink" title="一般的数据注入流程为："></a>一般的数据注入流程为：</h2><p><strong>判断注入语句结构：</strong><br>id=$a<br>id=’$a’<br>id=($a)<br>search =%$a%<br>…</p>
+<p><strong>判断闭合后，判断字段数：</strong><br>由于union查询是需要字段前后一致，所以我们需要判断字段，字段我们可以使用<strong>order by</strong>进行判断，order by 是mysql用来进行字段排序的，比如order by 1，就会根据第一个字段进行排序，order by 2,就会根据第二个字段进行排序。但如果查询的数据只有2个字段，那么我们执行order by 3就会进行报错，因为不存在第三个字段。我们可以根据这个原理来进行判断数据库存在多少个字段。<br>order by 1<br>order by 2<br>order by 3<br>…</p>
+<p><strong>测试回显位：</strong><br>经典的联合查询是需要存在回显字段的，所以我们需要测试出回显位：</p>
+<p>union select 1,2,3</p>
+<p><strong>查询当前数据库</strong></p>
+<p>select schema_name from information_schema.schemata</p>
+<p><strong>查询表名</strong></p>
+<p>select table_name from information_schema.tables where table_schema=”数据库名”</p>
+<p><strong>查询字段名</strong><br>select column_name from information_schema.columns where table_name=”表名”</p>
+<p><strong>查询字段数据</strong></p>
+<p>select 字段名 from 表</p>
+<h2 id="SQL注入是怎么产生的？"><a href="#SQL注入是怎么产生的？" class="headerlink" title="SQL注入是怎么产生的？"></a>SQL注入是怎么产生的？</h2><ol>
 <li><p>WEB开发人员无法保证所有的输入都已经过滤</p>
 </li>
 <li><p>攻击者利用发送给SQL服务器的输入参数构造可执行的SQL代码（可加入到get请求、post请求、http头信息、cookie中）</p>
 </li>
 <li><p>数据库未做相应的安全配置</p>
 </li>
+</ol>
+<h2 id="数据库修复建议"><a href="#数据库修复建议" class="headerlink" title="数据库修复建议"></a>数据库修复建议</h2><ol>
+<li>对数据库进行严格监控</li>
+<li>对用户提交的数据进行严格过滤</li>
+<li>对数据库内容进行加密</li>
+<li>代码层最佳防御sql漏洞方案：采用sql语句预编译和绑定变量，是防御sql注入的最佳方法</li>
 </ol>
 
   </div>
@@ -204,22 +215,22 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql-injection介绍："><span class="toc-number">1.</span> <span class="toc-text">sql injection介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入原理："><span class="toc-number">2.</span> <span class="toc-text">sql注入原理：</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql-injection介绍："><span class="toc-number">1.</span> <span class="toc-text">sql injection介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入实现的两大条件"><span class="toc-number">2.</span> <span class="toc-text">sql注入实现的两大条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入攻击的原理"><span class="toc-number">3.</span> <span class="toc-text">sql注入攻击的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入攻击的典型手段"><span class="toc-number">4.</span> <span class="toc-text">SQL注入攻击的典型手段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#information-schema库"><span class="toc-number">5.</span> <span class="toc-text">information_schema库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一般的数据注入流程为："><span class="toc-number">6.</span> <span class="toc-text">一般的数据注入流程为：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入是怎么产生的？"><span class="toc-number">7.</span> <span class="toc-text">SQL注入是怎么产生的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库修复建议"><span class="toc-number">8.</span> <span class="toc-text">数据库修复建议</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2019/12/07/sql1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql1/&text=sql注入原理分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql1/&is_video=false&description=sql注入原理分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=sql注入原理分析&body=Check out this article: http://allblue147.github.io/2019/12/07/sql1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title=sql注入原理分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql1/&name=sql注入原理分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql1/&t=sql注入原理分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2019/12/07/sql1/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2019/12/07/sql1/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2019/12/07/sql1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2019/12/07/sql1/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2019/12/07/sql1/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2019/12/07/sql1/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
