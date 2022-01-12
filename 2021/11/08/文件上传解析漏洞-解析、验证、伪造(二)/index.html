@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="我们接着上一篇文章对文件上传漏洞的讲解： %00截断绕过我们进入11关  本关的提示是%00截断，我们先不管，先看下源码 123456789101112131415161718$is_upload = false;$msg = null;if(isset($_POST[&apos;submit&apos;]))&amp;#123;    $ext_arr = array(&apos;jpg&apos;,&apos;png&apos;,&apos;gif&apos;);    $fil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A1LB1ue">
+<meta property="og:url" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/index.html">
+<meta property="og:site_name" content="A1LB1ue">
+<meta property="og:description" content="我们接着上一篇文章对文件上传漏洞的讲解： %00截断绕过我们进入11关  本关的提示是%00截断，我们先不管，先看下源码 123456789101112131415161718$is_upload = false;$msg = null;if(isset($_POST[&apos;submit&apos;]))&amp;#123;    $ext_arr = array(&apos;jpg&apos;,&apos;png&apos;,&apos;gif&apos;);    $fil">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108155042275.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108155236124.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108160456145.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108174405386.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108174742742.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108175020189.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108175226144.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108175310242.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108175402180.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108175458022.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108184340279.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108185657167.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108185747219.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108185913679.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108190225395.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108190325206.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108190357443.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108190450486.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108231231497.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211109101811468.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211109101934331.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211109101923939.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108231332748.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211109104933300.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211109103023200.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211109102837983.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211109105450848.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110191823095.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110192052865.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110192151009.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110192345753.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110192521626.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110193350535.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110193507087.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110193548032.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211110193653949.png">
+<meta property="og:updated_time" content="2021-11-10T12:12:26.654Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A1LB1ue">
+<meta name="twitter:description" content="我们接着上一篇文章对文件上传漏洞的讲解： %00截断绕过我们进入11关  本关的提示是%00截断，我们先不管，先看下源码 123456789101112131415161718$is_upload = false;$msg = null;if(isset($_POST[&apos;submit&apos;]))&amp;#123;    $ext_arr = array(&apos;jpg&apos;,&apos;png&apos;,&apos;gif&apos;);    $fil">
+<meta name="twitter:image" content="http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/1.assets/image-20211108155042275.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>A1LB1ue</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<script type="text/javascript" src="../source/js/love.js"></script>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/11/10/RCE写shell总结/RCE写shell姿势总结/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/09/26/ActiveMQ反序列化漏洞（CVE-2015-5254）复现/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#00截断绕过"><span class="toc-number">1.</span> <span class="toc-text">%00截断绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#00截断绕过（二）"><span class="toc-number">2.</span> <span class="toc-text">%00截断绕过（二）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图片马之文件头绕过"><span class="toc-number">3.</span> <span class="toc-text">图片马之文件头绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getimagesize图片类型绕过"><span class="toc-number">4.</span> <span class="toc-text">getimagesize图片类型绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-exif模块图片类型绕过"><span class="toc-number">5.</span> <span class="toc-text">php_exif模块图片类型绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二次渲染绕过"><span class="toc-number">6.</span> <span class="toc-text">二次渲染绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件竞争绕过"><span class="toc-number">7.</span> <span class="toc-text">条件竞争绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件竞争绕过2"><span class="toc-number">8.</span> <span class="toc-text">条件竞争绕过2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#move-uploaded-file截断"><span class="toc-number">9.</span> <span class="toc-text">move_uploaded_file截断</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-11-08T07:42:19.099Z" itemprop="datePublished">2021-11-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>我们接着上一篇文章对文件上传漏洞的讲解：</p>
+<h2 id="00截断绕过"><a href="#00截断绕过" class="headerlink" title="%00截断绕过"></a>%00截断绕过</h2><p>我们进入11关</p>
+<p><img src="1.assets/image-20211108155042275.png" alt="image-20211108155042275"></p>
+<p>本关的提示是%00截断，我们先不管，先看下源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    $ext_arr = <span class="keyword">array</span>(<span class="string">'jpg'</span>,<span class="string">'png'</span>,<span class="string">'gif'</span>);</span><br><span class="line">    $file_ext = substr($_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>],strrpos($_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>],<span class="string">"."</span>)+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span>(in_array($file_ext,$ext_arr))&#123;</span><br><span class="line">        $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">        $img_path = $_GET[<span class="string">'save_path'</span>].<span class="string">"/"</span>.rand(<span class="number">10</span>, <span class="number">99</span>).date(<span class="string">"YmdHis"</span>).<span class="string">"."</span>.$file_ext;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($temp_file,$img_path))&#123;</span><br><span class="line">            $is_upload = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">'上传出错！'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">        $msg = <span class="string">"只允许上传.jpg|.png|.gif类型文件！"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过代码分析可以发现他会将上传文件进行重命名并存到指定路径中</p>
+<p><img src="1.assets/image-20211108155236124.png" alt="image-20211108155236124"></p>
+<p>由于存储路径是随着POST表单传递的，也就是我们能控制的</p>
+<p>那我们能不能通过在存储路径进行%00截断</p>
+<p><img src="1.assets/image-20211108160456145.png" alt="image-20211108160456145"></p>
+<p>成功上传并将文件名成功截断</p>
+<p><img src="1.assets/image-20211108174405386.png" alt="image-20211108174405386"></p>
+<p>文件在上传的时候，会先将文件放到临时目录，再将文件转移到指定的目录并重新命名，在执行转移时php读取到%00时会将其当成一个结束符，然后并不会去读取后面的内容，所以我们上传一个jpg文件后，我们顺利通过%00截断后被当php文件去执行了，最后我们通过phpinfo(),验证是否上传成功</p>
+<p><img src="1.assets/image-20211108174742742.png" alt="image-20211108174742742"></p>
+<p>成功执行</p>
+<h2 id="00截断绕过（二）"><a href="#00截断绕过（二）" class="headerlink" title="%00截断绕过（二）"></a>%00截断绕过（二）</h2><p>进入12关：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    $ext_arr = <span class="keyword">array</span>(<span class="string">'jpg'</span>,<span class="string">'png'</span>,<span class="string">'gif'</span>);</span><br><span class="line">    $file_ext = substr($_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>],strrpos($_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>],<span class="string">"."</span>)+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span>(in_array($file_ext,$ext_arr))&#123;</span><br><span class="line">        $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">        $img_path = $_POST[<span class="string">'save_path'</span>].<span class="string">"/"</span>.rand(<span class="number">10</span>, <span class="number">99</span>).date(<span class="string">"YmdHis"</span>).<span class="string">"."</span>.$file_ext;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($temp_file,$img_path))&#123;</span><br><span class="line">            $is_upload = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">"上传失败"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $msg = <span class="string">"只允许上传.jpg|.png|.gif类型文件！"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发现与上一关很相似，只是有一个函数改为通过post进行传参提交路径文件名，我们先将一句话木马上传并抓包：</p>
+<p><img src="1.assets/image-20211108175020189.png" alt="image-20211108175020189"></p>
+<p>我们发现它是通过post进行传承，那我们再次进行00截断，但post默认是无法进行url编码的，除非声明表单编码格式，所以我们通过hex值0x00进行截断</p>
+<p>为了好找，这里我用+号</p>
+<p><img src="1.assets/image-20211108175226144.png" alt="image-20211108175226144"></p>
+<p><img src="1.assets/image-20211108175310242.png" alt="image-20211108175310242"></p>
+<p>修改后上传，发现成功上传，如图</p>
+<p><img src="1.assets/image-20211108175402180.png" alt="image-20211108175402180"></p>
+<p>最后通过phpinfo()验证，发现截断成功，成功将重命名截断在文件名外；</p>
+<p><img src="1.assets/image-20211108175458022.png" alt="image-20211108175458022"></p>
+<h2 id="图片马之文件头绕过"><a href="#图片马之文件头绕过" class="headerlink" title="图片马之文件头绕过"></a>图片马之文件头绕过</h2><p>这关主要考验做图片马的能力，是否能绕过，但不能直接使用，必须配合解析漏洞或文件包含漏洞等，才可以发挥其效果，所以我们只要能将图片马成功上传绕过就算过关：(ps:Pass-13更新了一个文件包含漏洞，方便执行图片马)</p>
+<p><img src="1.assets/image-20211108184340279.png" alt="image-20211108184340279"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getReailFileType</span><span class="params">($filename)</span></span>&#123;</span><br><span class="line">    $file = fopen($filename, <span class="string">"rb"</span>);</span><br><span class="line">    $bin = fread($file, <span class="number">2</span>); <span class="comment">//只读2字节</span></span><br><span class="line">    fclose($file);</span><br><span class="line">    $strInfo = @unpack(<span class="string">"C2chars"</span>, $bin);    </span><br><span class="line">    $typeCode = intval($strInfo[<span class="string">'chars1'</span>].$strInfo[<span class="string">'chars2'</span>]);    </span><br><span class="line">    $fileType = <span class="string">''</span>;    </span><br><span class="line">    <span class="keyword">switch</span>($typeCode)&#123;      </span><br><span class="line">        <span class="keyword">case</span> <span class="number">255216</span>:            </span><br><span class="line">            $fileType = <span class="string">'jpg'</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">13780</span>:            </span><br><span class="line">            $fileType = <span class="string">'png'</span>;</span><br><span class="line">            <span class="keyword">break</span>;        </span><br><span class="line">        <span class="keyword">case</span> <span class="number">7173</span>:            </span><br><span class="line">            $fileType = <span class="string">'gif'</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:            </span><br><span class="line">            $fileType = <span class="string">'unknown'</span>;</span><br><span class="line">        &#125;    </span><br><span class="line">        <span class="keyword">return</span> $fileType;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">    $file_type = getReailFileType($temp_file);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($file_type == <span class="string">'unknown'</span>)&#123;</span><br><span class="line">        $msg = <span class="string">"文件未知，上传失败！"</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $img_path = UPLOAD_PATH.<span class="string">"/"</span>.rand(<span class="number">10</span>, <span class="number">99</span>).date(<span class="string">"YmdHis"</span>).<span class="string">"."</span>.$file_type;</span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($temp_file,$img_path))&#123;</span><br><span class="line">            $is_upload = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">"上传出错！"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这题主要是对文件头的绕过，正常姿势上传文件马，成功上传</p>
+<p><img src="1.assets/image-20211108185657167.png" alt="image-20211108185657167"></p>
+<p>通过文件包含漏洞进行文件包含，从而实现代码执行</p>
+<p><img src="1.assets/image-20211108185747219.png" alt="image-20211108185747219"></p>
+<p>png和gif原理一样，只要文件头符合即可绕过</p>
+<p><img src="1.assets/image-20211108185913679.png" alt="image-20211108185913679"></p>
+<h2 id="getimagesize图片类型绕过"><a href="#getimagesize图片类型绕过" class="headerlink" title="getimagesize图片类型绕过"></a>getimagesize图片类型绕过</h2><p><img src="1.assets/image-20211108190225395.png" alt="image-20211108190225395"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isImage</span><span class="params">($filename)</span></span>&#123;</span><br><span class="line">    $types = <span class="string">'.jpeg|.png|.gif'</span>;</span><br><span class="line">    <span class="keyword">if</span>(file_exists($filename))&#123;</span><br><span class="line">        $info = getimagesize($filename);</span><br><span class="line">        $ext = image_type_to_extension($info[<span class="number">2</span>]);</span><br><span class="line">        <span class="keyword">if</span>(stripos($types,$ext)&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> $ext;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">    $res = isImage($temp_file);</span><br><span class="line">    <span class="keyword">if</span>(!$res)&#123;</span><br><span class="line">        $msg = <span class="string">"文件未知，上传失败！"</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $img_path = UPLOAD_PATH.<span class="string">"/"</span>.rand(<span class="number">10</span>, <span class="number">99</span>).date(<span class="string">"YmdHis"</span>).$res;</span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($temp_file,$img_path))&#123;</span><br><span class="line">            $is_upload = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">"上传出错！"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此关是对getimagesize的绕过：</p>
+<p>getimagesize测定文件图片的大小并返回图片尺寸和类型；所以我们还是通过图片马直接上传</p>
+<p><img src="1.assets/image-20211108190325206.png" alt="image-20211108190325206"></p>
+<p>文件包含即可</p>
+<p><img src="1.assets/image-20211108190357443.png" alt="image-20211108190357443"></p>
+<h2 id="php-exif模块图片类型绕过"><a href="#php-exif模块图片类型绕过" class="headerlink" title="php_exif模块图片类型绕过"></a>php_exif模块图片类型绕过</h2><p><img src="1.assets/image-20211108190450486.png" alt="image-20211108190450486"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isImage</span><span class="params">($filename)</span></span>&#123;</span><br><span class="line">    <span class="comment">//需要开启php_exif模块</span></span><br><span class="line">    $image_type = exif_imagetype($filename);</span><br><span class="line">    <span class="keyword">switch</span> ($image_type) &#123;</span><br><span class="line">        <span class="keyword">case</span> IMAGETYPE_GIF:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"gif"</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> IMAGETYPE_JPEG:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"jpg"</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> IMAGETYPE_PNG:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"png"</span>;</span><br><span class="line">            <span class="keyword">break</span>;    </span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">    $res = isImage($temp_file);</span><br><span class="line">    <span class="keyword">if</span>(!$res)&#123;</span><br><span class="line">        $msg = <span class="string">"文件未知，上传失败！"</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $img_path = UPLOAD_PATH.<span class="string">"/"</span>.rand(<span class="number">10</span>, <span class="number">99</span>).date(<span class="string">"YmdHis"</span>).<span class="string">"."</span>.$res;</span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($temp_file,$img_path))&#123;</span><br><span class="line">            $is_upload = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">"上传出错！"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这关是去读取图片一个字节并获取签名，简单点，还是去检测是否是一张图片，上传图片马：</p>
+<p><img src="1.assets/image-20211108231231497.png" alt="image-20211108231231497"></p>
+<h2 id="二次渲染绕过"><a href="#二次渲染绕过" class="headerlink" title="二次渲染绕过"></a>二次渲染绕过</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    <span class="comment">// 获得上传文件的基本信息，文件名，类型，大小，临时文件路径</span></span><br><span class="line">    $filename = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>];</span><br><span class="line">    $filetype = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'type'</span>];</span><br><span class="line">    $tmpname = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line"></span><br><span class="line">    $target_path=UPLOAD_PATH.<span class="string">'/'</span>.basename($filename);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获得上传文件的扩展名</span></span><br><span class="line">    $fileext= substr(strrchr($filename,<span class="string">"."</span>),<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断文件后缀与类型，合法才进行上传操作</span></span><br><span class="line">    <span class="keyword">if</span>(($fileext == <span class="string">"jpg"</span>) &amp;&amp; ($filetype==<span class="string">"image/jpeg"</span>))&#123;</span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($tmpname,$target_path))&#123;</span><br><span class="line">            <span class="comment">//使用上传的图片生成新的图片</span></span><br><span class="line">            $im = imagecreatefromjpeg($target_path);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>($im == <span class="keyword">false</span>)&#123;</span><br><span class="line">                $msg = <span class="string">"该文件不是jpg格式的图片！"</span>;</span><br><span class="line">                @unlink($target_path);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//给新图片指定文件名</span></span><br><span class="line">                srand(time());</span><br><span class="line">                $newfilename = strval(rand()).<span class="string">".jpg"</span>;</span><br><span class="line">                <span class="comment">//显示二次渲染后的图片（使用用户上传图片生成的新图片）</span></span><br><span class="line">                $img_path = UPLOAD_PATH.<span class="string">'/'</span>.$newfilename;</span><br><span class="line">                imagejpeg($im,$img_path);</span><br><span class="line">                @unlink($target_path);</span><br><span class="line">                $is_upload = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">"上传出错！"</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(($fileext == <span class="string">"png"</span>) &amp;&amp; ($filetype==<span class="string">"image/png"</span>))&#123;</span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($tmpname,$target_path))&#123;</span><br><span class="line">            <span class="comment">//使用上传的图片生成新的图片</span></span><br><span class="line">            $im = imagecreatefrompng($target_path);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>($im == <span class="keyword">false</span>)&#123;</span><br><span class="line">                $msg = <span class="string">"该文件不是png格式的图片！"</span>;</span><br><span class="line">                @unlink($target_path);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                 <span class="comment">//给新图片指定文件名</span></span><br><span class="line">                srand(time());</span><br><span class="line">                $newfilename = strval(rand()).<span class="string">".png"</span>;</span><br><span class="line">                <span class="comment">//显示二次渲染后的图片（使用用户上传图片生成的新图片）</span></span><br><span class="line">                $img_path = UPLOAD_PATH.<span class="string">'/'</span>.$newfilename;</span><br><span class="line">                imagepng($im,$img_path);</span><br><span class="line"></span><br><span class="line">                @unlink($target_path);</span><br><span class="line">                $is_upload = <span class="keyword">true</span>;               </span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">"上传出错！"</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(($fileext == <span class="string">"gif"</span>) &amp;&amp; ($filetype==<span class="string">"image/gif"</span>))&#123;</span><br><span class="line">        <span class="keyword">if</span>(move_uploaded_file($tmpname,$target_path))&#123;</span><br><span class="line">            <span class="comment">//使用上传的图片生成新的图片</span></span><br><span class="line">            $im = imagecreatefromgif($target_path);</span><br><span class="line">            <span class="keyword">if</span>($im == <span class="keyword">false</span>)&#123;</span><br><span class="line">                $msg = <span class="string">"该文件不是gif格式的图片！"</span>;</span><br><span class="line">                @unlink($target_path);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//给新图片指定文件名</span></span><br><span class="line">                srand(time());</span><br><span class="line">                $newfilename = strval(rand()).<span class="string">".gif"</span>;</span><br><span class="line">                <span class="comment">//显示二次渲染后的图片（使用用户上传图片生成的新图片）</span></span><br><span class="line">                $img_path = UPLOAD_PATH.<span class="string">'/'</span>.$newfilename;</span><br><span class="line">                imagegif($im,$img_path);</span><br><span class="line"></span><br><span class="line">                @unlink($target_path);</span><br><span class="line">                $is_upload = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">"上传出错！"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $msg = <span class="string">"只允许上传后缀为.jpg|.png|.gif的图片文件！"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二次渲染：就是根据用户上传的图片，新生成一个图片，将原始图片删除，将新图片添加到数据库中。比如一些网站根据用户上传的头像生成大中小不同尺寸的图像。</p>
+<p> 源码判断了后缀名、content-type，以及利用imagecreatefromgif判断是否为gif图片，最后再做了一次二次渲染。</p>
+<p>这里绕过gif的二次渲染比较好绕一点,我们只需要找到渲染前后没有变化的位置,然后将php代码写进去,就可以成功上传带有php代码的图片了；</p>
+<p><img src="1.assets/image-20211109101811468.png" alt="image-20211109101811468"></p>
+<p>上传</p>
+<p><img src="1.assets/image-20211109101934331.png" alt="image-20211109101934331"></p>
+<p><img src="1.assets/image-20211109101923939.png" alt="image-20211109101923939"></p>
+<h2 id="条件竞争绕过"><a href="#条件竞争绕过" class="headerlink" title="条件竞争绕过"></a>条件竞争绕过</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    $ext_arr = <span class="keyword">array</span>(<span class="string">'jpg'</span>,<span class="string">'png'</span>,<span class="string">'gif'</span>);</span><br><span class="line">    $file_name = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>];</span><br><span class="line">    $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">    $file_ext = substr($file_name,strrpos($file_name,<span class="string">"."</span>)+<span class="number">1</span>);</span><br><span class="line">    $upload_file = UPLOAD_PATH . <span class="string">'/'</span> . $file_name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(move_uploaded_file($temp_file, $upload_file))&#123;</span><br><span class="line">        <span class="keyword">if</span>(in_array($file_ext,$ext_arr))&#123;</span><br><span class="line">             $img_path = UPLOAD_PATH . <span class="string">'/'</span>. rand(<span class="number">10</span>, <span class="number">99</span>).date(<span class="string">"YmdHis"</span>).<span class="string">"."</span>.$file_ext;</span><br><span class="line">             rename($upload_file, $img_path);</span><br><span class="line">             $is_upload = <span class="keyword">true</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            $msg = <span class="string">"只允许上传.jpg|.png|.gif类型文件！"</span>;</span><br><span class="line">            unlink($upload_file);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $msg = <span class="string">'上传出错！'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="1.assets/image-20211108231332748.png" alt="image-20211108231332748"></p>
+<p>什么是条件竞争呢？条件竞争是“发生在多个线程同时访问同一个共享代码、变量、文件等没有进行锁操作或者同步操作的常见”；竞争条件发生在多个线程同时访问同一个共享代码、变量、文件等没有进行锁操作或者同步操作的场景中。</p>
+<p>开发者在进行代码开发时常常倾向于认为代码会以线性的方式执行，而且他们忽视了并行服务器会并发执行多个线程，这就会导致意想不到的结果。比如当我们上传一个文件，但是因为过滤原因或其他原因被删除，那么我们实际上就是和unlink 删除文件函数竞争；</p>
+<p>这道题是先将文件上传到服务器，然后判断文件后缀是否在白名单里，如果在则重命名，否则删除，因此我们可以上传1.php只需要在它删除之前访问即可，可以利用burp的intruder模块不断上传，然后我们不断的访问刷新该地址即可</p>
+<p>假如我不断发包，在删除函数还没执行前，我们已经先把里面代码执行完毕了，那么我们就可以上传一个php，在删除之前去执行，通过php代码再去写一个马：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> $a=<span class="string">'&lt;?php @eval($_REQUEST[\'a\'])?&gt;'</span>;file_put_contents(<span class="string">'1.php'</span>,$a) <span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span> fputs(fopen(<span class="string">'shell2.php'</span>,<span class="string">'w'</span>),<span class="string">'&lt;?php @eval($_POST["x"])?&gt;'</span>);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们先将上面的php代码文件上传上去，并抓包</p>
+<p><img src="1.assets/image-20211109104933300.png" alt="image-20211109104933300"></p>
+<p>通过burp的爆破模块进行null payload不断上传</p>
+<p><img src="1.assets/image-20211109103023200.png" alt="image-20211109103023200"></p>
+<p>并不断访问shell.php,通过条件竞争在php文件在删除之前，执行代码，从而生成新的shell</p>
+<p><img src="1.assets/image-20211109102837983.png" alt="image-20211109102837983"></p>
+<p>出现200之后，就代表访问shell.php是存在的，那么1.php很有可能已经创建，我们可以进行尝试访问</p>
+<p><img src="1.assets/image-20211109105450848.png" alt="image-20211109105450848"></p>
+<p>成功写入</p>
+<h2 id="条件竞争绕过2"><a href="#条件竞争绕过2" class="headerlink" title="条件竞争绕过2"></a>条件竞争绕过2</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.php</span></span><br><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">require_once</span>(<span class="string">"./myupload.php"</span>);</span><br><span class="line">    $imgFileName =time();</span><br><span class="line">    $u = <span class="keyword">new</span> MyUpload($_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>], $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>], $_FILES[<span class="string">'upload_file'</span>][<span class="string">'size'</span>],$imgFileName);</span><br><span class="line">    $status_code = $u-&gt;upload(UPLOAD_PATH);</span><br><span class="line">    <span class="keyword">switch</span> ($status_code) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            $is_upload = <span class="keyword">true</span>;</span><br><span class="line">            $img_path = $u-&gt;cls_upload_dir . $u-&gt;cls_file_rename_to;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            $msg = <span class="string">'文件已经被上传，但没有重命名。'</span>;</span><br><span class="line">            <span class="keyword">break</span>; </span><br><span class="line">        <span class="keyword">case</span> <span class="number">-1</span>:</span><br><span class="line">            $msg = <span class="string">'这个文件不能上传到服务器的临时文件存储目录。'</span>;</span><br><span class="line">            <span class="keyword">break</span>; </span><br><span class="line">        <span class="keyword">case</span> <span class="number">-2</span>:</span><br><span class="line">            $msg = <span class="string">'上传失败，上传目录不可写。'</span>;</span><br><span class="line">            <span class="keyword">break</span>; </span><br><span class="line">        <span class="keyword">case</span> <span class="number">-3</span>:</span><br><span class="line">            $msg = <span class="string">'上传失败，无法上传该类型文件。'</span>;</span><br><span class="line">            <span class="keyword">break</span>; </span><br><span class="line">        <span class="keyword">case</span> <span class="number">-4</span>:</span><br><span class="line">            $msg = <span class="string">'上传失败，上传的文件过大。'</span>;</span><br><span class="line">            <span class="keyword">break</span>; </span><br><span class="line">        <span class="keyword">case</span> <span class="number">-5</span>:</span><br><span class="line">            $msg = <span class="string">'上传失败，服务器已经存在相同名称文件。'</span>;</span><br><span class="line">            <span class="keyword">break</span>; </span><br><span class="line">        <span class="keyword">case</span> <span class="number">-6</span>:</span><br><span class="line">            $msg = <span class="string">'文件无法上传，文件不能复制到目标目录。'</span>;</span><br><span class="line">            <span class="keyword">break</span>;      </span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            $msg = <span class="string">'未知错误！'</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//myupload.php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyUpload</span></span>&#123;</span><br><span class="line">......</span><br><span class="line">......</span><br><span class="line">...... </span><br><span class="line">  <span class="keyword">var</span> $cls_arr_ext_accepted = <span class="keyword">array</span>(</span><br><span class="line">      <span class="string">".doc"</span>, <span class="string">".xls"</span>, <span class="string">".txt"</span>, <span class="string">".pdf"</span>, <span class="string">".gif"</span>, <span class="string">".jpg"</span>, <span class="string">".zip"</span>, <span class="string">".rar"</span>, <span class="string">".7z"</span>,<span class="string">".ppt"</span>,</span><br><span class="line">      <span class="string">".html"</span>, <span class="string">".xml"</span>, <span class="string">".tiff"</span>, <span class="string">".jpeg"</span>, <span class="string">".png"</span> );</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line">......</span><br><span class="line">......  </span><br><span class="line">  <span class="comment">/** upload()</span></span><br><span class="line"><span class="comment">   **</span></span><br><span class="line"><span class="comment">   ** Method to upload the file.</span></span><br><span class="line"><span class="comment">   ** This is the only method to call outside the class.</span></span><br><span class="line"><span class="comment">   ** <span class="doctag">@para</span> String name of directory we upload to</span></span><br><span class="line"><span class="comment">   ** <span class="doctag">@returns</span> void</span></span><br><span class="line"><span class="comment">  **/</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">upload</span><span class="params">( $dir )</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    $ret = <span class="keyword">$this</span>-&gt;isUploadedFile();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>( $ret != <span class="number">1</span> )&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( $ret );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $ret = <span class="keyword">$this</span>-&gt;setDir( $dir );</span><br><span class="line">    <span class="keyword">if</span>( $ret != <span class="number">1</span> )&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( $ret );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $ret = <span class="keyword">$this</span>-&gt;checkExtension();</span><br><span class="line">    <span class="keyword">if</span>( $ret != <span class="number">1</span> )&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( $ret );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $ret = <span class="keyword">$this</span>-&gt;checkSize();</span><br><span class="line">    <span class="keyword">if</span>( $ret != <span class="number">1</span> )&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( $ret );    </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// if flag to check if the file exists is set to 1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>( <span class="keyword">$this</span>-&gt;cls_file_exists == <span class="number">1</span> )&#123;</span><br><span class="line">      </span><br><span class="line">      $ret = <span class="keyword">$this</span>-&gt;checkFileExists();</span><br><span class="line">      <span class="keyword">if</span>( $ret != <span class="number">1</span> )&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( $ret );    </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// if we are here, we are ready to move the file to destination</span></span><br><span class="line"></span><br><span class="line">    $ret = <span class="keyword">$this</span>-&gt;move();</span><br><span class="line">    <span class="keyword">if</span>( $ret != <span class="number">1</span> )&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( $ret );    </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check if we need to rename the file</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( <span class="keyword">$this</span>-&gt;cls_rename_file == <span class="number">1</span> )&#123;</span><br><span class="line">      $ret = <span class="keyword">$this</span>-&gt;renameFile();</span><br><span class="line">      <span class="keyword">if</span>( $ret != <span class="number">1</span> )&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( $ret );    </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// if we are here, everything worked as planned :)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resultUpload( <span class="string">"SUCCESS"</span> );</span><br><span class="line">  </span><br><span class="line">  &#125;</span><br><span class="line">......</span><br><span class="line">......</span><br><span class="line">...... </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>条件竞争还是需要进行代码审计</p>
+<p>通过代码审计可以知道，这一道题还是通过先保存，然后再进行重命名</p>
+<p>因此也存在条件竞争的问题，不过这题对文件后缀名做了白名单判断校验后缀名，然后会一步一步检查文件大小、文件是否存在等等，因此可以通过不断上传图片马，由于条件竞争可能来不及重命名，从而上传成功。</p>
+<h2 id="move-uploaded-file截断"><a href="#move-uploaded-file截断" class="headerlink" title="move_uploaded_file截断"></a>move_uploaded_file截断</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">$is_upload = <span class="keyword">false</span>;</span><br><span class="line">$msg = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (file_exists(UPLOAD_PATH)) &#123;</span><br><span class="line">        $deny_ext = <span class="keyword">array</span>(<span class="string">"php"</span>,<span class="string">"php5"</span>,<span class="string">"php4"</span>,<span class="string">"php3"</span>,<span class="string">"php2"</span>,<span class="string">"html"</span>,<span class="string">"htm"</span>,<span class="string">"phtml"</span>,<span class="string">"pht"</span>,<span class="string">"jsp"</span>,<span class="string">"jspa"</span>,<span class="string">"jspx"</span>,<span class="string">"jsw"</span>,<span class="string">"jsv"</span>,<span class="string">"jspf"</span>,<span class="string">"jtml"</span>,<span class="string">"asp"</span>,<span class="string">"aspx"</span>,<span class="string">"asa"</span>,<span class="string">"asax"</span>,<span class="string">"ascx"</span>,<span class="string">"ashx"</span>,<span class="string">"asmx"</span>,<span class="string">"cer"</span>,<span class="string">"swf"</span>,<span class="string">"htaccess"</span>);</span><br><span class="line"></span><br><span class="line">        $file_name = $_POST[<span class="string">'save_name'</span>];</span><br><span class="line">        $file_ext = pathinfo($file_name,PATHINFO_EXTENSION);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(!in_array($file_ext,$deny_ext)) &#123;</span><br><span class="line">            $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">            $img_path = UPLOAD_PATH . <span class="string">'/'</span> .$file_name;</span><br><span class="line">            <span class="keyword">if</span> (move_uploaded_file($temp_file, $img_path)) &#123; </span><br><span class="line">                $is_upload = <span class="keyword">true</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                $msg = <span class="string">'上传出错！'</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            $msg = <span class="string">'禁止保存为该类型文件！'</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $msg = UPLOAD_PATH . <span class="string">'文件夹不存在,请手工创建！'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="1.assets/image-20211110191823095.png" alt="image-20211110191823095"></p>
+<p>这里是一个move_uploaded_file的一个截断，move_uploaded_file函数是一个移动临时文件路径的函数，一般用来将存放于临时目录的上传文件移动到指定目录上去；这里可以看到上传功能点是可以自定义文件名的，我们先上传一个普通图片，来看看图片移动后的位置：</p>
+<p><img src="1.assets/image-20211110192052865.png" alt="image-20211110192052865"></p>
+<p>可以发现他把图片移动到上一级的upload文件上去了，但并没有重命名，那我们就可以控制它的文件名，那我们是否能通过进行截断绕过：</p>
+<p>先上传一个图片马：</p>
+<p><img src="1.assets/image-20211110192151009.png" alt="image-20211110192151009"></p>
+<p>上传并抓包</p>
+<p><img src="1.assets/image-20211110192345753.png" alt="image-20211110192345753"></p>
+<p><img src="1.assets/image-20211110192521626.png" alt="image-20211110192521626"></p>
+<p>对文件名进行截断：</p>
+<p><img src="1.assets/image-20211110193350535.png" alt="image-20211110193350535"></p>
+<p>修改十六进制为00进行截断</p>
+<p><img src="1.assets/image-20211110193507087.png" alt="image-20211110193507087"></p>
+<p>发包，成功上传</p>
+<p><img src="1.assets/image-20211110193548032.png" alt="image-20211110193548032"></p>
+<p><img src="1.assets/image-20211110193653949.png" alt="image-20211110193653949"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#00截断绕过"><span class="toc-number">1.</span> <span class="toc-text">%00截断绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#00截断绕过（二）"><span class="toc-number">2.</span> <span class="toc-text">%00截断绕过（二）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图片马之文件头绕过"><span class="toc-number">3.</span> <span class="toc-text">图片马之文件头绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getimagesize图片类型绕过"><span class="toc-number">4.</span> <span class="toc-text">getimagesize图片类型绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-exif模块图片类型绕过"><span class="toc-number">5.</span> <span class="toc-text">php_exif模块图片类型绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二次渲染绕过"><span class="toc-number">6.</span> <span class="toc-text">二次渲染绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件竞争绕过"><span class="toc-number">7.</span> <span class="toc-text">条件竞争绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件竞争绕过2"><span class="toc-number">8.</span> <span class="toc-text">条件竞争绕过2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#move-uploaded-file截断"><span class="toc-number">9.</span> <span class="toc-text">move_uploaded_file截断</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

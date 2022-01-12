@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="A1LB1ue">
 <meta property="og:description" content="sql injection介绍： 我们称之为 sql 注入。何为 sql，英文：Structured Query Language，叫做结构化查询语言。常见的结构化数据库有 MySQL，MS SQL ,Oracle 以及 Postgresql。Sql语言就是我们在管理数据库时用到的一种。在我们的应用系统使用 sql 语句进行管理应用数据库时，往往采用拼接的方式形成一条完整的数据库语言，而危险的是，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-08-11T03:35:25.915Z">
+<meta property="og:updated_time" content="2021-11-19T01:54:30.483Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="A1LB1ue">
 <meta name="twitter:description" content="sql injection介绍： 我们称之为 sql 注入。何为 sql，英文：Structured Query Language，叫做结构化查询语言。常见的结构化数据库有 MySQL，MS SQL ,Oracle 以及 Postgresql。Sql语言就是我们在管理数据库时用到的一种。在我们的应用系统使用 sql 语句进行管理应用数据库时，往往采用拼接的方式形成一条完整的数据库语言，而危险的是，">
@@ -158,7 +158,7 @@
 <li>判断应用程序是否存在注入漏洞</li>
 <li>收集信息、并判断数据库类型</li>
 <li>根据注入参数类型，重构SQL语句的原貌</li>
-<li>猜解表名、字段名</li>
+<li>猜解库名、表名、字段名</li>
 <li>获取账户信息、攻击web或为下一步攻击做准备</li>
 </ol>
 <h2 id="information-schema库"><a href="#information-schema库" class="headerlink" title="information_schema库"></a>information_schema库</h2><p>在mysql5.0以上的版本中，为了方便管理，系统自动生成了information_schema这个系统库，用来存储数据库元信息。其中就有我们在注入中需要用到的一些表：schemata(数据库名)、tables(表名)、columns(列名或字段名)，通常我们可以通过系统库查询到很多信息，最常见的mysql注入也是根据该库来完成的。</p>
@@ -251,7 +251,7 @@
     Copyright &copy;
     
     
-    2016-2021
+    2016-2022
     JYP
   </div>
   <div class="footer-right">
